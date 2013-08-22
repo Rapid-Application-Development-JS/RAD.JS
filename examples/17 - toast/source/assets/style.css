@@ -1,0 +1,39 @@
+.toast-frame {
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+
+    border: 2px solid #2e5075;
+    overflow: hidden;
+}
+
+.toast-content {
+    padding: 15px;
+    background-color: #ffffff;
+}
+
+.taost-title {
+    padding: 5px;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.taost-title {
+    background-color: #2e5075;
+}
+
+.error.toast-frame {
+    border: 2px solid #dd0000;
+}
+
+.error .taost-title {
+    background-color: #dd0000;
+}
+
+.warning.toast-frame {
+    border: 2px solid #FFBF41;
+}
+
+.warning .taost-title {
+    background-color: #FFBF41;
+}

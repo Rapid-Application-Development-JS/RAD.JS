@@ -1,0 +1,49 @@
+.page {
+    position: relative;
+    height: 100%
+}
+
+/*swipe*/
+.swipe-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.swipe-0, .swipe-1, .swipe-2 {
+    -webkit-transform: translateZ(0);
+
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    float:left;
+
+    /*disable text select*/
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.swipe-0 {
+    top: 0;
+}
+
+.swipe-1 {
+    top: -100%;
+}
+
+.swipe-2 {
+    top: -200%;
+}
+
+.swipe-animation {
+    -webkit-transition: all 350ms ease;
+    -moz-transition: all 350ms ease;
+    -ms-transition: all 350ms ease;
+    -o-transition: all 350ms ease;
+    transition: all 350ms ease;
+}

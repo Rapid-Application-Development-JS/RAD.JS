@@ -1,0 +1,23 @@
+<div class="page">
+    <div class="rad-header">
+        <span>Page {{= index }}</span>
+    </div>
+    <div class="scroll-view">
+        <div>
+            <ul style="width: 100%; overflow: hidden;">
+                {{# var i, l, j, k, channel;
+                for(var i = 0, l = data.get('channels').length; i < l; i +=1) {
+                channel = data.get('channels')[i]; }}
+                <li class="row">
+                    <div class="channel-name">{{= channel.name }}</div>
+                    <div class="time-line">
+                        {{# for( j = 0, k = channel.data.length; j < k; j +=1) { }}
+                        <div class="interval" style="width: {{= channel.data[j] }}%;">{{# if(channel.data[j]>9){ }} {{= channel.data[j] }} {{# } }}</div>
+                        {{# } }}
+                    </div>
+                </li>
+                {{# } }}
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+.popup-content{
+    background-color: #2e5075;
+    overflow: hidden;
+}
+
+/*.close-dialog {*/
+    /*position: absolute;*/
+    /*width: 36px;*/
+    /*height: 36px;*/
+    /*background-color: #335b6d;*/
+    /*top: -18px;*/
+    /*right: -18px;*/
+
+    /*margin: 0;*/
+    /*padding: 0;*/
+
+    /*border: 1px solid #2C3E50;*/
+    /*border-radius: 50%;*/
+/*}*/
+
+/*.close-dialog:active {*/
+    /*background-color: #2C3E50;*/
+/*}*/
+
+.outside .close-dialog{
+    display: none;
+}

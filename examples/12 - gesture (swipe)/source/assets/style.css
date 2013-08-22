@@ -1,0 +1,46 @@
+.page h1,
+.page h2 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    line-height: 120%;
+}
+
+.page h2 {
+    font-size: 18px;
+}
+
+button {
+    margin: 0;
+    width: 120px;
+    height: 30px;
+    background: #ddd;
+    color: #000;
+    font-size: 12px;
+    border: 2px solid #999;
+    border-radius: 5px;
+}
+
+button:hover {
+    border: 2px solid #507c99;
+}
+
+button:active {
+    border: 2px solid #507c99;
+    background: #76d3dd;
+}
+
+.first, .second, .third {
+    padding: 10px;
+}
+
+.first {
+    background-color: #CDCDCD;
+}
+
+.second {
+    background-color: #D5F8FE;
+}
+
+.third {
+    background-color: #83bfd0;
+}

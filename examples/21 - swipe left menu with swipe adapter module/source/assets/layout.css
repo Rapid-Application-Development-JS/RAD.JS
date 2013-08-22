@@ -1,0 +1,132 @@
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+}
+
+.page {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.scroll-view {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.rad-header{
+    overflow: hidden;
+    height: 40px;
+}
+
+/*swipe implementation*/
+.swipe-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.swipe-0, .swipe-1, .swipe-2 {
+    -webkit-transform: translateZ(0);
+
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    float:left;
+
+    /*disable text select*/
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.swipe-0 {
+    top: 0;
+}
+
+.swipe-1 {
+    top: -100%;
+}
+
+.swipe-2 {
+    top: -200%;
+}
+
+.swipe-animation {
+    -webkit-transition: all 350ms ease;
+    -moz-transition: all 350ms ease;
+    -ms-transition: all 350ms ease;
+    -o-transition: all 350ms ease;
+    transition: all 350ms ease;
+}
+
+.top {
+    position: absolute;
+    width: 100%;
+    height: 0;
+}
+
+.content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.rad-page {
+    padding-bottom: 10px;
+}
+
+.scroll-view {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.menu {
+    position: static !important;
+}
+
+.menu-container {
+    width: 250px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.content-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.menu.rad-list {
+    margin: 0;
+}
+
+.toggle-menu{
+    height: 40px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden
+}

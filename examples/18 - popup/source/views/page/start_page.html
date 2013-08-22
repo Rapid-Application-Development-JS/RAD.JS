@@ -1,0 +1,67 @@
+<div class="rad-header">Popup Demo</div>
+<div class="scroll-view">
+    <div class="rad-page">
+        <button class="dialog-show rad-btn">Show popup</button>
+
+        <div class="rad-list">
+            <div>
+                Gravity to target:
+            </div>
+            <ul>
+                <li>
+                    <input id="ga" type="radio" name="gravity" value="none"><span></span> <label
+                        for="ga">Auto</label>
+                </li>
+                <li>
+                    <input id="gc" type="radio" name="gravity" value="center"><span></span> <label
+                        for="gc">Center in window</label>
+                </li>
+                <li>
+                    <input id="gl" type="radio" name="gravity" value="left"><span></span> <label for="gl">Left</label>
+                </li>
+                <li>
+                    <input id="gr" type="radio" name="gravity" value="right"><span></span> <label for="gr">Right</label>
+                </li>
+                <li>
+                    <input id="gt" type="radio" name="gravity" value="top"><span></span> <label
+                        for="gt">Top</label>
+                </li>
+                <li>
+                    <input id="gb" type="radio" name="gravity" value="bottom"><span></span> <label
+                        for="gb">Bottom</label>
+                </li>
+            </ul>
+        </div>
+
+        <div class="rad-bar">
+            <div>Content:</div>
+            <input id="content" type="text" size="40">
+        </div>
+
+        <div class="rad-list">
+            <div>
+                Popup Setup:
+            </div>
+            <ul>
+                <li>
+                    <input type="checkbox" id="close"><span></span> <label for="close">Destroy popup after close</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="out" checked="checked"><span></span> <label for="out">Outside
+                    close</label>
+                </li>
+            </ul>
+        </div>
+
+        <div class="rad-separator"></div>
+
+        <button class="dialog-show rad-btn rad-success" data-target="external_popup">Show popup to anchor</button>
+        <div style="display: table; vertical-align: middle; text-align: center; height: 80px; width: 100%;">
+            <div style="display: table-cell;vertical-align: middle;">
+                <span id="external_popup" style="background-color:#bdb76b; padding: 5px; font-weight: bold;">Popup Anchor</span>
+            </div>
+        </div>
+        <div class="rad-bar rad-warning">Popup Result: <span id="dialog_result"></span></div>
+
+    </div>
+</div>

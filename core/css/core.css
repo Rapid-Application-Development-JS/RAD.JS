@@ -1,0 +1,336 @@
+/* ===================================================== */
+/* CSS Reset */
+/* ===================================================== */
+html, body {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+
+    -ms-touch-action: none;
+    -ms-touch-select: none;
+}
+
+body {
+    margin: 0;
+    -webkit-text-size-adjust: 100%;
+
+    /*Disable certain interactions on touch devices*/
+    -webkit-touch-callout: none;
+    -webkit-text-size-adjust: none;
+    -webkit-highlight: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    /*disable text select*/
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+a, input,
+textarea, button, div {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+    /*enable text select*/
+    -moz-user-select: text;
+    -o-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+img {
+    border-style: none;
+}
+
+input, textarea, select {
+    vertical-align: middle;
+}
+
+form, fieldset {
+    margin: 0;
+    padding: 0;
+    border-style: none;
+}
+
+/* ===================================================== */
+/* Main View Layout */
+/* ===================================================== */
+div[data-role="view"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* main screen holder */
+#screen {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Overlay */
+#overlay {
+    display: none;
+}
+
+#overlay {
+    position: absolute;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#overlay.show {
+    display: block;
+}
+
+/* ===================================================== */
+/* Dialogs & Popups & Toasts View Layout */
+/* ===================================================== */
+/* light-boxes */
+.lightbox {
+    position: absolute;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    text-align: center;
+    white-space: nowrap;
+
+    -webkit-transition: opacity 300ms ease;
+    -moz-transition: opacity 300ms ease;
+    -ms-transition: opacity 300ms ease;
+    -o-transition: opacity 300ms ease;
+    transition: opacity 300ms ease;
+}
+
+.lightbox.show {
+    opacity: 1;
+}
+
+.lightbox:after {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 1px;
+    height: 100%;
+}
+
+.lightbox-frame {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    width: 100%;
+    text-align: left;
+    white-space: normal;
+
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    -moz-transform: scale(0.5, 0.5);
+    -webkit-transform: scale(0.5, 0.5);
+    -o-transform: scale(0.5, 0.5);
+    -ms-transform: scale(0.5, 0.5);
+    transform: scale(0.5, 0.5);
+
+    -webkit-transition: -webkit-transform 300ms ease;
+    -moz-transition: -moz-transform 300ms ease;
+    -ms-transition: -ms-transform 300ms ease;
+    -o-transition: -o-transform 300ms ease;
+    transition: transform 300ms ease;
+
+}
+
+.lightbox.show .lightbox-frame {
+    -moz-transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1);
+}
+
+/* toasts */
+.toast {
+    z-index: 999;
+    position: absolute;
+    width: auto !important;
+    max-width: 50% !important;
+    height: auto !important;
+    opacity: 0;
+    -webkit-transition: opacity 300ms ease;
+    -moz-transition: opacity 300ms ease;
+    -ms-transition: opacity 300ms ease;
+    -o-transition: opacity 300ms ease;
+    transition: opacity 300ms ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.toast.show {
+    opacity: 1;
+    -webkit-transition: opacity 10ms ease;
+    -moz-transition: opacity 10ms ease;
+    -ms-transition: opacity 10ms ease;
+    -o-transition: opacity 10ms ease;
+    transition: opacity 10ms ease;
+}
+
+/* popups */
+.popup {
+    position: absolute;
+    z-index: 999;
+    opacity: 0;
+    -webkit-transition: opacity 300ms ease;
+    -moz-transition: opacity 300ms ease;
+    -ms-transition: opacity 300ms ease;
+    -o-transition: opacity 300ms ease;
+    transition: opacity 300ms ease;
+}
+
+.popup.show {
+    opacity: 1;
+}
+
+/* ============================================= */
+/* Slide Animation */
+/* ============================================= */
+
+/* Animation timing */
+.slide-in,
+.slide-out {
+    -webkit-transition: -webkit-transform 350ms ease;
+    -moz-transition: -moz-transform 350ms ease;
+    -ms-transition: -ms-transform 350ms ease;
+    -o-transition: -o-transform 350ms ease;
+    transition: transform 350ms ease;
+}
+
+/* Slide-in animation ========================== */
+.new-page.slide-in {
+    -webkit-transform: translate3d(100%, 0, 0);
+    -moz-transform: translate3d(100%, 0, 0);
+    -ms-transform: translate3d(100%, 0, 0);
+    -o-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+}
+
+.old-page.slide-in {
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.animate > .new-page.slide-in{
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.animate > .old-page.slide-in {
+    -webkit-transform: translate3d(-100%, 0, 0);
+    -moz-transform: translate3d(-100%, 0, 0);
+    -ms-transform: translate3d(-100%, 0, 0);
+    -o-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+}
+
+/* Slide-out animation ========================= */
+.new-page.slide-out {
+    -webkit-transform: translate3d(-100%, 0, 0);
+    -moz-transform: translate3d(-100%, 0, 0);
+    -ms-transform: translate3d(-100%, 0, 0);
+    -o-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+}
+
+.old-page.slide-out {
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.animate > .new-page.slide-out{
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.animate > .old-page.slide-out {
+    -webkit-transform: translate3d(100%, 0, 0);
+    -moz-transform: translate3d(100%, 0, 0);
+    -ms-transform: translate3d(100%, 0, 0);
+    -o-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+}
+
+/* ============================================= */
+/* Fade Animation */
+/* ============================================= */
+
+.new-page.fade-in,
+.new-page.fade-out {
+    opacity: 0;
+
+    -webkit-transition: opacity 350ms ease;
+    -moz-transition: opacity 350ms ease;
+    -ms-transition: opacity 350ms ease;
+    -o-transition: opacity 350ms ease;
+    transition: opacity 350ms ease;
+}
+
+.old-page.fade-in,
+.old-page.fade-out {
+    opacity: 1;
+
+    -webkit-transition: opacity 175ms 175ms ease;
+    -moz-transition: opacity 175ms 175ms ease;
+    -ms-transition: opacity 175ms 175ms ease;
+    -o-transition: opacity 175ms 175ms ease;
+    transition: opacity 175ms 175ms ease;
+}
+
+.animate > .new-page.fade-in,
+.animate > .new-page.fade-out {
+    opacity: 1;
+}
+
+.animate > .old-page.fade-in,
+.animate > .old-page.fade-out {
+    opacity: 0;
+}

@@ -1,0 +1,46 @@
+#screen {
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.block {
+    position: relative;
+
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.block>div {
+    position: static !important;
+}
+
+.block>.rad-bar {
+    margin: 0;
+}
+
+/* Portrait */
+@media screen and (orientation:portrait) {
+    #widget1, #widget2 {
+        height: 49%;
+    }
+
+    .separator {
+        height: 2%;
+    }
+}
+
+/* Landscape */
+@media screen and (orientation:landscape) {
+    #widget1, #widget2 {
+        display: inline-block;
+        height: 100%;
+        width: 49%;
+        vertical-align: top;
+    }
+
+    .separator {
+        display: inline-block;
+        width: 2%;
+        vertical-align: top;
+    }
+}

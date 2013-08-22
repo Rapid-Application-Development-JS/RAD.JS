@@ -1,0 +1,94 @@
+.page {
+    position: relative;
+    height: 100%
+}
+
+.rad-page {
+    padding-bottom: 10px;
+}
+
+.scroll-view {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.popup-frame.scroll-view {
+    position: static;
+}
+
+.popup {
+    font-size: 12px;
+    padding: 18px;
+}
+
+.popup-holder {
+    position: relative;
+    height: 100%;
+    padding: 5px;
+    background-color: #2C3E50;
+
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.scroll-view-frame, .popup-frame {
+    background: #fff;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.popup-frame {
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.popup-pointer {
+    position: absolute;
+    left: 5px;
+}
+
+/* popup arrow pointer */
+.popup-pointer.bottom {
+    bottom: 100%;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #2C3E50;
+}
+
+.popup-pointer.top {
+    top: 100%;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #2C3E50;
+}
+
+.popup-pointer.left {
+    left: 100%;
+    top: 30px;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 15px solid #2C3E50;
+}
+
+.popup-pointer.right {
+    left: auto;
+    right: 100%;
+    top: 30px;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid #2C3E50;
+}
+
+.popup .scroll-view-body {
+    min-height: 100%;
+    padding: 7px 5px 5px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}

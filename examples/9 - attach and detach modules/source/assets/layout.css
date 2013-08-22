@@ -1,0 +1,18 @@
+.page {
+    position: relative;
+    height: 100%
+}
+
+.content {
+    position: absolute;
+    top: 0px;
+    bottom: 60px;
+    width: 100%;
+}
+
+.bottom {
+    position: absolute;
+    height: 60px;
+    width: 100%;
+    bottom: 0;
+}

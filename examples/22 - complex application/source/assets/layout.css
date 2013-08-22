@@ -1,0 +1,297 @@
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+}
+
+.page {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.scroll-view {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.rad-header{
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 40px;
+}
+
+.top>span {
+    position: absolute ;
+    top: 10px;
+    height: 20px;
+    display:block;
+}
+
+.toggle-menu {
+    left: 30px;
+}
+
+.open-dialog {
+    right: 30px;
+}
+.top span.rad-ico:after {
+    content: '';
+    display: block;
+    position: absolute ;
+    top: -10px;
+    left: -30px;
+    bottom: -10px ;
+    right: -30px;
+}
+
+
+
+/*swipe*/
+.swipe-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.swipe-0, .swipe-1, .swipe-2 {
+    -webkit-transform: translateZ(0);
+
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    float:left;
+
+    /*disable text select*/
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.swipe-0 {
+    top: 0;
+}
+
+.swipe-1 {
+    top: -100%;
+}
+
+.swipe-2 {
+    top: -200%;
+}
+
+.swipe-animation {
+    -webkit-transition: all 350ms ease;
+    -moz-transition: all 350ms ease;
+    -ms-transition: all 350ms ease;
+    -o-transition: all 350ms ease;
+    transition: all 350ms ease;
+}
+
+.top {
+    position: absolute;
+    width: 100%;
+    height: 0;
+}
+
+.content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.rad-page {
+    padding-bottom: 10px;
+}
+
+.scroll-view {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.menu {
+    position: static !important;
+}
+
+.menu-container {
+    width: 250px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.content-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.menu.rad-list {
+    margin: 0;
+}
+
+.toggle-menu{
+    height: 40px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden
+}
+
+.th-top {
+    position: absolute;
+    width: 100%;
+    height: 40px;
+}
+
+.th-content {
+    position: absolute;
+    top: 40px;
+    bottom: 60px;
+    width: 100%;
+}
+
+.th-bottom {
+    position: absolute;
+    height: 60px;
+    width: 100%;
+    bottom: 0;
+}
+
+.close-dialog {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    background: #2C3E50 url("../../../bootstrap/image/sprite.png") -1px -155px;
+    top: -18px;
+    right: -18px;
+
+    margin: 0;
+    padding: 0;
+
+    border: 2px solid #ffffff;
+    -webkit-border-radius: 18px;
+    border-radius: 18px;
+}
+
+.close-dialog:active {
+    border: 2px solid #cccccc;
+    background-color: #cdcdcd;
+}
+
+.todo-header {
+    height: 130px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    background-color: #2C3E50;
+    font-weight: bold;
+    color: #ffffff;
+    padding: 10px;
+}
+
+.todo-content {
+    position: absolute;
+    top: 130px;
+}
+
+/*popup*/
+
+.popup-frame.scroll-view {
+    position: static;
+}
+
+.popup {
+    font-size: 12px;
+    padding: 18px;
+}
+
+.popup-holder {
+    position: relative;
+    height: 100%;
+    padding: 5px;
+    background-color: #FFBF41;
+
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.scroll-view-frame, .popup-frame {
+    background: #fff;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.popup-frame {
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.popup-pointer {
+    position: absolute;
+    left: 5px;
+}
+
+/* popup arrow pointer */
+.popup-pointer.bottom {
+    bottom: 100%;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #FFBF41;
+}
+
+.popup-pointer.top {
+    top: 100%;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #FFBF41;
+}
+
+.popup-pointer.left {
+    left: 100%;
+    top: 30px;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 15px solid #FFBF41;
+}
+
+.popup-pointer.right {
+    left: auto;
+    right: 100%;
+    top: 30px;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid #FFBF41;
+}
+
+.popup .scroll-view-body {
+    min-height: 100%;
+    padding: 7px 5px 5px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}

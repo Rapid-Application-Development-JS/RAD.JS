@@ -1,0 +1,9 @@
+<div class="lightbox-frame rad-bar" style="width: 260px;">
+    <button class="close-dialog"></button>
+    <div class="rad-bar rad-warning" style="color: #2C3E50;">{{= model.title }}</div>
+    <ul class="rad-list" style="color: #2C3E50;">
+        {{# _.each(model.content, function(data){ }}
+        <li>{{= data }}</li>
+        {{# }); }}
+    </ul>
+</div>

@@ -1,0 +1,24 @@
+.done .row{
+    text-decoration: line-through;
+    color: #008800;
+}
+
+.rad-list li:first-child, .rad-list li:last-child{
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    -ms-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+.icon{
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    background: url("sprite.png") -40px -128px;
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+.done .icon{
+    background: url("sprite.png") -61px -128px;
+}
