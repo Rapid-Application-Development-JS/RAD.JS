@@ -80,6 +80,10 @@ pre{
     z-index:100;
     content:'';
 }
+
+#nav .disable{
+    display: none;
+}
 #nav a{
     color:#fff;
     padding:19px 20px;
@@ -266,3 +270,6 @@ b {
     display: none;
 }
 
+#to-git{
+     height: 50px;
+}
