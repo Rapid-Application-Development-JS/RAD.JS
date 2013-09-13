@@ -1,48 +1,47 @@
 RAD.JS
 ======
 ***
-Rapid Application Development (PhoneGap optimized javascript framework)
+[Rapid Application Development](http://rad-js.com/ "rad-js.com") (PhoneGap optimized javascript framework)
 
 Version:
 ---
 0.9a
 
-Чем является RAD.js:
+What RAD.js is:
 ---
 
-> Это фреймворк системного уровня. Он позволяет разрабатывать single page приложение как классическое многостраничное и берет на себя задачи системного уровня, такие как шину сообщений, создание и уничтожение экземпляров частей приложения, транзакции между views и т.д.
+> A system-level framework. It allows to build a single-page application that looks and feels as a conventional multi-page one. It also takes over system-level tasks, such as message bus, creating and deleting certain part instances of the application, transactions between views, etc.
 
-Чем не является RAD.js:
+What RAD.js isn't:
 ---
 
-  - MV* фреймворком, MV* в нем реализована на базе BackboneJS;
-  - Фремворком уровня приложения, приложением может выступать любой javascript объект. Фреймворк не диктует условия как должен быть построен объект приложения;
-  - Layout-движком. Layout-движок реализован как плагин navigation к ядру фреймворка;
-  - UI-фреймворком. Нет смысла писать очередной UI-фреймворк, так как от проекта к проекту в реальной жизни паттерны UI и оформление приложения меняется. В качестве расширения к базовой View, реализованы ScrollableView, PopupView и ToastView, то есть те, которые имеют расширенное и часто встречающееся поведение в разных проектах. Вы сами спокойно можете писать новые View, которые часто встречаются в Ваших проектах, например ListView, etc;
+  - An MV* framework. In RAD.js, MV* is based upon BackboneJS;
+  - An application-level framework. Any JavaScript object can serve as an application. The framework does not require any special environments for creating an object of the application;
+  - A layout engine. The layout engine is implemented as a navigation plugin for the framework core;
+  - A UI framework. There is no reason in creating another UI framework, because in real-life projects UI patterns and appearance of applications change. ScrollableView, PopupView and ToastView serve as an extension to the basic view; all of these have extended and frequent behavior in different projects. You can easily write new views (such as ListView), which are frequently used in your projects.
 
-Достоинства:
+Advantages:
 ---
 
-  - Оптимизирован для PhoneGap и мобильных браузеров;
-  - Возможность динамически управлять экземплярами модулей приложения (создавать, уничтожать), как на уровне приложения через функциональность ядра, так и на уровне view;
-  - Возможность составить приложение из слабо связанных модулей: моделей, views, сервисов (часть приложения без визуального представления) и объекта приложения;
-  - Древовидная структура сообщений;
-  - Debug-режим ядра и сообщений;
-  - Гибкая слабосвязанная архитектура — практически любой сторонний код может быть обернут в модуль несколькими строчками кода. Падение одного из модулей не ведет к падению всего приложения;
-  - Возможность отслеживания жизненого цикла view и сервисов. И наличие callback методов на все события жизненого цикла;
-  - Шаблонизация. Шаблоном выступает отдельный html файл который может быть наверстан отдельно;
-  - Частичная шаблонизация view, возможно указать части шаблона view которые будут меняться (rerender) при изменении модели, а какие нет;
-  - Объектом приложения может выступать любой объект javascript;
-  - Возможность расширения функциональности ядра за счет плагинов;
-  - Сложные вложенные views и декларируемые анимации перехода между ними;
-  - Возможности наследованная views, сервисов и моделей;
-  - Множественное инстанцирование;
-  - Модальные и немодальные самопозиционируемые окна;
-  - Динамическая маршрутизация, достаточно указать параметр backstack: true и транзакция между views (новое расположение views на экране) будет занесена в history браузера;
-  - Повторное использование модулей в других проектах;
-  - Возможность модульного тестирования, внешними фреймворками;
+  - The framework is optimized for PhoneGap and mobile browsers;
+  - Ability to dynamically control (create and delete) module instances of the application through the functionality of the core, at both view level and application level;
+  - Ability to build an application consisting of loosely bound modules: models, views, services (application part without visual representation); and of the object of the application;
+  - Tree-structured messaging;
+  - Debug mode of the core and messages;
+  - Flexible and loosely bound architecture - almost any extraneous code can be enveloped by the module with several lines of code. Failure of a module doesn't cause failure of the whole application;
+  - Ability to monitor the lifecycle of view and services. Callback methods for all lifecycle events;
+  - Templating. A template is an HTML file that can be created separately;
+  - Partial templating of view. Ability to determine parts of the view template, that will or will not be rerendered by changes of data within a model;
+  - Any JavaScript object can serve as the object of the application;
+  - Ability to extend functionality of the core via plugins;
+  - Complex embedded views and declarative transition animations between them;
+  - Ability to inherit views, services and models;
+  - Modal and non-modal self-positioning windows;
+  - Dynamic routing; it's enough to set the ''backstack: true'' parameter to enter transaction between views (new position of views on the screen) to the browser history;
+  - Reuse of modules in other projects;
+  - Module testing can be performed through external frameworks.
 
-Зависимости:
+Dependencies:
 ---
 
   - BackboneJS;
