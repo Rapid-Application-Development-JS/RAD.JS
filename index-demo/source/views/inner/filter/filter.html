@@ -1,0 +1,50 @@
+<div class="page">
+    <div class="page-content scroll-view filterView">
+        <div class="page-scroll-body filterView">
+            <ul class="list status-criteria" data-template="true">
+                <li class="list-header">Status<span class="font-awesome spinner-out spinner">&#xF103</span><span class="font-awesome spinner-in spinner" style="display: none">&#xF102</span></li>
+                <li class="list-item status" data-value="know">
+                    <label>Know</label>
+                    <span class="cards-number">Cards: {{ RAD.models.categories.know }}</span>
+                    <span class="chkbox font-awesome"></span>
+                </li>
+                <li class="list-item status" data-value="unsure">
+                    <label>Unsure</label>
+                    <span class="cards-number">Cards: {{ RAD.models.categories.unsure }}</span>
+                    <span class="chkbox"></span>
+                </li>
+                <li class="list-item status" data-value="dontknow">
+                    <label>Don't know</label>
+                    <span class="cards-number">Cards: {{ RAD.models.categories.dontknow }}</span>
+                    <span class="chkbox"></span>
+                </li>
+                <li class="list-item status" data-value="unanswered">
+                    <label>Unanswered</label>
+                    <span class="cards-number">Cards: {{ RAD.models.categories.unanswered }}</span>
+                    <span class="chkbox"></span>
+                </li>
+            </ul>
+            <ul class="list category-criteria" data-template="true">
+                <li class="list-header">Categories<span class="font-awesome spinner-out spinner">&#xF103</span><span class="font-awesome spinner-in spinner" style="display: none">&#xF102</span></li>
+                {{# _.each(model, function (cat) { }}
+                <li class="list-item category" data-id="{{ cat.id }}">
+                    <label>{{ cat.name }}</label>
+                    <span class="cards-number">Cards: {{ RAD.models.cards.cardsByCat[cat.id].length }}</span>
+                    <span class="chkbox"></span>
+                </li>
+                {{# }); }}
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bar page-footer">
+        <div class="col-4">
+            <button class="btn btn-bar btn-info btn-filter">Apply<br>filter</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-bar btn-red btn-filter-clear">Clean<br>filter</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-bar btn-green btn-start-test" disabled>Start<br>test</button>
+        </div>
+    </div>
+</div>

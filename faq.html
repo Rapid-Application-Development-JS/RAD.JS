@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>RAD-js project</title>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="prettify/prettify.css">
+</head>
+<body>
+
+<div class="header">
+	<div class="wrapper">
+<!-- 		<div class="language-bar">
+	<span>En</span>
+	<a href="#">Ru</a>
+</div> -->
+
+		<a href="index.html" class="logo-link"></a>
+		<a href="documentation.html" class="menu-link documentation">Documentation</a>
+		<!-- <a href="demo.html" class="menu-link demo">Demo</a> -->
+        <span href="faq.html" class="menu-link faq">FAQ</span>
+	  	<a href="contact.html" class="menu-link contact">Contact</a>
+	  	<!-- <a href="#" class="menu-link discus">Discus</a> -->
+	</div>
+</div>
+
+<div class="wrapper faq-wrapper">
+
+    <h2 id="FAQ">FAQ</h2>
+
+
+<div class="faq-q">
+    <p><strong>Q</strong>: How can I find out what views are visible on the screen?</p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: querySelectorAll(&laquo;[view]&raquo;);</p>
+</div>
+
+<div class="faq-q">
+    <p><strong>Q</strong>: How can I get the link to the HTML-element-container, which contains the view?</p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: querySelector(&laquo;[view=&#39;viewID&#39;]&raquo;);</p>
+</div>
+
+<div class="faq-q">
+    <p><strong>Q</strong>: How can I get the list of all instantiated views?</p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: RAD.core.getStartedViews();</p>
+    <p>Fortunately (or not) we had no real necessity to call this method.</p>
+</div>
+
+<div class="faq-q">
+    <p><strong>Q</strong>: How can I get the instance of any application module?</p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: In any application part it is possible to get a direct link to any registered application module (view or service) through a direct link to the core:</p>
+<pre class="prettyprint linenums">
+RAD.core.getView(viewID, extras);
+RAD.core.getService(viewID);
+</pre>
+    <p>Please consider that architecture of a <strong>RAD.js</strong> application presupposes weak coherence of modules and dynamic creation and elimination of application parts; that is why it is not recommended to use this mechanism.
+        It is so because these methods will return to you a link to an instance of an already existing module with indicated ID, or will create a new one. If you save this link, for example, in the attribute of your view, some other part of your application, again through methods of the core, can delete a module instance, then instantiate it with other data or model.
+        As a result there will be strong coherence and a link to the module that is already eliminated and is not used anywhere. It could be recommended to use methods of the core only in the application object. Thus all the work of creating and eliminating modules will be centralized in one place, and it will be easier to detect logical errors.</p>
+</div>
+
+<div class="faq-q">
+    <p><strong>Q</strong>: Can modules be considered as Backbone.View?</p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: No, but they are based on Backbone.View and have similar tasks, the main of them is displaying the module on the page.</p>
+</div>
+
+<div class="faq-q">
+    <p><strong>Q</strong>:  What is <strong>channel</strong>? Does every module have its own channel? How are <strong>subscribe</strong> and <strong>publish</strong> in a particular channel executed? There is a message published in the channel; must the module listening to the channel and waiting for this message react to it?</p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: Channel consists of a publisher, a subscriber module and a mediator. The messages that these components exchange are events (&#39;&#39;commands&#39;&#39;, &#39;&#39;intentions&#39;&#39;).</p>
+</div>
+
+
+<div class="faq-q">
+    <p><strong>Q</strong>: What is <strong>extras?</strong></p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: Additional data transferred to view during publishing a message through navigator. </p>
+</div>
+
+
+<div class="faq-q">
+    <p><strong>Q</strong>: To which messages are modules subscribed during registration? </p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>:  To events, names of which start with <strong>&quot;view.&quot; + module name</strong>. Upon publishing such a message, <a href="#">onReceiveMsg</a> of this module is called.</p>
+</div>
+
+
+<div class="faq-q">
+    <p><strong>Q</strong>: What is <strong>backstack</strong>? How does it work and what options must be set for its correct work? </p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: It is a component of the <strong>router</strong> plugin, which allows to dynamically memorize layout of views on the screen for a particular session, using browser&#39;s <em>history API</em> or internal realization; thus it allows to return to previous positions of modules.</p>
+    <p>To use backstack, it is enough to indicate the parameter <strong>backstack: true</strong> in view change query. For further details ref. <a href="#">backstack</a>.</p>
+</div>
+
+<div class="faq-q">
+    <p><strong>Q</strong>: Will animation of child modules work, if set this way?</p>
+<pre class="prettyprint linenums">
+RAD.views.ParentWidget = RAD.Blanks.View.extend({
+    url:&#39;source/views/parent_widget/parent_widget.html&#39;,
+    children: [
+        {
+            container_id: &#39;.content&#39;,
+            content: &quot;view.inner_first_widget&quot;,
+            animation: &#39;slide&#39;
+		},
+        {
+            container_id: &#39;.top&#39;,
+            content: &quot;view.inner_third_widget&quot;,
+            animation: &#39;fade&#39;
+        }
+    ]
+});
+</pre>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: Yes, but it should not be used this way because it won&#39;t look good visually.</p>
+</div>
+
+<div class="faq-q">
+    <p><strong>Q</strong>: What happens to child modules during rendering of the parent module?</p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: During the very first rendering of the parent module the following happens:</p>
+    <ul>
+        <li>
+            <p>Callback <strong>onStartRender()</strong> (if defined);</p>
+        </li>
+        <li>
+            <p>Rendering of the module;</p>
+        </li>
+        <li>
+            <p>Attachment of child modules;</p>
+        </li>
+        <li>
+            <p>Callback <strong>onEndRender()</strong> (if defined).</p>
+        </li>
+    </ul>
+    <p>During the repeated rendering, pre-detachment of child modules is added to order of actions:</p>
+    <p>Thus only the parent module is rerendered, while child modules are not.</p>
+    <ul>
+        <li>
+            <ul>
+                <li>
+                    <p>Callback <strong>onStartRender()</strong> (if defined);</p>
+                </li>
+                <li>
+                    <p>Detachment of child modules;</p>
+                </li>
+                <li>
+                    <p>Rendering of the module;</p>
+                </li>
+                <li>
+                    <p>Attachment of child modules;</p>
+                </li>
+                <li>
+                    <p>Callback <strong>onEndRender()</strong> (if defined).</p>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div class="faq-q">
+    <p><strong>Q</strong>: Can iScroll be attached to a child HTML-element of a module during display of this module?</p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: Yes, you must indicate the &quot;<strong>scroll-view</strong>&quot; class for the iScroll container.</p>
+</div>
+
+<div class="faq-q">
+    <p><strong>Q</strong>: What iScroll events are there?</p>
+</div>
+<div class="faq-a">
+    <p><strong>A</strong>: Ref. iScroll4 documentation.</p>
+</div>
+
+</div>
+<script src="prettify/prettify.js"></script>
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/main.js"></script>
+
+<script>prettyPrint();</script>
+
+		
+</body>
+</html>

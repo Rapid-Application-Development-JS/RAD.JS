@@ -1,0 +1,39 @@
+<div class="page">
+    <div class="page-content scroll-view">
+        <div class="page-scroll-body">
+            <div class="bar" data-template="true">
+                {{# _.each(model, function (cat) { }}
+                <h3 class="stat-header">{{ cat.name }}</h3>
+				<div class="stat-block clearfix">
+                    <div class="bar-holder">
+					<div class="chart-legend-holder">
+						<ul class="chart-legend">
+							<li>{{ cat.cardsCount }} Cards</li>
+							<li class="color-block-holder">
+                                <span class="color-block" style="background-color: rgb(12,181,0); width: {{ Math.round(cat.know * 100) }}%"></span>
+                                <div class="percentage">{{ Math.round(cat.know * 100) }}% KNOW</div>
+                            </li>
+							<li class="color-block-holder">
+                                <span class="color-block" style="background-color: rgb(178,142,0); width: {{ Math.round(cat.unsure * 100) }}%"></span>
+                                <div class="percentage">{{ Math.round(cat.unsure * 100) }}% NOT SURE</div>
+                            </li>
+							<li class="color-block-holder">
+                                <span class="color-block" style="background-color: rgb(183,3,0); width: {{ Math.round(cat.dontKnow * 100) }}%"></span>
+                                <div class="percentage">{{ Math.round(cat.dontKnow * 100) }}% DON'T KNOW</div>
+                            </li>
+							<li class="color-block-holder">
+                                <span class="color-block" style="background-color: rgb(0,145,186); width: {{ Math.round(cat.unanswered * 100) }}%"></span>
+                                <div class="percentage">{{ Math.round(cat.unanswered * 100) }}% UNANSWERED</div>
+                            </li>
+						</ul>
+					</div>
+                </div>
+				</div>
+                {{# }); }}
+            </div>
+        </div>
+    </div>
+    <div class="footer-bar page-footer">
+        <div class="col-6"><button class="btn btn-bar btn-red btn-reset">Reset<br>progress</button></div>
+    </div>
+</div>

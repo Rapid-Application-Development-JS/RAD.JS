@@ -1,0 +1,30 @@
+<div class="card-page" data-template="true">
+    <span class="font-awesome icon-arrows icon-left">&#xF053</span>
+    <div class="question-holder show">
+            <div class="question scroll-view">
+                <div class="scroll-view-body">
+                    {{# if (data.get('questionImg')) { }}
+                    <div class="thumb-holder">
+                        <div class="btn-info btn-show-image show-qst-image" data-src="{{ data.get('questionImg') }}"></div>
+                        <img src="{{ data.get('questionImgThumb') }}" />
+                    </div>
+                    {{# } }}
+                    <p>{{ data.get('question') }}</p>
+                </div>
+            </div>
+    </div>
+    <div class="answer-holder">
+        <div class="answer scroll-view">
+            <div class="scroll-view-body">
+                {{# if (data.get('answerImg')) { }}
+                <div class="thumb-holder">
+                    <div class="btn-info btn-show-image show-ans-image" data-src="{{ data.get('answerImg') }}"></div>
+                    <img src="{{ data.get('answerImgThumb') }}">
+                </div>
+                {{# } }}
+                <p>{{ data.get('answer') }}</p>
+            </div>
+        </div>
+    </div>
+    <span class="font-awesome icon-arrows icon-right">&#xF054</span>
+</div>

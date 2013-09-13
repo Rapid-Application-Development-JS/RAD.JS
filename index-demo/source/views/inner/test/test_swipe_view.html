@@ -1,0 +1,23 @@
+<div id="progressbar" data-template="true">
+    <div style='width:{{ this.model.cardIndex / (this.model.length - 1) * 100 }}%'></div>
+</div>
+<div class="question-counter" data-template="true">{{ this.model.cardIndex + 1 }}/{{ this.model.length }}</div>
+<div class="swipe-container">
+    <div class="swipe-0"></div>
+    <div class="swipe-1"></div>
+    <div class="swipe-2"></div>
+</div>
+<div class="variants-holder tab-bar" data-template="true">
+    <div class="col-4 variant {{ this.model.cardStatus === 'know' ? 'active' : '' }}" data-id="{{ this.model.cardIndex }}" data-status="know">
+        <span class="variant-text">know</span>
+        <span class="font-awesome">&#xF00C</span>
+    </div>
+    <div class="col-4 variant {{ this.model.cardStatus === 'unsure' ? 'active' : '' }}" data-id="{{ this.model.cardIndex }}" data-status="unsure">
+        <span class="variant-text">unsure</span>
+        <span class="font-awesome">&#xF128</span>
+    </div>
+    <div class="col-4 variant {{ this.model.cardStatus === 'dontknow' ? 'active' : '' }}" data-id="{{ this.model.cardIndex }}" data-status="dontknow">
+        <span class="variant-text">don't know</span>
+        <span class="font-awesome">&#xF00D</span>
+    </div>
+</div>

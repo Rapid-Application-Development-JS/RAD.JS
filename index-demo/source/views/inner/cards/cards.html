@@ -1,0 +1,20 @@
+<div class="page">
+    <div class="page-content scroll-view cardsView">
+        <div class="page-scroll-body cardsView">
+            <ul class="list cards-cat-list" data-template="true">
+                {{# _.each(model, function (cat) { }}
+                <li class="list-item category" data-id="{{ cat.id }}">
+                    <label>{{ cat.name }}</label>
+                    <span class="cards-number">Cards: {{ RAD.models.cards.cardsByCat[cat.id].length }}</span>
+                    <span class="chkbox"></span>
+                </li>
+                {{# }); }}
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bar page-footer cardsView">
+        <div class="col-4 resetButton"><button class="btn btn-bar btn-red btn-filter-clear">Reset<br>selection</button></div>
+        <div class="col-4 counter"><span class="cats-cnt">0 Categories</span><br><span class="cards-cnt">0 Cards</span></div>
+        <div class="col-4 startButton"><button class="btn btn-bar btn-green btn-start-test">Start<br>test</button></div>
+    </div>
+</div>

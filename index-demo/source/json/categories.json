@@ -1,0 +1,111 @@
+[
+    {
+        "id": 0,
+        "name": "Rules for pedestrians"
+    },
+    {
+        "id": 1,
+        "name": "Rules for users of powered wheelchairs and powered mobility scooters"
+    },
+    {
+        "id": 2,
+        "name": "Rules about animals"
+    },
+    {
+        "id": 3,
+        "name": "Rules for cyclists"
+    },
+    {
+        "id": 4,
+        "name": "Rules for motorcyclists"
+    },
+    {
+        "id": 5,
+        "name": "Rules for drivers and motorcyclists"
+    },
+    {
+        "id": 6,
+        "name": "General rules, techniques and advice for all drivers and riders"
+    },
+    {
+        "id": 7,
+        "name": "Using the road"
+    },
+    {
+        "id": 8,
+        "name": "Road users requiring extra care"
+    },
+    {
+        "id": 9,
+        "name": "Driving in adverse weather conditions"
+    },
+    {
+        "id": 10,
+        "name": "Waiting and parking"
+    },
+    {
+        "id": 11,
+        "name": "Motorways"
+    },
+    {
+        "id": 12,
+        "name": "Breakdowns and incidents"
+    },
+    {
+        "id": 13,
+        "name": "Road works"
+    },
+    {
+        "id": 14,
+        "name": "Level crossings"
+    },
+    {
+        "id": 15,
+        "name": "Tramways"
+    },
+    {
+        "id": 16,
+        "name": "Direction signs on roads and motorways"
+    },
+    {
+        "id": 17,
+        "name": "Information signs"
+    },
+    {
+        "id": 18,
+        "name": "Light signals controlling traffic"
+    },
+    {
+        "id": 19,
+        "name": "Road markings"
+    },
+    {
+        "id": 20,
+        "name": "Road signs giving orders"
+    },
+    {
+        "id": 21,
+        "name": "Road works signs"
+    },
+    {
+        "id": 22,
+        "name": "Signals by authorised persons"
+    },
+    {
+        "id": 23,
+        "name": "Signals to other road users"
+    },
+    {
+        "id": 24,
+        "name": "Traffic signs"
+    },
+    {
+        "id": 25,
+        "name": "Vehicle markings"
+    },
+    {
+        "id": 26,
+        "name": "Warning signs"
+    }
+
+]
