@@ -24,7 +24,8 @@ RAD.view("view.main_screen", RAD.Blanks.View.extend({
         'tapcancel .content-container': 'tapChancel',
         'tapclear .content-container': 'tapClear',
 
-        'tap .content-overlay': 'toggleMenu',
+        'tap .content-overlay': 'closeOnTap',
+        'tapmove .content-overlay': 'closeMenu',
         'tap .toggle-menu': 'toggleMenu',
 
         'tap .btn-done': 'onDone'
@@ -41,6 +42,21 @@ RAD.view("view.main_screen", RAD.Blanks.View.extend({
         this.changePosition(this.contentPosition);
 
         this.menuWidth = this.$('.menu-container').width();
+
+        $('body').on("mouseleave", function () {
+
+            var customEvent = document.createEvent('Event');
+
+            customEvent.initEvent('mouseup', true, true);
+            customEvent['mouseup'] = {
+                clientX: 100,
+                clientY: 100,
+                screenX: 100,
+                screenY: 1000,
+                timeStamp: (new Date()).getTime()
+            };
+            document.body.dispatchEvent(customEvent);
+        });
     },
 
     changePosition: function (position) {
@@ -75,7 +91,9 @@ RAD.view("view.main_screen", RAD.Blanks.View.extend({
             eventName = 'webkitTransitionEnd oTransitionEnd transitionend msTransitionEnd';
 
         function onEnd(e) {
-            if (e && e.target !== $container.get(0)) {return; }
+            if (e && e.target !== $container.get(0)) {
+                return;
+            }
 
             $container.removeClass('swipe-animation');
             $container.off(eventName, onEnd);
@@ -110,9 +128,9 @@ RAD.view("view.main_screen", RAD.Blanks.View.extend({
         this.startY = e.originalEvent.tapdown.clientY;
         this.subContentName = this.children[1].content;
         var view = RAD.core.getView(this.subContentName);
-        if (this.startX < this.tapWidth && ( this.children[1].content !== 'view.test' || this.startY < this.tapHeight )) {
+        if (this.startX < this.tapWidth && (this.children[1].content !== 'view.test' || this.startY < this.tapHeight)) {
             this.isRunning = true;
-            if ( view && this.subContentName !== 'view.test') {
+            if (view && this.subContentName !== 'view.test') {
                 view.mScroll.disable();
             }
             this.publish("view.test.block", null);
@@ -128,10 +146,12 @@ RAD.view("view.main_screen", RAD.Blanks.View.extend({
 
         this.isSwipe = true;
 
-        if (!this.isRunning) {return; }
+        if (!this.isRunning) {
+            return;
+        }
         //calculate new containers positions
         if ((this.contentPosition + delta) >= 0) {
-        this.changePosition(this.contentPosition + delta);
+            this.changePosition(this.contentPosition + delta);
         }
         //for next move function
         this.startX = X;
@@ -171,6 +191,15 @@ RAD.view("view.main_screen", RAD.Blanks.View.extend({
         this.publish("view.test.unblock", null);
     },
 
+    closeOnTap: function (e) {
+        "use strict";
+        this.startX = e.originalEvent.tap.clientX;
+        this.startY = e.originalEvent.tap.clientY;
+        if (this.startX > 250 && this.startX < 390 && this.startY < 70) {
+            this.closeMenu();
+        }
+    },
+
     closeMenu: function () {
         "use strict";
         this.prepareAnimation();
@@ -191,19 +220,24 @@ RAD.view("view.main_screen", RAD.Blanks.View.extend({
     },
 
     doneBtnShow: function () {
+        "use strict";
         this.$headerDoneBtn.addClass('show');
-        this.$headerDoneIcon.addClass('show')
+        this.$headerDoneIcon.addClass('show');
     },
 
     doneBtnHide: function () {
+        "use strict";
         this.$headerDoneBtn.removeClass('show');
-        this.$headerDoneIcon.removeClass('show')
+        this.$headerDoneIcon.removeClass('show');
+
     },
 
     onDone: function () {
+        "use strict";
         this.publish('buttons.done');
     },
     changeTitle: function (data) {
+        "use strict";
         if (!!data && typeof data.title === 'string') {
             this.$headerTitle.text(data.title);
         }

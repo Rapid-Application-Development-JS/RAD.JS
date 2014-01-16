@@ -1,6 +1,7 @@
 RAD.view('view.confirm_dialog', RAD.Blanks.View.extend({
 
     url: 'source/views/dialog/confirm_dialog.html',
+    className: 'topcoat-overlay-bg',
 
     events: {
         'tap .btn-confirm': 'onConfirm',
@@ -14,11 +15,13 @@ RAD.view('view.confirm_dialog', RAD.Blanks.View.extend({
     })),
 
     onNewExtras: function (data) {
+        "use strict";
         this.model.set('msg', data.msg);
         this.fromViewID = data.fromViewID;
     },
 
     onConfirm: function () {
+        "use strict";
         var ch = this.fromViewID + '.confirm';
 
         this.publish(ch);
@@ -28,6 +31,7 @@ RAD.view('view.confirm_dialog', RAD.Blanks.View.extend({
     },
 
     onCancel: function () {
+        "use strict";
         this.publish('navigation.dialog.close', {
             content: this.viewID
         });
@@ -37,6 +41,7 @@ RAD.view('view.confirm_dialog', RAD.Blanks.View.extend({
 RAD.view('view.info_dialog', RAD.Blanks.View.extend({
 
     url: 'source/views/dialog/info_dialog.html',
+    className: 'topcoat-overlay-bg',
 
     events: {
         'tap .btn-confirm': 'onConfirm'
@@ -49,10 +54,12 @@ RAD.view('view.info_dialog', RAD.Blanks.View.extend({
     })),
 
     onNewExtras: function (data) {
+        "use strict";
         this.model.set('msg', data.msg);
     },
 
     onConfirm: function () {
+        "use strict";
         this.publish('navigation.dialog.close', {
             content: this.viewID
         });

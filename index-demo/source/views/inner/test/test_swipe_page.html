@@ -1,11 +1,12 @@
 <div class="card-page" data-template="true">
-    <span class="font-awesome icon-arrows icon-left">&#xF053</span>
-    <div class="question-holder show">
+    <div class="topcoat-icon-font icon-arrows icon-back">&#xe04f;</div>
+    <div class="holder question-holder topcoat-text-input--large show">
             <div class="question scroll-view">
                 <div class="scroll-view-body">
                     {{# if (data.get('questionImg')) { }}
                     <div class="thumb-holder">
-                        <div class="btn-info btn-show-image show-qst-image" data-src="{{ data.get('questionImg') }}"></div>
+                        <div class="btn-show-image show-qst-image" data-src="{{ data.get('questionImg') }}"></div>
+                        <div class="topcoat-icon-font icon-expand">&#xe038;</div>
                         <img src="{{ data.get('questionImgThumb') }}" />
                     </div>
                     {{# } }}
@@ -13,12 +14,13 @@
                 </div>
             </div>
     </div>
-    <div class="answer-holder">
+    <div class="holder answer-holder topcoat-text-input--large">
         <div class="answer scroll-view">
             <div class="scroll-view-body">
                 {{# if (data.get('answerImg')) { }}
                 <div class="thumb-holder">
-                    <div class="btn-info btn-show-image show-ans-image" data-src="{{ data.get('answerImg') }}"></div>
+                    <div class="btn-show-image show-ans-image" data-src="{{ data.get('answerImg') }}"></div>
+                    <div class="topcoat-icon-font icon-expand">&#xe038;</div>
                     <img src="{{ data.get('answerImgThumb') }}">
                 </div>
                 {{# } }}
@@ -26,5 +28,5 @@
             </div>
         </div>
     </div>
-    <span class="font-awesome icon-arrows icon-right">&#xF054</span>
+    <div class="topcoat-icon-font icon-arrows icon-next">&#xe026;</div>
 </div>

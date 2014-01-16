@@ -55,6 +55,7 @@ time, mark, audio, video {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+    cursor: pointer;
 }
 
 article, aside, details, figcaption, figure,
