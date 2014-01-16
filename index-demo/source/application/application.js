@@ -1,4 +1,5 @@
 RAD.namespace('utils.Query', function (context) {
+    "use strict";
     var query = this,
         stack = [];
 
@@ -52,6 +53,7 @@ RAD.application(function (core) {
 
     function resetCards(previousResult, nextFn) {
         RAD.models.cards.resetCards(previousResult);
+        app.loadProgress();
         nextFn(null);
     }
 
@@ -82,7 +84,8 @@ RAD.application(function (core) {
     app.flags = RAD.model('flags', Backbone.Model.extend({
         defaults: {
             "testRunning": false,
-            "progressSaved": false
+            "progressSaved": false,
+            "testFinished": false
         }
     }));
 

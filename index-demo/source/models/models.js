@@ -31,6 +31,7 @@ RAD.model('CatsCollection', Backbone.Collection.extend({
     },
 
     merge: function (data) {
+        "use strict";
         var self = this;
         _.each(data, function (mod) {
             if (self.get(mod.id)) {
@@ -39,10 +40,12 @@ RAD.model('CatsCollection', Backbone.Collection.extend({
         });
     },
     resetCat: function (object) {
+        "use strict";
         this.reset(object);
         this.resetCatNames();
     },
     resetCatNames: function () {
+        "use strict";
         var self = this;
         self.catNames = {};
         _.each(self.models, function (element) {
@@ -58,6 +61,7 @@ RAD.model('CardsCollection', Backbone.Collection.extend({
         return card.get("id");
     },
     merge: function (data) {
+        "use strict";
         var self = this;
         _.each(data, function (mod) {
             if (self.get(mod.id)) {
@@ -70,10 +74,12 @@ RAD.model('CardsCollection', Backbone.Collection.extend({
         });
     },
     resetCards: function (object) {
+        "use strict";
         this.reset(object);
         this.groupCardsByCats();
     },
     groupCardsByCats: function () {
+        "use strict";
         var self = this;
         self.cardsByCat = self.groupBy('catRef');
     }
@@ -97,10 +103,8 @@ RAD.model('StatsCollection', Backbone.Collection.extend({
             "cardsCount": 0
         }
     }),
-    initialize: function () {
-
-    },
     refreshStats: function () {
+        "use strict";
         var self = this,
             cardsByCat = RAD.models.cards.cardsByCat,
             cardsColl = RAD.models.cards,
@@ -110,16 +114,16 @@ RAD.model('StatsCollection', Backbone.Collection.extend({
             "id": -1,
             "name": "All categories",
             "know": cardsColl.filter(function (card) {
-                return card.get('status') === 'know'
+                return card.get('status') === 'know';
             }).length / cardsColl.length,
             "unsure": cardsColl.filter(function (card) {
-                return card.get('status') === 'unsure'
+                return card.get('status') === 'unsure';
             }).length / cardsColl.length,
             "dontKnow": cardsColl.filter(function (card) {
-                return card.get('status') === 'dontknow'
+                return card.get('status') === 'dontknow';
             }).length / cardsColl.length,
             "unanswered": cardsColl.filter(function (card) {
-                return card.get('status') === 'unanswered'
+                return card.get('status') === 'unanswered';
             }).length / cardsColl.length,
             "cardsCount": cardsColl.length
         });
@@ -130,16 +134,16 @@ RAD.model('StatsCollection', Backbone.Collection.extend({
                     "name": cat.get('name'),
                     "cardsCount": cardsByCat[cat.get('id')].length,
                     "know": (cardsByCat[cat.get('id')].filter(function (card) {
-                        return card.get('status') === 'know'
+                        return card.get('status') === 'know';
                     }).length / cardsByCat[cat.get('id')].length),
                     "unsure": (cardsByCat[cat.get('id')].filter(function (card) {
-                        return card.get('status') === 'unsure'
+                        return card.get('status') === 'unsure';
                     }).length / cardsByCat[cat.get('id')].length),
                     "dontKnow": (cardsByCat[cat.get('id')].filter(function (card) {
-                        return card.get('status') === 'dontknow'
+                        return card.get('status') === 'dontknow';
                     }).length / cardsByCat[cat.get('id')].length),
                     "unanswered": (cardsByCat[cat.get('id')].filter(function (card) {
-                        return card.get('status') === 'unanswered'
+                        return card.get('status') === 'unanswered';
                     }).length / cardsByCat[cat.get('id')].length)
                 });
             }

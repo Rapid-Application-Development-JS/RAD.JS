@@ -7,17 +7,14 @@
     <div class="swipe-1"></div>
     <div class="swipe-2"></div>
 </div>
-<div class="variants-holder tab-bar" data-template="true">
-    <div class="col-4 variant {{ this.model.cardStatus === 'know' ? 'active' : '' }}" data-id="{{ this.model.cardIndex }}" data-status="know">
-        <span class="variant-text">know</span>
-        <span class="font-awesome">&#xF00C</span>
+<div class="variants-holder tab-bar topcoat-button-bar" data-template="true">
+    <div class="variant {{ this.model.cardStatus === 'know' ? 'active' : '' }} topcoat-button-bar__item" data-id="{{ this.model.cardIndex }}" data-status="know">
+        <button class="topcoat-button-bar__button"><span class="topcoat-icon-font variant-know">&#xe042;</span><span class="variant-text">know</span></button>
     </div>
-    <div class="col-4 variant {{ this.model.cardStatus === 'unsure' ? 'active' : '' }}" data-id="{{ this.model.cardIndex }}" data-status="unsure">
-        <span class="variant-text">unsure</span>
-        <span class="font-awesome">&#xF128</span>
+    <div class="variant {{ this.model.cardStatus === 'unsure' ? 'active' : '' }} topcoat-button-bar__item" data-id="{{ this.model.cardIndex }}" data-status="unsure">
+        <button class="topcoat-button-bar__button"><span class="topcoat-icon-font variant-unsure">&#xe018;</span><span class="variant-text">unsure</span></button>
     </div>
-    <div class="col-4 variant {{ this.model.cardStatus === 'dontknow' ? 'active' : '' }}" data-id="{{ this.model.cardIndex }}" data-status="dontknow">
-        <span class="variant-text">don't know</span>
-        <span class="font-awesome">&#xF00D</span>
+    <div class="variant {{ this.model.cardStatus === 'dontknow' ? 'active' : '' }} topcoat-button-bar__item" data-id="{{ this.model.cardIndex }}" data-status="dontknow">
+        <button class="topcoat-button-bar__button"><span class="topcoat-icon-font variant-dont">&#xe03f;</span><span class="variant-text">don't know</span></button>
     </div>
 </div>

@@ -142,7 +142,9 @@ RAD.namespace("RAD.views.SwipeAdapterView", RAD.Blanks.View.extend({
         var X = e.originalEvent.tapmove.clientX,
             delta = X - this.startX;
 
-        if(!this.isMoving && Math.abs(delta) < 10) return;
+        if (!this.isMoving && Math.abs(delta) < 10) {
+            return;
+        }
         this.isMoving = true;
 
         //calculate new containers positions
@@ -273,6 +275,46 @@ RAD.namespace("RAD.views.SwipeAdapterView", RAD.Blanks.View.extend({
         }
     },
 
+    swipeToByButton: function (direction) {
+        "use strict";
+        var position, containerWidth = this.containerWidth,
+            delta = 0, pages_count = this.getPageCount();
+
+        if (!this.isDown) {
+            return;
+        }
+
+        if (!(direction === "left" || direction === "right")) {
+            return;
+        }
+
+        this.swipeRunning = true;
+        this.isDown = false;
+
+        //calculate delta shift
+        position = containerWidth;
+        if (direction === "right") {
+            delta = position;
+        } else {
+            delta = -position;
+        }
+
+//        check left && right limits
+
+        if (this.containerPosition > 0) {
+            direction = "left";
+            delta = -this.containerPosition;
+        } else if ((-parseInt(this.containerPosition / containerWidth, 10) === (pages_count - 1))) {
+            direction = "right";
+            delta = position;
+        }
+
+        this.prepareAnimation(direction);
+        this.onSwipeStart();
+        this.changeContainerPosition(this.containerPosition + delta);
+        $('.overlay').removeClass('show');
+    },
+
     swipeTo: function (direction) {
         "use strict";
         var position, containerWidth = this.containerWidth,
@@ -352,6 +394,8 @@ RAD.namespace("RAD.views.SwipeAdapterView", RAD.Blanks.View.extend({
         });
     },
     refreshPageScroll: function ($html) {
+        "use strict";
+
         var el = $html.get(0);
         if (el && el.mScroll0) {
             el.mScroll0.refresh();
@@ -407,10 +451,12 @@ RAD.view("view.test", RAD.views.SwipeAdapterView.extend({
     },
 
     onInitialize: function () {
+        "use strict";
         this.subscribe('buttons.done', this.onDone, this);
     },
 
     onNewExtras: function (data) {
+        "use strict";
         var self = this;
         if (!!data.cards) {
             self.model.reset(data.cards);
@@ -422,8 +468,9 @@ RAD.view("view.test", RAD.views.SwipeAdapterView.extend({
     },
 
     onStartAttach: function () {
-        var self = this;
+        "use strict";
 
+        var self = this;
         if (!self.application.flags.get('testRunning')) {
             self.clearState();
         }
@@ -432,6 +479,7 @@ RAD.view("view.test", RAD.views.SwipeAdapterView.extend({
         });
     },
     onEndDetach: function () {
+        "use strict";
         this.$el.find('.variants-holder').off('tap.variant', '.variant');
     },
     getData: function (position) {
@@ -443,32 +491,49 @@ RAD.view("view.test", RAD.views.SwipeAdapterView.extend({
         "use strict";
         //when page loading
         var self = this,
-            modelLength = this.model.length;
-        if (index == 0) {
-            $(element).find('.icon-left').addClass('hidden');
+            modelLength = this.model.length,
+            $left = $(element).find('.icon-back'),
+            $right = $(element).find('.icon-next'),
+            $question = $(element).find('.question-holder'),
+            $answer = $(element).find('.answer-holder');
+
+        if (index === 0) {
+            $left.addClass('hidden');
         }
-        if (index == ( modelLength - 1 ) || modelLength == 1) {
-            $(element).find('.icon-right').addClass('hidden');
+        if (index === (modelLength - 1) || modelLength === 1) {
+            $right.addClass('hidden');
         }
-        $(element).find('.question-holder').on('tap.btn_' + index, function (e) {
+
+        $question.on('tap', function (e) {
             e.stopPropagation();
-            $(element).find('.answer-holder').addClass('show');
-            $(element).find('.question-holder').removeClass('show');
+            $answer.addClass('show');
+            $question.removeClass('show');
         });
-        $(element).find('.answer-holder').on('tap.btn_' + index, function (e) {
+        $answer.on('tap', function (e) {
             e.stopPropagation();
-            $(element).find('.question-holder').addClass('show');
-            $(element).find('.answer-holder').removeClass('show');
+            $question.addClass('show');
+            $answer.removeClass('show');
         });
-        $(element).find('.btn-show-image').on('tap.btn_' + index, function (e) {
+        $(element).find('.btn-show-image').on('tap', function (e) {
             e.stopPropagation();
             self.displayFullImage(e);
         });
+
+        $left.on('tap', function (e) {
+            e.stopPropagation();
+            self.swipeToByButton('right');
+        });
+        $right.on('tap', function (e) {
+            e.stopPropagation();
+            self.swipeToByButton('left');
+        });
     },
     onUnloadPage: function (index, element) {
-        $(element).find('.question-holder').off('tap.btn_' + index);
-        $(element).find('.answer-holder').off('tap.btn_' + index);
-        $(element).find('.btn-show-image').off('tap.btn_' + index);
+        $(element).find('.question-holder').off('tap');
+        $(element).find('.answer-holder').off('tap');
+        $(element).find('.btn-show-image').off('tap');
+        $(element).find('.icon-left').off('tap');
+        $(element).find('.icon-right').off('tap');
     },
     onSwipeEnd: function (html, index, lastHtml) {
         "use strict";
@@ -498,6 +563,7 @@ RAD.view("view.test", RAD.views.SwipeAdapterView.extend({
     },
 
     answer: function (e) {
+        "use strict";
         e.stopPropagation();
         var target = $(e.currentTarget),
             i = this.model.cardIndex;
@@ -507,6 +573,7 @@ RAD.view("view.test", RAD.views.SwipeAdapterView.extend({
     },
 
     displayFullImage: function (e) {
+        "use strict";
         var target = $(e.currentTarget),
             imgSource = target.data('src'),
             options = {
@@ -520,6 +587,7 @@ RAD.view("view.test", RAD.views.SwipeAdapterView.extend({
     },
 
     onDone: function () {
+        "use strict";
         var options = {
                 content: 'view.confirm_dialog',
                 extras: {
@@ -531,6 +599,7 @@ RAD.view("view.test", RAD.views.SwipeAdapterView.extend({
     },
 
     finishTest: function () {
+        "use strict";
         var self = this;
 
         self.model.each(function (card) {
@@ -540,6 +609,7 @@ RAD.view("view.test", RAD.views.SwipeAdapterView.extend({
         self.application.saveProgress();
 
         self.application.flags.set('testRunning', false);
+        self.application.flags.set('testFinished', true);
         self.publish('view.main_screen.doneBtnHide');
         self.publish('navigation.show', {
             content: 'view.stats',

@@ -4,48 +4,46 @@ RAD.view("view.stats", RAD.Blanks.ScrollableView.extend({
         'tap .btn-reset': 'onResetStat'
     },
     onInitialize: function () {
+        "use strict";
         this.model = new RAD.models.StatsCollection;
     },
-    onNewExtras: function (data) {
+    onEndAttach: function () {
+        "use strict";
         this.refreshStats();
         this.render();
     },
-    onEndRender: function () {
-        this.buildChart();
-    },
     onReceiveMsg: function (channel, data) {
+        "use strict";
         var self = this,
             parts = channel.split('.');
 
         switch (parts[2]) {
-            case 'refresh':
-				self.refreshStats();
-                break;
-            case 'confirm':
-                self.clearProgress();
-                break;
+        case 'refresh':
+            self.refreshStats();
+            break;
+        case 'confirm':
+            self.clearProgress();
+            break;
         }
     },
     refreshStats: function () {
-		this.model.refreshStats();
-	},
-    buildChart: function () {
-        var stats = this.model,
-            keys = ['unanswered', 'know', 'unsure', 'dontKnow'],
-            color = RAD.models.colors,
-            chrtCanvases = this.$('.pie-chart');
+        "use strict";
+        this.model.refreshStats();
     },
     onResetStat: function (e) {
-        var options = {
-            content: 'view.confirm_dialog',
-            extras: {
-                msg: 'Do you want to reset progress?',
-                fromViewID: this.viewID
-            }
-        };
-        this.publish('navigation.dialog.show', options);
+        "use strict";
+        var self = this,
+            options = {
+                content: 'view.confirm_dialog',
+                extras: {
+                    msg: 'Do you want to reset progress?',
+                    fromViewID: self.viewID
+                }
+            };
+        self.publish('navigation.dialog.show', options);
     },
     clearProgress: function () {
+        "use strict";
         this.application.clearProgress();
         this.model.refreshStats();
     }

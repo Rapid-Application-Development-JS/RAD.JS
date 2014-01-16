@@ -1,6 +1,7 @@
 RAD.view('view.image_view', RAD.Blanks.View.extend({
 
     url: 'source/views/image_view/image_view.html',
+    className: 'topcoat-overlay-bg',
 
     model: new (Backbone.Model.extend({
         defaults: {
@@ -9,22 +10,25 @@ RAD.view('view.image_view', RAD.Blanks.View.extend({
     })),
 
     events: {
-        'tap .image-block': 'selfClose'
+        'tap .image-block': 'selfClose',
+        'tap .src-image': 'selfClose'
     },
 
     onNewExtras: function (data) {
+        "use strict";
         var src = data.src;
         this.model.set('src', src);
     },
 
     onStartAttach: function () {
+        "use strict";
         this.imageAutoZoom();
     },
-
     imageAutoZoom: function () {
+        "use strict";
         var img = this.$('.src-image').get(0),
             imgHolder = this.$('.zoom-view').get(0);
-        if (img.naturalHeight > (window.innerHeight * 0.75) - 40 || img.naturalWidth > (window.innerWidth) - 20) {
+        if (img.naturalHeight > (window.innerHeight * 0.80) - 40 || img.naturalWidth > (window.innerWidth * 0.80) - 20) {
             this.$el.imgIScroll = new window.iScroll(imgHolder, {
                 bounce: false,
                 momentum: false,
@@ -42,7 +46,6 @@ RAD.view('view.image_view', RAD.Blanks.View.extend({
                 },
                 onScrollStart: function (e) {
                     e.preventDefault();
-                    e.stopPropagation();
                 },
                 onScrollMove: function () {
                 },
@@ -53,6 +56,7 @@ RAD.view('view.image_view', RAD.Blanks.View.extend({
     },
 
     onEndDetach: function () {
+        "use strict";
         if (this.$el.imgIScroll) {
             this.$el.imgIScroll.destroy();
             this.$el.imgIScroll = null;
@@ -60,6 +64,7 @@ RAD.view('view.image_view', RAD.Blanks.View.extend({
     },
 
     selfClose: function () {
+        "use strict";
         this.publish('navigation.dialog.close', {content: this.viewID});
     }
 }));
