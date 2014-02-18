@@ -465,7 +465,6 @@ RAD.views.InnerFirstWidget = RAD.views.SwipeAdapterView.extend({
         var parts = channel.split('.');
         switch (parts[2]) {
         case 'block':
-            console.log('block');
             this.swipeRunning = true;
             break;
         case 'unblock':

@@ -2,7 +2,7 @@
     'use strict';
 
     var scripts = [
-        "../libs/iscroll-lite.js",
+        "../js/iscroll-lite.js",
 
         "source/application/application.js",
 

@@ -1,6 +1,4 @@
 RAD.plugin("plugin.router", function (core, id) {
-    'use strict';
-
     var self = {},
         router,
         stubStack = [],
@@ -80,8 +78,8 @@ RAD.plugin("plugin.router", function (core, id) {
         return result;
     }
 
-    function packURL(urlObj, timestamp) {
-        return encodeURIComponent(JSON.stringify(urlObj)).replace(/[!'()]/g, escape).replace(/\*/g, "%2A") + '$$$' + timestamp;
+    function packURL(urlObj, timestamp, animation) {
+        return encodeURIComponent(JSON.stringify(urlObj)).replace(/[!'()]/g, escape).replace(/\*/g, "%2A") + '$$$' + timestamp + '$$$' + animation;
     }
 
     function unpackURL(packURLString) {
@@ -91,6 +89,7 @@ RAD.plugin("plugin.router", function (core, id) {
         tmpArr = packURLString.split('$$$');
         result.urlObj = JSON.parse(decodeURIComponent((tmpArr[0] + '').replace(/\+/g, '%20')));
         result.timestamp = tmpArr[1];
+        result.animation = tmpArr[2];
 
         return result;
     }
@@ -210,16 +209,17 @@ RAD.plugin("plugin.router", function (core, id) {
             self.stack.push(newUrl);
         },
 
-        saveScoopeAsURL: function () {
+        saveScoopeAsURL: function (datawrapper) {
             var timestamp = +new Date().getTime(),
                 rootModule = getRootView(document.getElementsByTagName('body')[0]),
                 rootView = core.getView(rootModule.content),
+                animation = (datawrapper.animation) ? datawrapper.animation : core.options.defaultAnimation,
                 children = buildURL(rootView);
 
             if (children && children.length > 0) {
                 rootModule.children = children;
             }
-            this.navigate(packURL(rootModule, timestamp));
+            this.navigate(packURL(rootModule, timestamp, animation));
         },
 
         onNewTransition: function () {
@@ -310,6 +310,7 @@ RAD.plugin("plugin.router", function (core, id) {
                     }
                     differ = this.extractDiffer(unpackURL(this.currentURL).urlObj, unpackURL(param).urlObj);
                     differ.direction = this.toBack;
+                    differ.animation = this.toBack ? unpackURL(this.currentURL).animation : unpackURL(param).animation;
                     core.publish("navigation.back", differ);
 
                     this.lastURL = this.currentURL;
@@ -332,7 +333,7 @@ RAD.plugin("plugin.router", function (core, id) {
             break;
         case 'endTransition':
             if (router.pushToStackRequest) {
-                router.saveScoopeAsURL();
+                router.saveScoopeAsURL(data);
             }
             break;
         case 'back':

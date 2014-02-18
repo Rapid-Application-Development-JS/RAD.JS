@@ -1,5 +1,4 @@
 (function (document, window) {
-    'use strict';
     var defaultOptions = {
         defaultBackstack: false,
         backstackType: 'custom',
@@ -114,8 +113,38 @@
         return loader;
     }
 
+    function closest(element, className) {
+        var result;
+        if (element.classList && element.classList.contains(className)) {
+            result = element;
+        } else if (element.parentNode) {
+            result = closest(element.parentNode, className);
+        }
+        return result;
+    }
+
+    function preventBodyTouch(e) {
+        var tracker = this.scrollTracker;
+        if (!tracker.scrollView || (tracker.scrollRequest &&  ((e.touches[0].screenY > tracker.startIOSTouch && tracker.scrollView.scrollTop === 0) || (tracker.scrollView.scrollTop >= tracker.scrollEnd && e.touches[0].screenY < tracker.startIOSTouch)))) {
+            e.preventDefault();
+        }
+        tracker = null;
+    }
+
+    function startBodyTouch(e) {
+        var tracker = this.scrollTracker = this.scrollTracker || {};
+        tracker.scrollView = closest(e.target, 'native-scroll');
+        tracker.scrollRequest = false;
+        if (!!tracker.scrollView) {
+            tracker.startIOSTouch = e.touches[0].screenY;
+            tracker.scrollRequest = true;
+            tracker.scrollEnd = tracker.scrollView.firstElementChild.offsetHeight - tracker.scrollView.offsetHeight;
+        }
+        tracker = null;
+    }
+
     function prepareEnvironment() {
-        var isIPad = (/ipad/gi).test(window.navigator.appVersion),
+        var isIOS = navigator.userAgent.match(/(iPad|iPhone|iPod|iOS)/gi) ? true : false,
             isAndroid = (/android/gi).test(window.navigator.appVersion),
             overlay = document.querySelector('#overlay');
 
@@ -125,21 +154,19 @@
             escape:      /\{\{\{([\s\S]+?)\}\}\}/g         // {{{ title }}}
         };
 
-        // prevent scrolling
-        window.addEventListener('touchmove', function (e) {
-            e.preventDefault();
-        }, false);
-
         //disable text select
         document.body.onselectstart = function () {
             return false;
         };
 
         //setup specify device class
-        if (isIPad) {
-            window.document.body.className = 'i-pad';
+        if (isIOS) {
+            //ios prevent scroll bounce
+            window.addEventListener('touchstart', startBodyTouch, false);
+            window.addEventListener('touchmove', preventBodyTouch, false);
+            window.document.body.className += ' ios';
         } else if (isAndroid) {
-            window.document.body.className = 'android';
+            window.document.body.className += ' android';
         }
 
         //stopPropagation from overlay
@@ -160,7 +187,7 @@
             model = new Model();
         }
 
-        if(modelID.indexOf('RAD.models.') === -1){
+        if (modelID.indexOf('RAD.models.') === -1) {
             id = 'RAD.models.' + modelID;
         }
 

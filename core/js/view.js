@@ -51,22 +51,19 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
     listen: ['add', 'remove', 'fetch', 'sort', 'change', 'reset'],
 
     getChildren: function () {
-        'use strict';
         if (!this.children) {
             this.children = [];
         }
         return this.children;
     },
 
-    initialize: function () {
-        'use strict';
+    initialize: function (options) {
         var self = this,
             children,
             core,
-            extras = self.options.extras;
+            extras = options.extras;
 
         function unEscape(str) {
-            'use strict';
             if (!str) return str;
             return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
         }
@@ -75,15 +72,15 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
         self.renderRequest = true;
 
         // transfer options
-        self.viewID = self.options.viewID;
-        core = self.options.core;
+        self.viewID = options.viewID;
+        core = options.core;
         self.publish = core.publish;
         self.subscribe = core.subscribe;
         self.unsubscribe = core.unsubscribe;
         self.finish = function () {
             core.stop(self.viewID);
         };
-        self.application = self.options.application;
+        self.application = options.application;
 
         //delete options
         delete self.options;
@@ -91,20 +88,22 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
         children = _.clone(self.getChildren());
         self.children = children;
 
-        $.get(self.url, function (data) {
+        self.ajax = $.get(self.url, function (data) {
             var innerTemplate, wrapper, i, l, templArr;
+            if (self.ajax) {
+                templArr = window.$('<div></div>').html(data).find('[data-template]');
+                if (templArr.length > 0) { self.innerTemplate = []; }
+                for (i = 0, l = templArr.length; i < l; i += 1) {
+                    wrapper = templArr.get(i);
+                    innerTemplate = wrapper.innerHTML;
+                    self.innerTemplate[i] = _.template(unEscape(innerTemplate));
+                }
 
-            templArr = window.$('<div></div>').html(data).find('[data-template]');
-            if (templArr.length > 0) { self.innerTemplate = []; }
-            for (i = 0, l = templArr.length; i < l; i += 1) {
-                wrapper = templArr.get(i);
-                innerTemplate = wrapper.innerHTML;
-                self.innerTemplate[i] = _.template(unEscape(innerTemplate));
+                self.template = _.template(data);
+                self.bindModel(self.model);
+                self.loader.resolve();
             }
-
-            self.template = _.template(data);
-            self.bindModel(self.model);
-            self.loader.resolve();
+            self.ajax = null;
         }, 'text');
 
         self.subscribe(self.viewID, self.receiveMsg, self);
@@ -117,7 +116,6 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
     },
 
     setExtras: function (extras) {
-        "use strict";
         if (extras !== this.extras) {
             this.onNewExtras(extras);
             this.extras = extras;
@@ -125,7 +123,6 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
     },
 
     bindModel: function (model) {
-        "use strict";
         var self = this, i;
         if (model) {
             self.model = model;
@@ -139,7 +136,6 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
     },
 
     unbindModel: function (forceRender) {
-        "use strict";
         if (this.model) {
             this.stopListening(this.model);
             this.model = null;
@@ -150,45 +146,61 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
     },
 
     changeModel: function (newModel) {
-        "use strict";
         var self = this;
         self.unbindModel();
         self.bindModel(newModel);
     },
 
-    render: function () {
-        "use strict";
+    insertSubview: function (data, callback) {
+        var content = RAD.core.getView(data.content, data.extras),
+            container = this.$(data.container_id);
+
+        if (data && data.backstack) {
+            RAD.core.publish("router.beginTransition", data);
+        }
+
+        content.appendIn(container, function () {
+            container.attr('view', data.content);
+            if (typeof data.callback === 'function') {
+                if (typeof data.context === 'object') {
+                    data.callback.call(data.context);
+                } else {
+                    data.callback();
+                }
+            }
+
+            if (typeof callback === 'function') {
+                callback();
+            }
+        });
+    },
+
+    render: function (callback) {
         var self = this,
             json = (self.model) ? self.model.toJSON() : undefined,
-            children,
+            children = self.getChildren(),
+            counter = children.length,
             index,
             length,
             arr;
 
-        function insertSubview(parent, data) {
-            var content = RAD.core.getView(data.content, data.extras),
-                container = parent.$(data.container_id);
+        function check() {
+            counter -= 1;
+            if (counter <= 0) {
+                self.onrender();
+                self.onEndRender();
+                self.initScrollRefresh();
+                self.renderRequest = false;
 
-            if (data && data.backstack) {
-                RAD.core.publish("router.beginTransition", data);
-            }
-
-            content.appendIn(container, function () {
-                container.attr('view', data.content);
-                if (typeof data.callback === 'function') {
-                    if (typeof data.context === 'object') {
-                        data.callback.call(data.context);
-                    } else {
-                        data.callback();
-                    }
+                if (typeof callback === 'function') {
+                    callback();
                 }
-            });
+            }
         }
 
         self.onStartRender();
 
         //detach children
-        children = self.getChildren();
         for (index = 0, length = children.length; index < length; index += 1) {
             RAD.core.getView(children[index].content, children[index].extras).detach();
         }
@@ -215,21 +227,18 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
         }
 
         //attach children
-        for (index = 0, length = children.length; index < length; index += 1) {
-            insertSubview(self, children[index]);
+        if (children.length > 0) {
+            for (index = 0, length = children.length; index < length; index += 1) {
+                this.insertSubview(children[index], check);
+            }
+        } else {
+            check();
         }
-
-        self.onrender();
-        self.onEndRender();
-
-        self.initScrollRefresh();
-        self.renderRequest = false;
 
         return self;
     },
 
     appendIn: function (container, callback) {
-        "use strict";
         var self = this, $container = $(container);
 
         if (!container || $container.length === 0) {
@@ -245,8 +254,7 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
         $container.append(self.$el);
         if (self.renderRequest) {
             self.loader.doneFirstTask(function () {
-                self.render();
-                onEnd();
+                self.render(onEnd);
             });
         } else {
             onEnd();
@@ -254,7 +262,6 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
     },
 
     initScrollRefresh: function (target) {
-        "use strict";
         var elem = target || this.el,
             event = document.createEvent('Event');
 
@@ -265,45 +272,49 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
     },
 
     receiveMsg: function msgFunc(msg, data) {
-        "use strict";
         var self = this,
             parts = msg.split('.');
 
         switch (parts[2]) {
-        case 'attach':
-            self.loader.done(function () {
-                self.onattach();
-                self.onStartAttach(msg, data);
-            });
-            break;
-        case 'detach':
-            self.ondetach();
-            self.onEndDetach(msg, data);
-            break;
-        case 'attach_complete':
-            self.loader.doneLastTask(function () {
-                self.onEndAttach(msg, data);
-            });
-            break;
-        default:
-            self.onReceiveMsg(msg, data);
-            break;
+            case 'attach':
+                self.loader.done(function () {
+                    self.onattach();
+                    self.onStartAttach(msg, data);
+                });
+                break;
+            case 'detach':
+                self.ondetach();
+                self.onEndDetach(msg, data);
+                break;
+            case 'attach_complete':
+                self.loader.doneLastTask(function () {
+                    self.onEndAttach(msg, data);
+                });
+                break;
+            default:
+                self.onReceiveMsg(msg, data);
+                break;
         }
 
         return self;
     },
 
     detach: function () {
-        "use strict";
         var self = this;
         self.detachScroll();
-        self.$el.detach();
+        if (self.$el) {
+            self.$el.detach();
+        }
     },
 
     destroy: function () {
-        "use strict";
         var property,
             self = this;
+
+        if (self.ajax) {
+            self.ajax.abort();
+            self.ajax = null;
+        }
 
         self.onDestroy();
         self.ondestroy();
@@ -330,26 +341,28 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
     },
 
     //stubs for inner service callback functions
-    oninit: function () { "use strict"; },
-    onattach: function () { "use strict"; },
-    ondetach: function () { "use strict"; },
-    onrender: function () { "use strict"; },
-    ondestroy: function () { "use strict"; },
+    oninit: function () {},
+    onattach: function () {
+        this.el.offsetHeight;
+    },
+    ondetach: function () {},
+    onrender: function () {},
+    ondestroy: function () {},
 
-    attachScroll: function () { "use strict"; },
-    refreshScroll: function () { "use strict"; },
-    detachScroll: function () { "use strict"; },
+    attachScroll: function () {},
+    refreshScroll: function () {},
+    detachScroll: function () {},
 
     //stubs for external service callback functions
-    onInitialize: function () { "use strict"; },
-    onNewExtras: function () { "use strict"; },
-    onReceiveMsg: function () { "use strict"; },
-    onStartRender: function () { "use strict"; },
-    onEndRender: function () { "use strict"; },
-    onStartAttach: function () { "use strict"; },
-    onEndAttach: function () { "use strict"; },
-    onEndDetach: function () { "use strict"; },
-    onDestroy: function () { "use strict"; }
+    onInitialize: function () {},
+    onNewExtras: function () {},
+    onReceiveMsg: function () {},
+    onStartRender: function () {},
+    onEndRender: function () {},
+    onStartAttach: function () {},
+    onEndAttach: function () {},
+    onEndDetach: function () {},
+    onDestroy: function () {}
 }));
 
 RAD.namespace('RAD.Blanks.Service', RAD.Class.extend({
@@ -386,32 +399,29 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
     offsetY: 0,
 
     attachScroll: function () {
-        "use strict";
         var self = this,
             scrollView = self.el.querySelector('.scroll-view') || self.el;
-        self.detachScroll();
-        self.loader.done(function () {
-            if (self.renderRequest) {
-                return;
-            }
-            self.mScroll = new window.iScroll(scrollView, {
-                bounce: false,
-                onBeforeScrollStart: function (e) {
-                    var target = e.target;
 
-                    while (target.nodeType !== 1) {
-                        target = target.parentNode;
-                    }
-                    if (target.tagName !== 'SELECT' && target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
-                        e.preventDefault();
-                    }
+        if (self.mScroll) {
+            return;
+        }
+
+        self.mScroll = new window.iScroll(scrollView, {
+            bounce: true,
+            onBeforeScrollStart: function (e) {
+                var target = e.target;
+
+                while (target.nodeType !== 1) {
+                    target = target.parentNode;
                 }
-            });
+                if (target.tagName !== 'SELECT' && target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                }
+            }
         });
     },
 
     onattach: function () {
-        "use strict";
         var self = this;
         window.setTimeout(function () {
             if (self.mScroll) {
@@ -422,19 +432,16 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
     },
 
     refreshScroll: function () {
-        "use strict";
         if (this.mScroll) {
             this.mScroll.refresh();
         }
     },
 
     detachScroll: function () {
-        "use strict";
-        var self = this;
-        if (self.mScroll) {
-            self.offsetY = self.mScroll.y;
-            self.mScroll.destroy();
-            self.mScroll = null;
+        if (this.mScroll) {
+            this.offsetY = this.mScroll.y;
+            this.mScroll.destroy();
+            this.mScroll = null;
         }
     }
 }));
@@ -446,23 +453,43 @@ RAD.namespace('RAD.Blanks.Toast', RAD.Blanks.View.extend({
 
     showTime: 4000,
 
-    close: function () {
-        "use strict";
-        clearTimeout(this.closeTimeOut);
-
-        var options = {
-            content: this.viewID
+    oninit: function () {
+        var self = this;
+        self.refreshTimeout = function () {
+            clearTimeout(self.closeTimeOut);
+            self.closeTimeOut = window.setTimeout(function () {
+                self.close(self);
+            }, self.showTime);
         };
+    },
+
+    setExtras: function (extras) {
+        if (extras !== this.extras) {
+            this.refreshTimeout();
+            this.onNewExtras(extras);
+            this.extras = extras;
+        }
+    },
+
+    close: function (context) {
+        var self = context || this,
+            options = { content: self.viewID };
+
+        clearTimeout(self.closeTimeOut);
         $(document.body).off('click.close');
-        this.publish('navigation.toast.close', options);
+
+        if (self.publish) {
+            self.publish('navigation.toast.close', options);
+        }
     },
 
     onattach: function () {
-        "use strict";
         var self = this;
+        clearTimeout(self.closeTimeOut);
         self.closeTimeOut = window.setTimeout(function () {
             self.close();
         }, self.showTime);
+
         $(document.body).one('click.close', function () {
             self.close();
         });

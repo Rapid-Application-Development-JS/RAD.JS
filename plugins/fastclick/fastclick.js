@@ -5,7 +5,7 @@ RAD.plugin("plugin.fastclick", function (core) {
     function Swiper(element) {
         var swiper = this,
             lastMove,
-            TOUCH_DIFFERENCE = 10,
+            TOUCH_DIFFERENCE = 20,
             preLastMove;
 
         function extractCoord(e) {
@@ -157,7 +157,7 @@ RAD.plugin("plugin.fastclick", function (core) {
             }
 
             swiper.isDown = false;
-            if (!swiper.moved && duration <= 200) {
+            if (!swiper.moved && duration <= 400) {
                 fireEvent("tap", e);
             }
 

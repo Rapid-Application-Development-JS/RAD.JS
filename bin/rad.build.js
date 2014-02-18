@@ -1,8 +1,8 @@
 /**
  * RAD.js
- * v.0.9a development version
+ * v.0.93b development version
  * Mobidev.biz
- * Date: 8/21/13
+ * Date: 02/18/14
  */
 
 (function (document, window) {
@@ -120,12 +120,42 @@
         return loader;
     }
 
+    function closest(element, className) {
+        var result;
+        if (element.classList && element.classList.contains(className)) {
+            result = element;
+        } else if (element.parentNode) {
+            result = closest(element.parentNode, className);
+        }
+        return result;
+    }
+
+    function preventBodyTouch(e) {
+        var tracker = this.scrollTracker;
+        if (!tracker.scrollView || (tracker.scrollRequest &&  ((e.touches[0].screenY > tracker.startIOSTouch && tracker.scrollView.scrollTop === 0) || (tracker.scrollView.scrollTop >= tracker.scrollEnd && e.touches[0].screenY < tracker.startIOSTouch)))) {
+            e.preventDefault();
+        }
+        tracker = null;
+    }
+
+    function startBodyTouch(e) {
+        var tracker = this.scrollTracker = this.scrollTracker || {};
+        tracker.scrollView = closest(e.target, 'native-scroll');
+        tracker.scrollRequest = false;
+        if (!!tracker.scrollView) {
+            tracker.startIOSTouch = e.touches[0].screenY;
+            tracker.scrollRequest = true;
+            tracker.scrollEnd = tracker.scrollView.firstElementChild.offsetHeight - tracker.scrollView.offsetHeight;
+        }
+        tracker = null;
+    }
+
     function prepareEnvironment() {
-        var isIPad = (/ipad/gi).test(window.navigator.appVersion),
+        var isIOS = navigator.userAgent.match(/(iPad|iPhone|iPod|iOS)/gi) ? true : false,
             isAndroid = (/android/gi).test(window.navigator.appVersion),
             overlay = document.querySelector('#overlay'),
             style = document.createElement("style"),
-            theme = 'html,body{position:relative;height:100%;overflow:hidden;-ms-touch-action:none;-ms-touch-select:none}body{margin:0;-webkit-text-size-adjust:100%;-webkit-touch-callout:none;-webkit-text-size-adjust:none;-webkit-highlight:none;-webkit-tap-highlight-color:rgba(0,0,0,0)}html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{-moz-user-select:none;-o-user-select:none;-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none}a,input,textarea,button,div{-webkit-tap-highlight-color:rgba(0,0,0,0);-moz-user-select:text;-o-user-select:text;-khtml-user-select:text;-webkit-user-select:text;-ms-user-select:text;user-select:text}img{border-style:none}input,textarea,select{vertical-align:middle}form,fieldset{margin:0;padding:0;border-style:none}div[data-role=view]{position:absolute;top:0;left:0;width:100%;height:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}#screen{position:relative;height:100%;overflow:hidden}#overlay{display:none}#overlay{position:absolute;z-index:1000;left:0;top:0;width:100%;height:100%}#overlay.show{display:block}.lightbox{position:absolute;z-index:999;left:0;top:0;width:100%;height:100%;opacity:0;text-align:center;white-space:nowrap;-webkit-transition:opacity 300ms ease;-moz-transition:opacity 300ms ease;-ms-transition:opacity 300ms ease;-o-transition:opacity 300ms ease;transition:opacity 300ms ease}.lightbox.show{opacity:1}.lightbox:after{content:"";display:inline-block;vertical-align:middle;width:1px;height:100%}.lightbox-frame{position:relative;display:inline-block;vertical-align:middle;width:100%;text-align:left;white-space:normal;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;-moz-transform:scale(0.5,.5);-webkit-transform:scale(0.5,.5);-o-transform:scale(0.5,.5);-ms-transform:scale(0.5,.5);transform:scale(0.5,.5);-webkit-transition:-webkit-transform 300ms ease;-moz-transition:-moz-transform 300ms ease;-ms-transition:-ms-transform 300ms ease;-o-transition:-o-transform 300ms ease;transition:transform 300ms ease}.lightbox.show .lightbox-frame{-moz-transform:scale(1,1);-webkit-transform:scale(1,1);-o-transform:scale(1,1);-ms-transform:scale(1,1);transform:scale(1,1)}.toast{z-index:999;position:absolute;width:auto!important;max-width:50%!important;height:auto!important;opacity:0;-webkit-transition:opacity 300ms ease;-moz-transition:opacity 300ms ease;-ms-transition:opacity 300ms ease;-o-transition:opacity 300ms ease;transition:opacity 300ms ease;text-align:center;display:inline-block}.toast.show{opacity:1;-webkit-transition:opacity 10ms ease;-moz-transition:opacity 10ms ease;-ms-transition:opacity 10ms ease;-o-transition:opacity 10ms ease;transition:opacity 10ms ease}.popup{position:absolute;z-index:999;opacity:0;-webkit-transition:opacity 300ms ease;-moz-transition:opacity 300ms ease;-ms-transition:opacity 300ms ease;-o-transition:opacity 300ms ease;transition:opacity 300ms ease}.popup.show{opacity:1}.slide-in,.slide-out{-webkit-transition:-webkit-transform 350ms ease;-moz-transition:-moz-transform 350ms ease;-ms-transition:-ms-transform 350ms ease;-o-transition:-o-transform 350ms ease;transition:transform 350ms ease}.new-page.slide-in{-webkit-transform:translate3d(100%,0,0);-moz-transform:translate3d(100%,0,0);-ms-transform:translate3d(100%,0,0);-o-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0)}.old-page.slide-in{-webkit-transform:translate3d(0,0,0);-moz-transform:translate3d(0,0,0);-ms-transform:translate3d(0,0,0);-o-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}.animate>.new-page.slide-in{-webkit-transform:translate3d(0,0,0);-moz-transform:translate3d(0,0,0);-ms-transform:translate3d(0,0,0);-o-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}.animate>.old-page.slide-in{-webkit-transform:translate3d(-100%,0,0);-moz-transform:translate3d(-100%,0,0);-ms-transform:translate3d(-100%,0,0);-o-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}.new-page.slide-out{-webkit-transform:translate3d(-100%,0,0);-moz-transform:translate3d(-100%,0,0);-ms-transform:translate3d(-100%,0,0);-o-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}.old-page.slide-out{-webkit-transform:translate3d(0,0,0);-moz-transform:translate3d(0,0,0);-ms-transform:translate3d(0,0,0);-o-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}.animate>.new-page.slide-out{-webkit-transform:translate3d(0,0,0);-moz-transform:translate3d(0,0,0);-ms-transform:translate3d(0,0,0);-o-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}.animate>.old-page.slide-out{-webkit-transform:translate3d(100%,0,0);-moz-transform:translate3d(100%,0,0);-ms-transform:translate3d(100%,0,0);-o-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0)}.new-page.fade-in,.new-page.fade-out{opacity:0;-webkit-transition:opacity 350ms ease;-moz-transition:opacity 350ms ease;-ms-transition:opacity 350ms ease;-o-transition:opacity 350ms ease;transition:opacity 350ms ease}.old-page.fade-in,.old-page.fade-out{opacity:1;-webkit-transition:opacity 175ms 175ms ease;-moz-transition:opacity 175ms 175ms ease;-ms-transition:opacity 175ms 175ms ease;-o-transition:opacity 175ms 175ms ease;transition:opacity 175ms 175ms ease}.animate>.new-page.fade-in,.animate>.new-page.fade-out{opacity:1}.animate>.old-page.fade-in,.animate>.old-page.fade-out{opacity:0}';
+            theme = 'body,html{position:relative;height:100%;overflow:hidden;-ms-touch-action:none;-ms-touch-select:none}body{margin:0;-webkit-touch-callout:none;-webkit-text-size-adjust:none;-webkit-highlight:none;-webkit-tap-highlight-color:rgba(0,0,0,0)}a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video{-moz-user-select:none;-o-user-select:none;-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none}a,button,input,textarea{-webkit-tap-highlight-color:rgba(0,0,0,0);-moz-user-select:text;-o-user-select:text;-khtml-user-select:text;-webkit-user-select:text;-ms-user-select:text;user-select:text}img{border-style:none}input,select,textarea{vertical-align:middle}fieldset,form{margin:0;padding:0;border-style:none}div[data-role=view]{position:absolute;top:0;left:0;width:100%;height:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}#screen{position:relative;height:100%;overflow:hidden}#overlay{display:none;position:absolute;z-index:1000;left:0;top:0;width:100%;height:100%}#overlay.show{display:block}.lightbox{position:absolute;z-index:999;left:0;top:0;width:100%;height:100%;opacity:0;text-align:center;white-space:nowrap}.lightbox.animate{-webkit-transition:opacity 300ms ease;-moz-transition:opacity 300ms ease;-ms-transition:opacity 300ms ease;-o-transition:opacity 300ms ease;transition:opacity 300ms ease}.lightbox.show{opacity:1}.lightbox:after{content:"";display:inline-block;vertical-align:middle;width:1px;height:100%}.lightbox-frame{position:relative;display:inline-block;vertical-align:middle;width:100%;text-align:left;white-space:normal;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;-moz-transform:scale(0.5,.5);-webkit-transform:scale(0.5,.5);-o-transform:scale(0.5,.5);-ms-transform:scale(0.5,.5);transform:scale(0.5,.5)}.lightbox.animate>.lightbox-frame{-webkit-transition:-webkit-transform 300ms ease;-moz-transition:-moz-transform 300ms ease;-ms-transition:-ms-transform 300ms ease;-o-transition:-o-transform 300ms ease;transition:transform 300ms ease}.lightbox.show .lightbox-frame{-moz-transform:scale(1,1);-webkit-transform:scale(1,1);-o-transform:scale(1,1);-ms-transform:scale(1,1);transform:scale(1,1)}.toast{z-index:999;position:absolute;width:auto!important;max-width:50%!important;height:auto!important;opacity:0;text-align:center;display:inline-block}.toast.animate{-webkit-transition:opacity 300ms ease;-moz-transition:opacity 300ms ease;-ms-transition:opacity 300ms ease;-o-transition:opacity 300ms ease;transition:opacity 300ms ease}.toast.show{opacity:1}.popup{position:absolute;z-index:999;opacity:0}.popup.animate{-webkit-transition:opacity 300ms ease;-moz-transition:opacity 300ms ease;-ms-transition:opacity 300ms ease;-o-transition:opacity 300ms ease;transition:opacity 300ms ease}.popup.show{opacity:1}.jump-in,.jump-out,.slide-in,.slide-out{-webkit-transition:-webkit-transform 350ms ease;-moz-transition:-moz-transform 350ms ease;-ms-transition:-ms-transform 350ms ease;-o-transition:-o-transform 350ms ease;transition:transform 350ms ease}.new-page.slide-in{-webkit-transform:translate(100%,0) translateZ(0);-moz-transform:translate(100%,0) translateZ(0);-ms-transform:translate(100%,0) translateZ(0);-o-transform:translate(100%,0) translateZ(0);transform:translate(100%,0) translateZ(0)}.animate>.new-page.jump-in,.animate>.new-page.slide-in,.old-page.jump-in,.old-page.slide-in{-webkit-transform:translate(0,0) translateZ(0);-moz-transform:translate(0,0) translateZ(0);-ms-transform:translate(0,0) translateZ(0);-o-transform:translate(0,0) translateZ(0);transform:translate(0,0) translateZ(0)}.animate>.old-page.slide-in,.new-page.slide-out{-webkit-transform:translate(-100%,0) translateZ(0);-moz-transform:translate(-100%,0) translateZ(0);-ms-transform:translate(-100%,0) translateZ(0);-o-transform:translate(-100%,0) translateZ(0);transform:translate(-100%,0) translateZ(0)}.animate>.new-page.jump-out,.animate>.new-page.slide-out,.old-page.jump-out,.old-page.slide-out{-webkit-transform:translate(0,0) translateZ(0);-moz-transform:translate(0,0) translateZ(0);-ms-transform:translate(0,0) translateZ(0);-o-transform:translate(0,0) translateZ(0);transform:translate(0,0) translateZ(0)}.animate>.old-page.slide-out{-webkit-transform:translate(100%,0) translateZ(0);-moz-transform:translate(100%,0) translateZ(0);-ms-transform:translate(100%,0) translateZ(0);-o-transform:translate(100%,0) translateZ(0);transform:translate(100%,0) translateZ(0)}.new-page.jump-in{-webkit-transform:translate(0,100%) translateZ(0);-moz-transform:translate(0,100%) translateZ(0);-ms-transform:translate(0,100%) translateZ(0);-o-transform:translate(0,100%) translateZ(0);transform:translate(0,100%) translateZ(0)}.animate>.old-page.jump-in,.new-page.jump-out{-webkit-transform:translate(0,-100%) translateZ(0);-moz-transform:translate(0,-100%) translateZ(0);-ms-transform:translate(0,-100%) translateZ(0);-o-transform:translate(0,-100%) translateZ(0);transform:translate(0,-100%) translateZ(0)}.animate>.old-page.jump-out{-webkit-transform:translate(0,100%) translateZ(0);-moz-transform:translate(0,100%) translateZ(0);-ms-transform:translate(0,100%) translateZ(0);-o-transform:translate(0,100%) translateZ(0);transform:translate(0,100%) translateZ(0)}.new-page.fade-in,.new-page.fade-out{opacity:0;-webkit-transition:opacity 350ms ease;-moz-transition:opacity 350ms ease;-ms-transition:opacity 350ms ease;-o-transition:opacity 350ms ease;transition:opacity 350ms ease}.old-page.fade-in,.old-page.fade-out{opacity:1;-webkit-transition:opacity 175ms 175ms ease;-moz-transition:opacity 175ms 175ms ease;-ms-transition:opacity 175ms 175ms ease;-o-transition:opacity 175ms 175ms ease;transition:opacity 175ms 175ms ease}.animate>.new-page.fade-in,.animate>.new-page.fade-out{opacity:1}.animate>.old-page.fade-in,.animate>.old-page.fade-out{opacity:0}.native-scroll{overflow-y:scroll;-webkit-overflow-scrolling:touch}.native-scroll>div,.native-scroll>ol,.native-scroll>p,.native-scroll>ul{-webkit-transform:translate(0,0) translateZ(0);-moz-transform:translate(0,0) translateZ(0);-ms-transform:translate(0,0) translateZ(0);-o-transform:translate(0,0) translateZ(0);transform:translate(0,0) translateZ(0)}';
 
         style.appendChild(document.createTextNode(theme));
         document.head.appendChild(style);
@@ -136,21 +166,19 @@
             escape:      /\{\{\{([\s\S]+?)\}\}\}/g         // {{{ title }}}
         };
 
-        // prevent scrolling
-        window.addEventListener('touchmove', function (e) {
-            e.preventDefault();
-        }, false);
-
         //disable text select
         document.body.onselectstart = function () {
             return false;
         };
 
         //setup specify device class
-        if (isIPad) {
-            window.document.body.className = 'i-pad';
+        if (isIOS) {
+            //ios prevent scroll bounce
+            window.addEventListener('touchstart', startBodyTouch, false);
+            window.addEventListener('touchmove', preventBodyTouch, false);
+            window.document.body.className += ' ios';
         } else if (isAndroid) {
-            window.document.body.className = 'android';
+            window.document.body.className += ' android';
         }
 
         //stopPropagation from overlay
@@ -171,7 +199,7 @@
             model = new Model();
         }
 
-        if(modelID.indexOf('RAD.models.') === -1){
+        if (modelID.indexOf('RAD.models.') === -1) {
             id = 'RAD.models.' + modelID;
         }
 
@@ -623,11 +651,11 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
         return this.children;
     },
 
-    initialize: function () {
+    initialize: function (options) {
         var self = this,
             children,
             core,
-            extras = self.options.extras;
+            extras = options.extras;
 
         function unEscape(str) {
             if (!str) return str;
@@ -638,15 +666,15 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
         self.renderRequest = true;
 
         // transfer options
-        self.viewID = self.options.viewID;
-        core = self.options.core;
+        self.viewID = options.viewID;
+        core = options.core;
         self.publish = core.publish;
         self.subscribe = core.subscribe;
         self.unsubscribe = core.unsubscribe;
         self.finish = function () {
             core.stop(self.viewID);
         };
-        self.application = self.options.application;
+        self.application = options.application;
 
         //delete options
         delete self.options;
@@ -654,20 +682,22 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
         children = _.clone(self.getChildren());
         self.children = children;
 
-        $.get(self.url, function (data) {
+        self.ajax = $.get(self.url, function (data) {
             var innerTemplate, wrapper, i, l, templArr;
+            if (self.ajax) {
+                templArr = window.$('<div></div>').html(data).find('[data-template]');
+                if (templArr.length > 0) { self.innerTemplate = []; }
+                for (i = 0, l = templArr.length; i < l; i += 1) {
+                    wrapper = templArr.get(i);
+                    innerTemplate = wrapper.innerHTML;
+                    self.innerTemplate[i] = _.template(unEscape(innerTemplate));
+                }
 
-            templArr = window.$('<div></div>').html(data).find('[data-template]');
-            if (templArr.length > 0) { self.innerTemplate = []; }
-            for (i = 0, l = templArr.length; i < l; i += 1) {
-                wrapper = templArr.get(i);
-                innerTemplate = wrapper.innerHTML;
-                self.innerTemplate[i] = _.template(unEscape(innerTemplate));
+                self.template = _.template(data);
+                self.bindModel(self.model);
+                self.loader.resolve();
             }
-
-            self.template = _.template(data);
-            self.bindModel(self.model);
-            self.loader.resolve();
+            self.ajax = null;
         }, 'text');
 
         self.subscribe(self.viewID, self.receiveMsg, self);
@@ -715,38 +745,56 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
         self.bindModel(newModel);
     },
 
-    render: function () {
+    insertSubview: function (data, callback) {
+        var content = RAD.core.getView(data.content, data.extras),
+            container = this.$(data.container_id);
+
+        if (data && data.backstack) {
+            RAD.core.publish("router.beginTransition", data);
+        }
+
+        content.appendIn(container, function () {
+            container.attr('view', data.content);
+            if (typeof data.callback === 'function') {
+                if (typeof data.context === 'object') {
+                    data.callback.call(data.context);
+                } else {
+                    data.callback();
+                }
+            }
+
+            if (typeof callback === 'function') {
+                callback();
+            }
+        });
+    },
+
+    render: function (callback) {
         var self = this,
             json = (self.model) ? self.model.toJSON() : undefined,
-            children,
+            children = self.getChildren(),
+            counter = children.length,
             index,
             length,
             arr;
 
-        function insertSubview(parent, data) {
-            var content = RAD.core.getView(data.content, data.extras),
-                container = parent.$(data.container_id);
+        function check() {
+            counter -= 1;
+            if (counter <= 0) {
+                self.onrender();
+                self.onEndRender();
+                self.initScrollRefresh();
+                self.renderRequest = false;
 
-            if (data && data.backstack) {
-                RAD.core.publish("router.beginTransition", data);
-            }
-
-            content.appendIn(container, function () {
-                container.attr('view', data.content);
-                if (typeof data.callback === 'function') {
-                    if (typeof data.context === 'object') {
-                        data.callback.call(data.context);
-                    } else {
-                        data.callback();
-                    }
+                if (typeof callback === 'function') {
+                    callback();
                 }
-            });
+            }
         }
 
         self.onStartRender();
 
         //detach children
-        children = self.getChildren();
         for (index = 0, length = children.length; index < length; index += 1) {
             RAD.core.getView(children[index].content, children[index].extras).detach();
         }
@@ -773,15 +821,13 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
         }
 
         //attach children
-        for (index = 0, length = children.length; index < length; index += 1) {
-            insertSubview(self, children[index]);
+        if (children.length > 0) {
+            for (index = 0, length = children.length; index < length; index += 1) {
+                this.insertSubview(children[index], check);
+            }
+        } else {
+            check();
         }
-
-        self.onrender();
-        self.onEndRender();
-
-        self.initScrollRefresh();
-        self.renderRequest = false;
 
         return self;
     },
@@ -802,8 +848,7 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
         $container.append(self.$el);
         if (self.renderRequest) {
             self.loader.doneFirstTask(function () {
-                self.render();
-                onEnd();
+                self.render(onEnd);
             });
         } else {
             onEnd();
@@ -851,12 +896,19 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
     detach: function () {
         var self = this;
         self.detachScroll();
-        self.$el.detach();
+        if (self.$el) {
+            self.$el.detach();
+        }
     },
 
     destroy: function () {
         var property,
             self = this;
+
+        if (self.ajax) {
+            self.ajax.abort();
+            self.ajax = null;
+        }
 
         self.onDestroy();
         self.ondestroy();
@@ -884,7 +936,9 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
 
     //stubs for inner service callback functions
     oninit: function () {},
-    onattach: function () {},
+    onattach: function () {
+        this.el.offsetHeight;
+    },
     ondetach: function () {},
     onrender: function () {},
     ondestroy: function () {},
@@ -933,24 +987,23 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
     attachScroll: function () {
         var self = this,
             scrollView = self.el.querySelector('.scroll-view') || self.el;
-        self.detachScroll();
-        self.loader.done(function () {
-            if (self.renderRequest) {
-                return;
-            }
-            self.mScroll = new window.iScroll(scrollView, {
-                bounce: false,
-                onBeforeScrollStart: function (e) {
-                    var target = e.target;
 
-                    while (target.nodeType !== 1) {
-                        target = target.parentNode;
-                    }
-                    if (target.tagName !== 'SELECT' && target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
-                        e.preventDefault();
-                    }
+        if (self.mScroll) {
+            return;
+        }
+
+        self.mScroll = new window.iScroll(scrollView, {
+            bounce: true,
+            onBeforeScrollStart: function (e) {
+                var target = e.target;
+
+                while (target.nodeType !== 1) {
+                    target = target.parentNode;
                 }
-            });
+                if (target.tagName !== 'SELECT' && target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                }
+            }
         });
     },
 
@@ -971,11 +1024,10 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
     },
 
     detachScroll: function () {
-        var self = this;
-        if (self.mScroll) {
-            self.offsetY = self.mScroll.y;
-            self.mScroll.destroy();
-            self.mScroll = null;
+        if (this.mScroll) {
+            this.offsetY = this.mScroll.y;
+            this.mScroll.destroy();
+            this.mScroll = null;
         }
     }
 }));
@@ -987,21 +1039,43 @@ RAD.namespace('RAD.Blanks.Toast', RAD.Blanks.View.extend({
 
     showTime: 4000,
 
-    close: function () {
-        clearTimeout(this.closeTimeOut);
-
-        var options = {
-            content: this.viewID
+    oninit: function () {
+        var self = this;
+        self.refreshTimeout = function () {
+            clearTimeout(self.closeTimeOut);
+            self.closeTimeOut = window.setTimeout(function () {
+                self.close(self);
+            }, self.showTime);
         };
+    },
+
+    setExtras: function (extras) {
+        if (extras !== this.extras) {
+            this.refreshTimeout();
+            this.onNewExtras(extras);
+            this.extras = extras;
+        }
+    },
+
+    close: function (context) {
+        var self = context || this,
+            options = { content: self.viewID };
+
+        clearTimeout(self.closeTimeOut);
         $(document.body).off('click.close');
-        this.publish('navigation.toast.close', options);
+
+        if (self.publish) {
+            self.publish('navigation.toast.close', options);
+        }
     },
 
     onattach: function () {
         var self = this;
+        clearTimeout(self.closeTimeOut);
         self.closeTimeOut = window.setTimeout(function () {
             self.close();
         }, self.showTime);
+
         $(document.body).one('click.close', function () {
             self.close();
         });
@@ -1073,7 +1147,7 @@ RAD.plugin("plugin.fastclick", function (core) {
     function Swiper(element) {
         var swiper = this,
             lastMove,
-            TOUCH_DIFFERENCE = 10,
+            TOUCH_DIFFERENCE = 20,
             preLastMove;
 
         function extractCoord(e) {
@@ -1225,7 +1299,7 @@ RAD.plugin("plugin.fastclick", function (core) {
             }
 
             swiper.isDown = false;
-            if (!swiper.moved && duration <= 200) {
+            if (!swiper.moved && duration <= 400) {
                 fireEvent("tap", e);
             }
 
@@ -1313,16 +1387,24 @@ RAD.plugin("plugin.navigator", function (core, id) {
         window = core.window,
         defaultAnimation = core.options.defaultAnimation || 'slide',
         animationTimeout = core.options.animationTimeout || 1000,
-        transEndEventName = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd',
+        transEndEventName = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd animationend webkitAnimationEnd oanimationend MSAnimationEnd',
         overlay,
         defaultSaveInBackstack = (core.options && core.options.defaultBackstack !== undefined) ? core.options.defaultBackstack : false,
+        ieVersion,
+        ieLessThanTen = false,
         animator;
 
+    if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)) { //test for MSIE x.x;
+        ieVersion = new Number(RegExp.$1); // capture x.x portion and store as a number
+        if ( ieVersion < 10) {
+            ieLessThanTen = true;
+        }
+    }
 
     function apply(callback, context, data) {
         if (typeof callback !== 'function') { return; }
         if (typeof context === 'object') {
-            callback.apply(context, data);
+            callback.apply(context, [data]);
         } else {
             callback(data);
         }
@@ -1598,22 +1680,19 @@ RAD.plugin("plugin.navigator", function (core, id) {
             container.attr('view', datawrapper.content);
 
             function startAnimation() {
-                window.setTimeout(function () {
+                if (newView && newView.el) {
+                    // Force the browser to calculate new element styles, before CSS animation start
+                    window.getComputedStyle(newView.el, null).getPropertyValue('left');
 
-                    if (newView && newView.el) {
-                        // Force the browser to calculate new element styles, before CSS animation start
-                        window.getComputedStyle(newView.el, null).getPropertyValue('left');
+                    publish('attach', attachedViews);
+                }
 
-                        publish('attach', attachedViews);
-                    }
-
-                    // Start CSS animation
-                    if (!newView && !oldView) {
-                        overlay.removeClass('show');
-                    } else {
-                        container.addClass('animate');
-                    }
-                }, 0);
+                // Start CSS animation
+                if (!newView && !oldView) {
+                    overlay.removeClass('show');
+                } else {
+                    container.addClass('animate');
+                }
             }
 
             function showView() {
@@ -1633,6 +1712,7 @@ RAD.plugin("plugin.navigator", function (core, id) {
                 if (self.inAnimation === 0) {
                     overlay.removeClass('show');
                 }
+
                 apply(datawrapper.callback, datawrapper.context, [newView, oldView]);
                 publish('detach', detachedViews);
                 publish('attach_complete', attachedViews);
@@ -1647,7 +1727,7 @@ RAD.plugin("plugin.navigator", function (core, id) {
             overlay.addClass('show');
             self.inAnimation += 1;
 
-            if (datawrapper.animation === 'none' || (defaultAnimation === 'none' && !datawrapper.animation)) {
+            if (datawrapper.animation === 'none' || (defaultAnimation === 'none' && !datawrapper.animation) || ieLessThanTen) {
                 if (oldView) {
                     oldView.detach();
                 }
@@ -1719,6 +1799,10 @@ RAD.plugin("plugin.navigator", function (core, id) {
         }
         newView.isShown = true;
 
+        if (data.animation) {
+            newView.animation = data.animation;
+        }
+
         $element = newView.$el;
         endFunc = function () {
             if (done) {
@@ -1729,9 +1813,17 @@ RAD.plugin("plugin.navigator", function (core, id) {
             apply(data.callback, data.context, newView);
             overlay.removeClass('show');
             $element.off(transEndEventName, endFunc);
-            core.publish(data.content + '.' + 'attach', null);
+            $element.off('cssClassChanged', endFunc);
+            core.publish(data.content + '.' + 'attach_complete', null);
             newView = null;
         };
+
+        if (!(newView.animation === 'none' || (defaultAnimation === 'none' && !newView.animation) || ieLessThanTen)) {
+            $element.addClass('animate');
+            $element.on(transEndEventName, endFunc);
+        } else {
+            $element.on('cssClassChanged', endFunc);
+        }
 
         overlay.addClass('show');
         window.setTimeout(endFunc, animationTimeout);
@@ -1751,8 +1843,11 @@ RAD.plugin("plugin.navigator", function (core, id) {
                     break;
             }
 
-            $element.on(transEndEventName, endFunc);
             $element.width();
+            window.setTimeout(function() {
+                core.publish(data.content + '.' + 'attach', null);
+                $element.trigger('cssClassChanged');
+            }, 0);
             $element.addClass('show');
         });
     }
@@ -1780,7 +1875,9 @@ RAD.plugin("plugin.navigator", function (core, id) {
             oldDialog.detach();
             apply(data.callback, data.context, oldDialog);
             overlay.removeClass('show');
+            oldElement.removeClass('animate');
             oldElement.off(transEndEventName, endFunc);
+            oldElement.off('cssClassChanged', endFunc);
 
             core.publish(data.content + '.' + 'detach', null);
 
@@ -1794,12 +1891,23 @@ RAD.plugin("plugin.navigator", function (core, id) {
         };
 
         overlay.addClass('show');
-        oldElement.on(transEndEventName, endFunc);
+
+        if (!(oldDialog.animation === 'none' || (defaultAnimation === 'none' && !oldDialog.animation) || ieLessThanTen)) {
+            oldElement.on(transEndEventName, endFunc);
+        }
+        else {
+            oldElement.on('cssClassChanged', endFunc);
+        }
+
         window.setTimeout(function () {
             endFunc();
         }, animationTimeout);
 
         oldElement.removeClass('show');
+
+        window.setTimeout(function() {
+            oldElement.trigger('cssClassChanged');
+        }, 0);
     }
 
     function isArray(value) {
@@ -1944,8 +2052,8 @@ RAD.plugin("plugin.router", function (core, id) {
         return result;
     }
 
-    function packURL(urlObj, timestamp) {
-        return encodeURIComponent(JSON.stringify(urlObj)).replace(/[!'()]/g, escape).replace(/\*/g, "%2A") + '$$$' + timestamp;
+    function packURL(urlObj, timestamp, animation) {
+        return encodeURIComponent(JSON.stringify(urlObj)).replace(/[!'()]/g, escape).replace(/\*/g, "%2A") + '$$$' + timestamp + '$$$' + animation;
     }
 
     function unpackURL(packURLString) {
@@ -1955,6 +2063,7 @@ RAD.plugin("plugin.router", function (core, id) {
         tmpArr = packURLString.split('$$$');
         result.urlObj = JSON.parse(decodeURIComponent((tmpArr[0] + '').replace(/\+/g, '%20')));
         result.timestamp = tmpArr[1];
+        result.animation = tmpArr[2];
 
         return result;
     }
@@ -2074,16 +2183,17 @@ RAD.plugin("plugin.router", function (core, id) {
             self.stack.push(newUrl);
         },
 
-        saveScoopeAsURL: function () {
+        saveScoopeAsURL: function (datawrapper) {
             var timestamp = +new Date().getTime(),
                 rootModule = getRootView(document.getElementsByTagName('body')[0]),
                 rootView = core.getView(rootModule.content),
+                animation = (datawrapper.animation) ? datawrapper.animation : core.options.defaultAnimation,
                 children = buildURL(rootView);
 
             if (children && children.length > 0) {
                 rootModule.children = children;
             }
-            this.navigate(packURL(rootModule, timestamp));
+            this.navigate(packURL(rootModule, timestamp, animation));
         },
 
         onNewTransition: function () {
@@ -2174,6 +2284,7 @@ RAD.plugin("plugin.router", function (core, id) {
                     }
                     differ = this.extractDiffer(unpackURL(this.currentURL).urlObj, unpackURL(param).urlObj);
                     differ.direction = this.toBack;
+                    differ.animation = this.toBack ? unpackURL(this.currentURL).animation : unpackURL(param).animation;
                     core.publish("navigation.back", differ);
 
                     this.lastURL = this.currentURL;
@@ -2196,7 +2307,7 @@ RAD.plugin("plugin.router", function (core, id) {
                 break;
             case 'endTransition':
                 if (router.pushToStackRequest) {
-                    router.saveScoopeAsURL();
+                    router.saveScoopeAsURL(data);
                 }
                 break;
             case 'back':

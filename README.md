@@ -5,7 +5,7 @@ RAD.JS
 
 Version:
 ---
-0.9a
+0.93b
 
 What RAD.js is:
 ---
@@ -49,6 +49,10 @@ Dependencies:
   - JQuery;
   - IScroll;
 
+Note:
+---
+We started working on the framework for the division of the tools that can be used without reference to our framework, as a completely independent tool for any javascript application.
+[RAD.js Toolkit](https://github.com/mobidevpublisher/RAD.JS-toolkit)
 ***
 License
 ---

@@ -1,20 +1,26 @@
 RAD.plugin("plugin.navigator", function (core, id) {
-    'use strict';
-
     var self = {},
         window = core.window,
         defaultAnimation = core.options.defaultAnimation || 'slide',
         animationTimeout = core.options.animationTimeout || 1000,
-        transEndEventName = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd',
+        transEndEventName = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd animationend webkitAnimationEnd oanimationend MSAnimationEnd',
         overlay,
         defaultSaveInBackstack = (core.options && core.options.defaultBackstack !== undefined) ? core.options.defaultBackstack : false,
+        ieVersion,
+        ieLessThanTen = false,
         animator;
 
+    if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)) { //test for MSIE x.x;
+        ieVersion = new Number(RegExp.$1); // capture x.x portion and store as a number
+        if ( ieVersion < 10) {
+            ieLessThanTen = true;
+        }
+    }
 
     function apply(callback, context, data) {
         if (typeof callback !== 'function') { return; }
         if (typeof context === 'object') {
-            callback.apply(context, data);
+            callback.apply(context, [data]);
         } else {
             callback(data);
         }
@@ -142,8 +148,8 @@ RAD.plugin("plugin.navigator", function (core, id) {
             break;
         }
 
-        popup.style.left = Math.round(popupX + window.pageXOffset) + 'px';
-        popup.style.top = Math.round(popupY + window.pageYOffset) + 'px';
+        popup.style.left = Math.max(Math.round(popupX + window.pageXOffset), 0) + 'px';
+        popup.style.top = Math.max(Math.round(popupY + window.pageYOffset), 0) + 'px';
         popup.style.width = width + 'px';
         popup.style.height = height + 'px';
 
@@ -290,22 +296,19 @@ RAD.plugin("plugin.navigator", function (core, id) {
             container.attr('view', datawrapper.content);
 
             function startAnimation() {
-                window.setTimeout(function () {
+                if (newView && newView.el) {
+                    // Force the browser to calculate new element styles, before CSS animation start
+                    window.getComputedStyle(newView.el, null).getPropertyValue('left');
 
-                    if (newView && newView.el) {
-                        // Force the browser to calculate new element styles, before CSS animation start
-                        window.getComputedStyle(newView.el, null).getPropertyValue('left');
+                    publish('attach', attachedViews);
+                }
 
-                        publish('attach', attachedViews);
-                    }
-
-                    // Start CSS animation
-                    if (!newView && !oldView) {
-                        overlay.removeClass('show');
-                    } else {
-                        container.addClass('animate');
-                    }
-                }, 0);
+                // Start CSS animation
+                if (!newView && !oldView) {
+                    overlay.removeClass('show');
+                } else {
+                    container.addClass('animate');
+                }
             }
 
             function showView() {
@@ -325,6 +328,7 @@ RAD.plugin("plugin.navigator", function (core, id) {
                 if (self.inAnimation === 0) {
                     overlay.removeClass('show');
                 }
+
                 apply(datawrapper.callback, datawrapper.context, [newView, oldView]);
                 publish('detach', detachedViews);
                 publish('attach_complete', attachedViews);
@@ -339,7 +343,7 @@ RAD.plugin("plugin.navigator", function (core, id) {
             overlay.addClass('show');
             self.inAnimation += 1;
 
-            if (datawrapper.animation === 'none' || (defaultAnimation === 'none' && !datawrapper.animation)) {
+            if (datawrapper.animation === 'none' || (defaultAnimation === 'none' && !datawrapper.animation) || ieLessThanTen) {
                 if (oldView) {
                     oldView.detach();
                 }
@@ -411,6 +415,10 @@ RAD.plugin("plugin.navigator", function (core, id) {
         }
         newView.isShown = true;
 
+        if (data.animation) {
+            newView.animation = data.animation;
+        }
+
         $element = newView.$el;
         endFunc = function () {
             if (done) {
@@ -421,9 +429,17 @@ RAD.plugin("plugin.navigator", function (core, id) {
             apply(data.callback, data.context, newView);
             overlay.removeClass('show');
             $element.off(transEndEventName, endFunc);
-            core.publish(data.content + '.' + 'attach', null); //TODO only root view receive onStartAttach
+            $element.off('cssClassChanged', endFunc);
+            core.publish(data.content + '.' + 'attach_complete', null);
             newView = null;
         };
+
+        if (!(newView.animation === 'none' || (defaultAnimation === 'none' && !newView.animation) || ieLessThanTen)) {
+            $element.addClass('animate');
+            $element.on(transEndEventName, endFunc);
+        } else {
+            $element.on('cssClassChanged', endFunc);
+        }
 
         overlay.addClass('show');
         window.setTimeout(endFunc, animationTimeout);
@@ -443,8 +459,11 @@ RAD.plugin("plugin.navigator", function (core, id) {
                 break;
             }
 
-            $element.on(transEndEventName, endFunc);
             $element.width();
+            window.setTimeout(function() {
+                core.publish(data.content + '.' + 'attach', null);
+                $element.trigger('cssClassChanged');
+            }, 0);
             $element.addClass('show');
         });
     }
@@ -472,9 +491,11 @@ RAD.plugin("plugin.navigator", function (core, id) {
             oldDialog.detach();
             apply(data.callback, data.context, oldDialog);
             overlay.removeClass('show');
+            oldElement.removeClass('animate');
             oldElement.off(transEndEventName, endFunc);
+            oldElement.off('cssClassChanged', endFunc);
 
-            core.publish(data.content + '.' + 'detach', null); //TODO only root view receive onEndDetach
+            core.publish(data.content + '.' + 'detach', null);
 
             //destroy dialog
             if (!data || data.destroy === undefined || data.destroy === true) {
@@ -486,12 +507,23 @@ RAD.plugin("plugin.navigator", function (core, id) {
         };
 
         overlay.addClass('show');
-        oldElement.on(transEndEventName, endFunc);
+
+        if (!(oldDialog.animation === 'none' || (defaultAnimation === 'none' && !oldDialog.animation) || ieLessThanTen)) {
+            oldElement.on(transEndEventName, endFunc);
+        }
+        else {
+            oldElement.on('cssClassChanged', endFunc);
+        }
+
         window.setTimeout(function () {
             endFunc();
         }, animationTimeout);
 
         oldElement.removeClass('show');
+
+        window.setTimeout(function() {
+            oldElement.trigger('cssClassChanged');
+        }, 0);
     }
 
     function isArray(value) {
@@ -531,12 +563,12 @@ RAD.plugin("plugin.navigator", function (core, id) {
         case 'popup':
         case 'dialog':
             switch (parts[2]) {
-            case 'show':
-                showModal(data, parts[1]);
-                break;
-            case 'close':
-                closeModal(data);
-                break;
+                case 'show':
+                    showModal(data, parts[1]);
+                    break;
+                case 'close':
+                    closeModal(data);
+                    break;
             }
             break;
         }
