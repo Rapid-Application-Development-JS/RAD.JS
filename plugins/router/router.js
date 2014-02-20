@@ -17,17 +17,16 @@ RAD.plugin("plugin.router", function (core, id) {
         }(core.options.backstackType));
 
     function getRootView(el) {
-        var result,
-            nodes,
-            i,
-            l;
+        var result, nodes, i, l, id;
 
         nodes = el.childNodes;
         for (i = 0, l = nodes.length; i < l; i += 1) {
             if (nodes[i].getAttribute) {
                 result = nodes[i].getAttribute('view');
+                id = nodes[i].getAttribute('id');
+                id = (id) ? ('#'+id) : ('.'+nodes[i].className.split(' ').join('.'));
                 if (result) {
-                    return {content: result, container_id: '#' + nodes[i].getAttribute('id')};
+                    return {content: result, container_id: id};
                 }
             }
         }
