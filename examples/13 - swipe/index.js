@@ -2,6 +2,9 @@
     'use strict';
 
     var scripts = [
+        "../tools/objectpool.js",
+        "../tools/utils.js",
+        "../tools/gestureadapter.js",
         "../js/iscroll-lite.js",
 
         "source/application/application.js",

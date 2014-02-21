@@ -1,28 +1,18 @@
 RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
     url: 'source/views/parent_widget/swipe_view.html',
-    events: {
-        'swipe .swipe-container': 'swipe',
-        'tapdown .swipe-container': 'tapDown',
-        'tapmove .swipe-container': 'tapMove',
-        'tapup .swipe-container': 'tapUp',
-        'tapcancel .swipe-container': 'tapChancel',
-        'tapclear .swipe-container': 'tapClear'
-    },
 
     innerIndex: 0,
     isSwiping: false,
     swipeRunning: false,
 
     swipe: function (e) {
-        "use strict";
-        var direction = e.originalEvent.swipe.direction;
-        if ((direction === "left" || direction === "right") && e.originalEvent.swipe.speed > 0.25 && !this.swipeRunning) {
+        var direction = e.direction;
+        if ((direction === "left" || direction === "right") && e.speed > 0.25 && !this.swipeRunning) {
             this.swipeTo(direction);
         }
     },
 
     oninit: function () {
-        "use strict";
         var self = this;
 
         self.pageLoader = new RAD.Blanks.Deferred();
@@ -43,13 +33,40 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
         });
     },
 
+    handleEvent: function (e) {
+        switch (e.type) {
+            case 'fling':
+                this.swipe(e);
+                break;
+            case 'pointerdown':
+                this.tapDown(e);
+                break;
+            case 'pointermove':
+                e.origin.preventDefault();
+                this.tapMove(e);
+                break;
+            case 'pointerup':
+                this.tapUp(e);
+                break;
+        }
+        e.release();
+    },
+
+    onrender: function () {
+        if (this.gestureAdapter) {
+            this.gestureAdapter.destroy();
+        }
+        this.gestureAdapter = new GestureAdapter(this.$('.swipe-container')[0], this);
+    },
+
     ondestroy: function () {
-        "use strict";
+        if (this.gestureAdapter) {
+            this.gestureAdapter.destroy();
+        }
         $(window).off('resize.module');
     },
 
     setContent: function (arrayIndex, dataIndex) {
-        "use strict";
         var container = this.containers[arrayIndex].containerID,
             viewID = this.swipe_content[dataIndex],
             options = {
@@ -61,8 +78,7 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
     },
 
     clearState: function () {
-        "use strict";
-        var i, pages_count = this.getPageCount();
+        var i, pages_count = this.getPageCount(), $container;
 
         this.innerIndex = 0;
         this.isSwiping = false;
@@ -80,8 +96,12 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
         ];
 
         for (i = 0; i < 3; i += 1) {
-            this.containers[i].$container.html("");
+            $container = this.containers[i].$container;
+            this.publish($container.attr('view') + '.detach');
+            $container.removeAttr('view');
+            $container.children().detach();
         }
+        this.children.length = 0;
 
         for (i = 0; i < pages_count && i < 3; i += 1) {
             this.setContent(i, i);
@@ -96,19 +116,16 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
     },
 
     changePosition: function (containerID, position) {
-        "use strict";
         this.containers[containerID].$container.css({
             'left': position  * 100 + '%'
         });
     },
 
     getPageCount: function () {
-        "use strict";
         return this.swipe_content.length;
     },
 
     changeContainerPosition: function (position) {
-        "use strict";
         var value = "translate3d(" + position + "px, 0, 0)";
         this.$container.css({
             'transform': value,
@@ -121,23 +138,20 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
     },
 
     tapDown: function (e) {
-        "use strict";
         if (this.swipeRunning || this.inAnimation) {
             return;
         }
         this.isSwiping = false;
-        this.isDown = true;
 
-        this.startX = e.originalEvent.tapdown.clientX;
+        this.startX = e.clientX;
     },
 
     tapMove: function (e) {
-        "use strict";
-        if (this.swipeRunning || !this.isDown) {
+        if (this.swipeRunning) {
             return;
         }
         this.isSwiping = true;
-        var X = e.originalEvent.tapmove.clientX,
+        var X = e.clientX,
             delta = X - this.startX;
 
         //calculate new containers positions
@@ -147,29 +161,14 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
         this.startX = X;
     },
 
-    tapChancel: function (e) {
-        "use strict";
-        var self = this;
-        this.clearTimeout = setTimeout(function () {
-            self.tapUp();
-        }, 50);
-    },
-
-    tapClear: function (e) {
-        "use strict";
-        clearTimeout(this.clearTimeout);
-    },
-
     tapUp: function () {
-        "use strict";
         var position, containerWidth = this.containerWidth,
             delta = 0, direction = "right", pages_count = this.getPageCount();
 
-        if (!this.isSwiping || this.swipeRunning || !this.isDown) {
+        if (!this.isSwiping || this.swipeRunning) {
             return;
         }
 
-        this.isDown = false;
         this.swipeRunning = true;
 
         //calculate delta shift
@@ -195,7 +194,6 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
     },
 
     prepareAnimation: function (direction) {
-        "use strict";
         var self = this,
             $container = this.$container,
             eventName = 'webkitTransitionEnd oTransitionEnd transitionend msTransitionEnd';
@@ -222,7 +220,6 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
     },
 
     tweetPosition: function (direction) {
-        "use strict";
         var i,
             tmp,
             containerWidth = this.containerWidth,
@@ -266,7 +263,6 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
     },
 
     swipeTo: function (direction) {
-        "use strict";
         var position, containerWidth = this.containerWidth,
             delta = 0, pages_count = this.getPageCount();
 
@@ -274,12 +270,11 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
             return;
         }
 
-        if (!this.isSwiping || !this.isDown) {
+        if (!this.isSwiping) {
             return;
         }
 
         this.swipeRunning = true;
-        this.isDown = false;
 
         //calculate delta shift
         position = Math.abs(this.containerPosition % containerWidth);
@@ -306,22 +301,18 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
 
     // callbacks if you needed
     onLoadPage: function (index, element) {
-        "use strict";
         //when page loading
     },
 
     onUnloadPage: function (index, element) {
-        "use strict";
         //when page start unload
     },
 
     onSwipeStart: function () {
-        "use strict";
         //when pages start scrolling
     },
 
     onSwipeEnd: function (html, index, lastHtml) {
-        "use strict";
         //when central page stop animation
     }
 }));
@@ -329,7 +320,6 @@ RAD.namespace("RAD.Blanks.SwipeView", RAD.Blanks.View.extend({
 RAD.view("view.parent_widget", RAD.Blanks.SwipeView.extend({
     swipe_content: ["view.inner_first_widget", "view.inner_second_widget", "view.inner_third_widget"],
     onEndRender: function () {
-        "use strict";
         this.clearState();
     }
 }));
