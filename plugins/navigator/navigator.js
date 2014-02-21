@@ -250,6 +250,13 @@ RAD.plugin("plugin.navigator", function (core, id) {
             // new adding view
             newView = core.getView(datawrapper.content, core.extractExtras(datawrapper));
             previous = container.attr('view');
+
+            // clear old container attr
+            var oldContainer = document.querySelector('[view="' + datawrapper.content + '"]');
+            if (oldContainer) {
+                oldContainer.removeAttribute('view');
+            }
+
             // old removing view
             oldView = previous ? core.getView(previous) : undefined;
 
@@ -290,7 +297,9 @@ RAD.plugin("plugin.navigator", function (core, id) {
                     }
                 }
 
-                children.push(newChildOptions);
+                if (newChildOptions.content) {
+                    children.push(newChildOptions);
+                }
             }
 
             container.attr('view', datawrapper.content);
