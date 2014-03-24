@@ -251,18 +251,18 @@ RAD.plugin("plugin.navigator", function (core, id) {
             newView = core.getView(datawrapper.content, core.extractExtras(datawrapper));
             previous = container.attr('view');
 
-            // clear old container attr
-            var oldContainer = document.querySelector('[view="' + datawrapper.content + '"]');
-            if (oldContainer) {
-                oldContainer.removeAttribute('view');
-            }
-
             // old removing view
             oldView = previous ? core.getView(previous) : undefined;
 
             if (oldView && oldView.viewID === (newView && newView.viewID)) {
                 window.console.log("You try navigate the same view:" + oldView.viewID + " as old and new widget!");
                 return;
+            }
+
+            // clear old container attr
+            var oldContainer = document.querySelector('[view="' + datawrapper.content + '"]');
+            if (oldContainer) {
+                oldContainer.removeAttribute('view');
             }
 
             // get array of detached viewsID
