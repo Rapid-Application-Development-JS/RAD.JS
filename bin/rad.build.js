@@ -142,7 +142,7 @@
         var tracker = this.scrollTracker = this.scrollTracker || {};
         tracker.scrollView = closest(e.target, 'native-scroll');
         tracker.scrollRequest = false;
-        if (!!tracker.scrollView) {
+        if (!!tracker.scrollView && tracker.scrollView.firstElementChild) {
             tracker.startIOSTouch = e.touches[0].screenY;
             tracker.scrollRequest = true;
             tracker.scrollEnd = tracker.scrollView.firstElementChild.offsetHeight - tracker.scrollView.offsetHeight;
