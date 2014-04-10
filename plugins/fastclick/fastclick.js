@@ -6,6 +6,7 @@ RAD.plugin("plugin.fastclick", function (core) {
         var swiper = this,
             lastMove,
             TOUCH_DIFFERENCE = 20,
+            TOUCHMOVE_DELTA = 1,
             preLastMove;
 
         function extractCoord(e) {
@@ -91,8 +92,12 @@ RAD.plugin("plugin.fastclick", function (core) {
         }
 
         function saveLastPoint(e) {
-            var coords = extractCoord(e);
-            lastMove = preLastMove;
+            var coords = extractCoord(e),
+                dX = Math.abs(coords.screenX - preLastMove.screenX),
+                dY = Math.abs(coords.screenY - preLastMove.screenY);
+            if (dX >= TOUCHMOVE_DELTA || dY >= TOUCHMOVE_DELTA) {
+                lastMove = preLastMove;
+            }
             preLastMove = {
                 screenX: coords.screenX,
                 screenY: coords.screenY,
