@@ -1,5 +1,0 @@
-Toast:
-You can't use className attribute in toast view, you must use class for root element of template.
-
-Any view:
-you must use url in any view, in otherwise index.html will be reloaded

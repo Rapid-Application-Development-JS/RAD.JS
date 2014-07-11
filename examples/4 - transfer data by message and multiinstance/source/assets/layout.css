@@ -1,8 +1,0 @@
-.block {
-    position: relative;
-    padding: 10px;
-}
-
-.block>div {
-    position: static !important;
-}
