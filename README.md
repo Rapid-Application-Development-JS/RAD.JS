@@ -1,3 +1,7 @@
+>Currently in the master branch the work has begun on a new version of RAD-js - 2.0. The previous version is available on the branch "old_master". Thank you for understanding. The documentation and examples will be updated in the nearest time.
+
+***
+
 RAD.JS
 ======
 ***

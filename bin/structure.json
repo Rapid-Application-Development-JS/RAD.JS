@@ -1,0 +1,52 @@
+{
+	"animate_transition_plugin": {
+		"name": "Animate transition",
+		"file": "plugins/animate_transition.js",
+		"description": ""
+	},
+	"navigator": {
+		"name": "Navigator",
+		"file": "plugins/navigator.js",
+		"description": ""
+	},
+	"router": {
+		"name": "Router",
+		"file": "plugins/router.js",
+		"description": ""
+	},
+	"pointer_plugin": {
+		"name": "Pointer",
+		"file": "plugins/pointer.js",
+		"description": ""
+	},
+	"gesture_plugin": {
+		"name": "Gesture",
+		"file": "plugins/gesture.js",
+		"description": ""
+	},
+	"deferred": {
+		"name": "Deferred",
+		"file": "blanks/deferred.js",
+		"description": ""
+	},
+	"plugin": {
+		"name": "Plugin",
+		"file": "blanks/plugin.js",
+		"description": ""
+	},
+	"service": {
+		"name": "Service",
+		"file": "blanks/service.js",
+		"description": ""
+	},
+	"view": {
+		"name": "View",
+		"file": "blanks/view.js",
+		"description": "Basic view functionality"
+	},
+	"scrollable_view": {
+		"name": "Scrollable view",
+		"file": "blanks/scrollable_view.js",
+		"description": ""
+	}
+}
