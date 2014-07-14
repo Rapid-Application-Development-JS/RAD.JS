@@ -251,6 +251,11 @@ function Navigator() {
         renderView(newView, attachViews);
     }
 
+    // helper function
+    function stopPropagation(e) {
+        e.stopPropagation();
+    }
+
     function showSingle(data) {
         var viewId, view, attachView;
 
@@ -260,6 +265,12 @@ function Navigator() {
         view.el.animation = data.animation; // save animation name for future using in closeSingle()
         if (view.el.timeout) {
             window.clearTimeout(view.el.timeout);
+        }
+        // remove onCloseListener in case when we popup was reopened
+        if (view.el.onCloseListener) {
+            view.el.removeEventListener('click', stopPropagation, false);
+            document.body.removeEventListener('click', view.el.onCloseListener, false);
+            view.el.onCloseListener = null;
         }
         attachView = function () {
             core.publish(viewId + '.attach_start');
@@ -277,6 +288,14 @@ function Navigator() {
                         view.el.timeout = window.setTimeout(function() {
                             closeSingle({content: viewId});
                         }, data.showTime);
+                    }
+                    // setup autoclose when user click outside
+                    if (data.outsideClose) {
+                        view.el.onCloseListener = function(e) {
+                            closeSingle({content: viewId});
+                        };
+                        view.el.addEventListener('click', stopPropagation, false);
+                        document.body.addEventListener('click', view.el.onCloseListener, false);
                     }
                 }
             });
