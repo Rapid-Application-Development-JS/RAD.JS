@@ -58,7 +58,7 @@ module.exports = function (grunt) {
             },
             blanks : {
                 files: [
-                    {src: 'bin/structure.js', dest: 'bin/<%= pkg.name %>.<%= pkg.version %>.js'}
+                    {src: 'bin/structure.js', dest: 'bin/<%= pkg.name %>.js'}
                 ]
             }
         }
