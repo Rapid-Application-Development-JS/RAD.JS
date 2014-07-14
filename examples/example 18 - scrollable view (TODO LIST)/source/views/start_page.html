@@ -1,0 +1,43 @@
+<div class="top-bar topcoat-navigation-bar">
+    <div class="topcoat-navigation-bar__item center full">
+        <h1 class="topcoat-navigation-bar__title">Simple Todo List</h1>
+    </div>
+</div>
+<div class="section create-task">
+    <h2 class="section__header">Enter task name</h2>
+    <div class="section__content">
+        <form action="#">
+            <input class="topcoat-text-input task-name full" type="text" placeholder="What needs to be done?" />
+            <button type="submit" class="topcoat-button--cta full">Add Task</button>
+        </form>
+    </div>
+</div>
+<div class="main">
+    <form class="topcoat-list todo-list" action="#">
+
+        <h3 class="topcoat-list__header" data-template="true">Todo List (<%= model.length %>):</h3>
+
+        <div class="topcoat-list__container scroll-view">
+            <div class="scroll-view-body">
+
+                <ul data-template="true">
+                    <% _.each(model, function(task, index) { %>
+                    <li class="topcoat-list__item  <%= task.done ? 'done' : '' %>">
+                        <label class="topcoat-checkbox"  >
+                            <input type="checkbox" value="<%= index %>" <%= task.done ? 'checked' : '' %> >
+                            <span class="topcoat-checkbox__checkmark"></span>
+                        </label>
+                        <span class="label"><%= task.name %></span>
+                        <span class="remove-icon" data-index="<%= index %>">
+                            <i class="fa fa-minus-square-o" ></i>
+                        </span>
+                    </li>
+                    <% }); %>
+                </ul>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+

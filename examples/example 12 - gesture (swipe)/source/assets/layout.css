@@ -1,0 +1,29 @@
+.pointer-wrap{
+    position: relative;
+    margin: -10px -20px;
+    height: 300px;
+    overflow: hidden;
+    background: #454646;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+
+    /* No support for these yet, use at own risk */
+    -o-user-select: none;
+    user-select: none;
+}
+.pointer{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    margin: -10px -10px;
+    background-color: #17b7f9;
+    display: none;
+    border-radius: 50%;
+}
+.pointer-wrap .label {
+    position: absolute;
+    left:20px;
+    top:10px;
+    right:10px;
+}

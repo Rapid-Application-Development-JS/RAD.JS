@@ -1,0 +1,9 @@
+.warning {
+    color: #ffa500;
+}
+.message {
+    color: #008000;
+}
+.error {
+    color: #ff0000;
+}

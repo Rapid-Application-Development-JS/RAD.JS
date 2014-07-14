@@ -1,0 +1,86 @@
+.create-task {
+    height:10rem;
+    border-top: 0;
+}
+.create-task ~ .main {
+    top:14.375em;
+}
+.create-task input[type="text"] {
+    margin: 0 0 10px;
+}
+.create-task button {
+    margin: 0 !important;
+}
+.todo-list {
+    position: relative;
+    padding-top: 29px;
+    height: 100%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.todo-list .topcoat-list__header {
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.todo-list .topcoat-list__container {
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
+}
+.todo-list ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.todo-list .topcoat-list__item {
+    position: relative;
+    padding-left: 52px;
+    font-size: 0; /* remove extra space between inline-block */
+}
+.todo-list .topcoat-checkbox {
+    vertical-align: middle;
+    margin: 0 0 0 -2rem;
+    font-size: 16px;
+}
+.todo-list .topcoat-checkbox__checkmark {
+    margin: 0;
+}
+.todo-list .label {
+    display: inline-block;
+    vertical-align: middle;
+    width: 100%;
+    padding: 0 30px 0 20px;
+    font-size: 16px;
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
+
+    word-wrap: break-word;
+}
+.todo-list .done .label {
+    text-decoration: line-through;
+}
+.todo-list .remove-icon {
+    position: absolute;
+    z-index: 2;
+    top:50%;
+    right:10px;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0;
+
+    text-align: center;
+    color: #4ca1e4;
+    font-size: 24px;
+    line-height: 42px;
+
+    cursor: pointer;
+}
+.todo-list .remove-icon:active {
+    margin-top: -18px;
+}
+.todo-list .done .remove-icon {
+    color: green;
+}

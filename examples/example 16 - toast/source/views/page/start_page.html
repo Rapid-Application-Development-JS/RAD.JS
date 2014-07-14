@@ -1,0 +1,90 @@
+<div class="top-bar topcoat-navigation-bar">
+    <div class="topcoat-navigation-bar__item center full">
+        <h1 class="topcoat-navigation-bar__title">Toast Demo</h1>
+    </div>
+</div>
+<div class="main">
+    <div class="scroll-view">
+        <div class="scroll-view-body">
+            <div class="section">
+                <h3 class="section__header">Enter toast Title and Content</h3>
+                <div class="section__content">
+                    <form action="#" name="toast-content">
+                        <input name="title" type="text" class="topcoat-text-input full extra-margin--bottom" placeholder="Title:" value="">
+                        <input name="content" type="text" class="topcoat-text-input full extra-margin--bottom" placeholder="Content:" value="">
+                        <div class="extra-margin--bottom right">
+                            <button class="topcoat-button--cta toast-show" type="button">Show toast</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <form action="#" class="form-options" name="toast-options">
+                <div class="topcoat-list topcoat-list-margin topcoat-list-wrapper">
+                    <h3 class="topcoat-list__header sub-title">Type:</h3>
+                    <ul class="topcoat-list__container">
+                        <li class="topcoat-list__item">
+                            <label class="topcoat-radio-button" for="w">
+                                <input id="w" type="radio" name="type" value="warning">
+                                <div class="topcoat-radio-button__checkmark"></div>
+                                Warning
+                            </label>
+                        </li>
+                        <li class="topcoat-list__item">
+                            <label class="topcoat-radio-button" for="m">
+                                <input id="m" type="radio" name="type" value="message" checked>
+                                <div class="topcoat-radio-button__checkmark"></div>
+                                Message
+                            </label>
+                        </li>
+                        <li class="topcoat-list__item">
+                            <label class="topcoat-radio-button" for="e">
+                                <input id="e" type="radio" name="type" value="error">
+                                <div class="topcoat-radio-button__checkmark"></div>
+                                Error
+                            </label>
+                        </li>
+                    </ul>
+
+                    <h3 class="topcoat-list__header sub-title">Gravity:</h3>
+                    <ul class="topcoat-list__container">
+                        <li class="topcoat-list__item">
+                            <label class="topcoat-radio-button" for="gc">
+                                <input id="gc" type="radio" name="gravity" value="center" checked>
+                                <div class="topcoat-radio-button__checkmark"></div>
+                                Center
+                            </label>
+                        </li>
+                        <li class="topcoat-list__item">
+                            <label class="topcoat-radio-button" for="gl">
+                                <input id="gl" type="radio" name="gravity" value="left">
+                                <div class="topcoat-radio-button__checkmark"></div>
+                                Left
+                            </label>
+                        </li>
+                        <li class="topcoat-list__item">
+                            <label class="topcoat-radio-button" for="gr">
+                                <input id="gr" type="radio" name="gravity" value="right">
+                                <div class="topcoat-radio-button__checkmark"></div>
+                                Right
+                            </label>
+                        </li>
+                        <li class="topcoat-list__item">
+                            <label class="topcoat-radio-button" for="gt">
+                                <input id="gt" type="radio" name="gravity" value="top">
+                                <div class="topcoat-radio-button__checkmark"></div>
+                                Top
+                            </label>
+                        </li>
+                        <li class="topcoat-list__item">
+                            <label class="topcoat-radio-button" for="gb">
+                                <input id="gb" type="radio" name="gravity" value="bottom">
+                                <div class="topcoat-radio-button__checkmark"></div>
+                                Bottom
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

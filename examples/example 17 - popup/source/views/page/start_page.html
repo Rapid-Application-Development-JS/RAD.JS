@@ -1,0 +1,91 @@
+<div class="top-bar topcoat-navigation-bar">
+    <div class="topcoat-navigation-bar__item center full">
+        <h1 class="topcoat-navigation-bar__title">Popup Demo</h1>
+    </div>
+</div>
+<div class="main">
+    <div class="scroll-view">
+        <div class="scroll-view-body">
+            <div class="section">
+                <h3 class="section__header">Popup content:</h3>
+                <div class="section__content">
+                    <input id="content" type="text" size="40" class="topcoat-text-input full" value="">
+                </div>
+            </div>
+            <div class="section">
+                <h3 class="section__header">Launch popup with different gravity target</h3>
+                <div class="section__content center">
+                    <button class="topcoat-button--cta dialog-show" data-target="popup-anchor">Show popup (target: anchor)</button>
+                    <button class="topcoat-button--cta dialog-show" >Show popup</button>
+                </div>
+            </div>
+
+            <div class="extra-margin center">
+                    <span id="popup-anchor" class="anchor">Anchor</span>
+            </div>
+            <div class="section">
+                <h3 class="section__header">Message received from popup:</h3>
+                <div class="section content">
+                    <div id="dialog_result" class="receiver"></div>
+                </div>
+            </div>
+            <form action="#" class="topcoat-list" name="popup-options">
+                <h3 class="topcoat-list__header">Select gravity:</h3>
+                <ul class="topcoat-list__container">
+                    <li class="topcoat-list__item">
+                        <label class="topcoat-radio-button" for="ga">
+                            <input id="ga" type="radio" name="gravity" value="none" checked>
+                            <div class="topcoat-radio-button__checkmark"></div>
+                            Auto
+                        </label>
+                    </li>
+                    <li class="topcoat-list__item">
+                        <label class="topcoat-radio-button" for="gc">
+                            <input  id="gc" type="radio" name="gravity" value="center">
+                            <div class="topcoat-radio-button__checkmark"></div>
+                            Center in window
+                        </label>
+                    </li>
+                    <li class="topcoat-list__item">
+                        <label class="topcoat-radio-button" for="gl">
+                            <input id="gl" type="radio" name="gravity" value="left">
+                            <div class="topcoat-radio-button__checkmark"></div>
+                            Left
+                        </label>
+                    </li>
+                    <li class="topcoat-list__item">
+                        <label class="topcoat-radio-button" for="gr">
+                            <input  id="gr" type="radio" name="gravity" value="right">
+                            <div class="topcoat-radio-button__checkmark"></div>
+                            Right
+                        </label>
+                    </li>
+                    <li class="topcoat-list__item">
+                        <label class="topcoat-radio-button" for="gt">
+                            <input id="gt" type="radio" name="gravity" value="top">
+                            <div class="topcoat-radio-button__checkmark"></div>
+                            Top
+                        </label>
+                    </li>
+                    <li class="topcoat-list__item">
+                        <label class="topcoat-radio-button" for="gb">
+                            <input id="gb" type="radio" name="gravity" value="bottom">
+                            <div class="topcoat-radio-button__checkmark"></div>
+                            Bottom
+                        </label>
+                    </li>
+                </ul>
+                <h3 class="topcoat-list__header ">Other options:</h3>
+                <ul class="topcoat-list__container">
+                    <li class="topcoat-list__item">
+                        <label class="topcoat-switch">
+                            <input id="auto-close" type="checkbox" class="topcoat-switch__input" name="autoclose">
+                            <div class="topcoat-switch__toggle"></div>
+                        </label>
+                        <label for="auto-close" class="switch-label">- Click outside to close Pop-Up</label>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
