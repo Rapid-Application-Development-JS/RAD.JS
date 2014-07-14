@@ -2,6 +2,10 @@ module.exports = function (grunt) {
 
     var fileList = grunt.file.readJSON('bin/toolset.json').items;
 
+    console.log(typeof fileList);
+
+    fileList = fileList ? fileList : [];
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -32,7 +36,7 @@ module.exports = function (grunt) {
                     beautify: true
                 },
                 files: {
-                    'separated_core/bin/tools.js': fileList.split(',')
+                    'separated_core/bin/tools.js': fileList
                 }
             }
         },
@@ -49,12 +53,12 @@ module.exports = function (grunt) {
                     exports : 'RAD'
                 },
                 files: [
-                    {src: 'separated_core/entry.js', dest: 'separated_core/bin/prebuild.js'}
+                    {src: 'entry.js', dest: 'bin/prebuild.js'}
                 ]
             },
             blanks : {
                 files: [
-                    {src: 'separated_core/bin/structure.js', dest: 'separated_core/bin/<%= pkg.name %>.<%= pkg.version %>.js'}
+                    {src: 'bin/structure.js', dest: 'bin/<%= pkg.name %>.<%= pkg.version %>.js'}
                 ]
             }
         }
@@ -69,12 +73,12 @@ module.exports = function (grunt) {
     grunt.registerTask('pack', ['concat:build']);
 
     grunt.registerTask('blanks', function(){
-        var structure = grunt.file.readJSON('separated_core/bin/structure.json'),
+        var structure = grunt.file.readJSON('bin/structure.json'),
 
-        content = grunt.file.read('separated_core/tools.tpl', 'utf-8');
+        content = grunt.file.read('tools.tpl', 'utf-8');
         content = grunt.template.process(content, {data : {arr : structure}});
 
-        grunt.file.write('separated_core/bin/structure.js', content);
+        grunt.file.write('bin/structure.js', content);
     });
 
 
