@@ -1,0 +1,19 @@
+<div class="section">
+    <div class="section__header">
+        <h3>Widget 2</h3>
+    </div>
+    <div class="section__content">
+
+        <div class="receiver">
+            <b>No data template: render time stamp {{= new Date().getTime() }}</b>
+        </div>
+        <div class="receiver" data-template>
+            <b>Has data template: render time stamp {{= new Date().getTime() }}</b>
+            Received data:  <span>{{= model.msg }}</span>
+        </div>
+        <div class="receiver" data-template>
+            <b>Has data template: render time stamp {{= new Date().getTime() }}</b>
+            Received data:  <span>{{= model.msg }}</span>
+        </div>
+    </div>
+</div>

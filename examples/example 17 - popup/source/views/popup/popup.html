@@ -1,0 +1,18 @@
+<div class="popup-view-holder">
+    <div class="scroll-view">
+        <div class="scroll-view-body">
+            <input id="text" type="text" class="topcoat-text-input full" placeholder="Enter some text here" value="">
+            <button class="close-dialog topcoat-button--cta extra-margin--top-bottom full">Close</button>
+            <div class="topcoat-list extra-margin--bottom">
+                <h3 class="topcoat-list__header">Items</h3>
+                <ul class="topcoat-list__container">
+                    {{# for (var i = 0; i < 5; i++) {  }}
+                    <li class="topcoat-list__item">{{= model.msg || 'No message received' }}</li>
+                    {{# }  }}
+                </ul>
+            </div>
+            <button class="topcoat-button--cta  full close-dialog">Close</button>
+        </div>
+    </div>
+    <span class="popup-pointer"></span>
+</div>
