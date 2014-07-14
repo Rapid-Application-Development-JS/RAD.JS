@@ -2,8 +2,6 @@ module.exports = function (grunt) {
 
     var fileList = grunt.file.readJSON('bin/toolset.json').items;
 
-    console.log(typeof fileList);
-
     fileList = fileList ? fileList : [];
 
     grunt.initConfig({
@@ -61,10 +59,17 @@ module.exports = function (grunt) {
                     {src: 'bin/structure.js', dest: 'bin/<%= pkg.name %>.<%= pkg.version %>.js'}
                 ]
             }
+        },
+        clean : {
+            dev : {
+                files : [
+                    { src : ['bin/structure.js', 'bin/prebuild.js'] }
+                ]
+            }
         }
-
     });
 
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -82,6 +87,6 @@ module.exports = function (grunt) {
     });
 
 
-    grunt.registerTask('dev', ['pure_cjs:rad', 'blanks', 'pure_cjs:blanks']);
+    grunt.registerTask('dev', ['pure_cjs:rad', 'blanks', 'pure_cjs:blanks', 'clean:dev']);
     grunt.registerTask('release', ['pure_cjs:rad', 'blanks', 'pure_cjs:blanks', 'uglify:build']);
 };
