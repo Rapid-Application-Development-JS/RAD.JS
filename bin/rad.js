@@ -1399,6 +1399,9 @@
                     };
                     renderView(newView, attachViews);
                 }
+                function stopPropagation(e) {
+                    e.stopPropagation();
+                }
                 function showSingle(data) {
                     var viewId, view, attachView;
                     viewId = data.content;
@@ -1407,6 +1410,11 @@
                     view.el.animation = data.animation;
                     if (view.el.timeout) {
                         window.clearTimeout(view.el.timeout);
+                    }
+                    if (view.el.onCloseListener) {
+                        view.el.removeEventListener('click', stopPropagation, false);
+                        document.body.removeEventListener('click', view.el.onCloseListener, false);
+                        view.el.onCloseListener = null;
                     }
                     attachView = function () {
                         core.publish(viewId + '.attach_start');
@@ -1423,6 +1431,13 @@
                                     view.el.timeout = window.setTimeout(function () {
                                         closeSingle({ content: viewId });
                                     }, data.showTime);
+                                }
+                                if (data.outsideClose) {
+                                    view.el.onCloseListener = function (e) {
+                                        closeSingle({ content: viewId });
+                                    };
+                                    view.el.addEventListener('click', stopPropagation, false);
+                                    document.body.addEventListener('click', view.el.onCloseListener, false);
                                 }
                             }
                         });
@@ -2105,8 +2120,8 @@
                             this._fireEvent('fling', e, {
                                 start: pointer.start,
                                 end: pointer.end,
-                                speedX: (pointer.last.clientX - pointer.start.clientX) / (pointer.last.timeStamp - pointer.start.timeStamp),
-                                speedY: (pointer.last.clientY - pointer.start.clientY) / (pointer.last.timeStamp - pointer.start.timeStamp)
+                                speedX: (pointer.end.clientX - pointer.last.clientX) / (pointer.end.timeStamp - pointer.last.timeStamp),
+                                speedY: (pointer.end.clientY - pointer.last.clientY) / (pointer.end.timeStamp - pointer.last.timeStamp)
                             });
                         } else if (!isMoved) {
                             if (pointer.end.timeStamp - pointer.start.timeStamp > 300) {

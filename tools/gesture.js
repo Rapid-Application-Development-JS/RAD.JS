@@ -98,8 +98,8 @@ GestureTracker.prototype = {
                 this._fireEvent('fling', e, {
                     start: pointer.start,
                     end: pointer.end,
-                    speedX: (pointer.last.clientX - pointer.start.clientX) / (pointer.last.timeStamp - pointer.start.timeStamp),
-                    speedY: (pointer.last.clientY - pointer.start.clientY) / (pointer.last.timeStamp - pointer.start.timeStamp)
+                    speedX: (pointer.end.clientX - pointer.last.clientX) / (pointer.end.timeStamp - pointer.last.timeStamp),
+                    speedY: (pointer.end.clientY - pointer.last.clientY) / (pointer.end.timeStamp - pointer.last.timeStamp)
                 });
             } else if (!isMoved) {
                 if (pointer.end.timeStamp - pointer.start.timeStamp > 300) {
