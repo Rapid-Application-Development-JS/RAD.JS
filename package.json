@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.mobidev.biz:phonegap/scalablejsapp.git"
+    "url": "git://github.com/mobidevpublisher/RAD.JS.git"
   },
   "keywords": [
     "RAD.js",
