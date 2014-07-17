@@ -44,4 +44,10 @@ function build(mode, cb){
 
 }
 
+
+function getLibsPath(){
+    return path.join(__dirname, 'examples', 'libs');
+}
+
 exports.build = build;
+exports.getLibsPath = getLibsPath;
