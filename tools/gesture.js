@@ -33,16 +33,16 @@ GestureTracker.prototype = {
 
     handleEvent: function (e) {
         switch (e.type) {
-            case this.TRACK_EVENTS.down:
-                this._pointerDown(e);
-                break;
-            case this.TRACK_EVENTS.move:
-                this._pointerMove(e);
-                break;
-            case this.TRACK_EVENTS.chancel:
-            case this.TRACK_EVENTS.up:
-                this._pointerUp(e);
-                break;
+        case this.TRACK_EVENTS.down:
+            this._pointerDown(e);
+            break;
+        case this.TRACK_EVENTS.move:
+            this._pointerMove(e);
+            break;
+        case this.TRACK_EVENTS.chancel:
+        case this.TRACK_EVENTS.up:
+            this._pointerUp(e);
+            break;
         }
     },
 
@@ -140,5 +140,3 @@ GestureTracker.prototype = {
         e.target.dispatchEvent(customEvent);
     }
 };
-
-exports.module = GestureTracker;
