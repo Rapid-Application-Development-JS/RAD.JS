@@ -49,5 +49,10 @@ function getLibsPath(){
     return path.join(__dirname, 'examples', 'libs');
 }
 
+function getCssPath(){
+    return path.join(__dirname, 'css');
+}
+
 exports.build = build;
 exports.getLibsPath = getLibsPath;
+exports.getCssPath = getCssPath;

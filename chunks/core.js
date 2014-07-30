@@ -10,6 +10,27 @@ var defaultOptions = {
     debug: false
 };
 
+function preventBodyTouch(e) {
+    var tracker = this.scrollTracker;
+    if (!tracker.scrollView || (tracker.scrollRequest && ((e.touches[0].screenY > tracker.startIOSTouch && tracker.scrollView.scrollTop === 0) || (tracker.scrollView.scrollTop >= tracker.scrollEnd && e.touches[0].screenY < tracker.startIOSTouch)))) {
+        e.preventDefault();
+    }
+    tracker = null;
+}
+
+function startBodyTouch(e) {
+    var tracker = this.scrollTracker = this.scrollTracker || {};
+
+    tracker.scrollView = closest(e.target, 'native-scroll');
+    tracker.scrollRequest = false;
+    if (!!tracker.scrollView && tracker.scrollView.firstElementChild) {
+        tracker.startIOSTouch = e.touches[0].screenY;
+        tracker.scrollRequest = true;
+        tracker.scrollEnd = tracker.scrollView.firstElementChild.offsetHeight - tracker.scrollView.offsetHeight;
+    }
+    tracker = null;
+}
+
 function prepareEnvironment(options) {
     var isIOS = navigator.userAgent.match(/(iPad|iPhone|iPod|iOS)/gi) ? true : false,
         isAndroid = (/android/gi).test(window.navigator.appVersion);
