@@ -1,0 +1,33 @@
+/*swipe implementation*/
+.swipe-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.swipe-0, .swipe-1, .swipe-2 {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left:0;
+
+    /*disable text select*/
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.swipe-animation {
+    -webkit-transition: all 350ms ease;
+    -moz-transition: all 350ms ease;
+    -ms-transition: all 350ms ease;
+    -o-transition: all 350ms ease;
+    transition: all 350ms ease;
+}

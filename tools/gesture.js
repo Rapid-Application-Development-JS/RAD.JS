@@ -33,22 +33,27 @@ GestureTracker.prototype = {
 
     handleEvent: function (e) {
         switch (e.type) {
-            case this.TRACK_EVENTS.down:
-                this._pointerDown(e);
-                break;
-            case this.TRACK_EVENTS.move:
-                this._pointerMove(e);
-                break;
-            case this.TRACK_EVENTS.chancel:
-            case this.TRACK_EVENTS.up:
-                this._pointerUp(e);
-                break;
+        case this.TRACK_EVENTS.down:
+            this._pointerDown(e);
+            break;
+        case this.TRACK_EVENTS.move:
+            this._pointerMove(e);
+            break;
+        case this.TRACK_EVENTS.chancel:
+        case this.TRACK_EVENTS.up:
+            this._pointerUp(e);
+            break;
         }
     },
 
     _pointerDown: function (e) {
         this.tracks[e.pointerId] = {
             start: {
+                clientX: e.clientX,
+                clientY: e.clientY,
+                timeStamp: e.timeStamp
+            },
+            pre: {
                 clientX: e.clientX,
                 clientY: e.clientY,
                 timeStamp: e.timeStamp
@@ -68,6 +73,10 @@ GestureTracker.prototype = {
 
     _pointerMove: function (e) {
         if (e.timeStamp - this.tracks[e.pointerId].last.timeStamp > 10) {
+            this.tracks[e.pointerId].pre.clientX = this.tracks[e.pointerId].last.clientX;
+            this.tracks[e.pointerId].pre.clientY = this.tracks[e.pointerId].last.clientY;
+            this.tracks[e.pointerId].pre.timeStamp = this.tracks[e.pointerId].last.timeStamp;
+
             this.tracks[e.pointerId].last.clientX = e.clientX;
             this.tracks[e.pointerId].last.clientY = e.clientY;
             this.tracks[e.pointerId].last.timeStamp = e.timeStamp;
@@ -84,22 +93,22 @@ GestureTracker.prototype = {
     },
 
     _checkGesture: function (e) {
-        var isMoved, isFling, pointerId = e.pointerId, pointer = this.tracks[pointerId];
+        var isMoved, isFling, pointerId = e.pointerId, pointer = this.tracks[pointerId], TOUCH_GAP = 15;
 
         function distance(x1, x2, y1, y2) {
             return Math.pow(((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)), 0.5);
         }
 
-        isMoved = distance(pointer.start.clientX, pointer.end.clientX, pointer.start.clientY, pointer.end.clientY) >> 0 > 0;
-        isFling = distance(pointer.start.clientX, pointer.last.clientX, pointer.start.clientY, pointer.last.clientY) >> 0 > 0;
+        isMoved = Math.abs(distance(pointer.start.clientX, pointer.end.clientX, pointer.start.clientY, pointer.end.clientY)) > TOUCH_GAP;
+        isFling = Math.abs(distance(pointer.end.clientX, pointer.pre.clientX, pointer.end.clientY, pointer.pre.clientY)) > TOUCH_GAP;
 
         if (Object.keys(this.tracks).length === 1) {
             if (isFling) {
                 this._fireEvent('fling', e, {
                     start: pointer.start,
                     end: pointer.end,
-                    speedX: (pointer.end.clientX - pointer.last.clientX) / (pointer.end.timeStamp - pointer.last.timeStamp),
-                    speedY: (pointer.end.clientY - pointer.last.clientY) / (pointer.end.timeStamp - pointer.last.timeStamp)
+                    speedX: (pointer.end.clientX - pointer.pre.clientX) / (pointer.end.timeStamp - pointer.pre.timeStamp),
+                    speedY: (pointer.end.clientY - pointer.pre.clientY) / (pointer.end.timeStamp - pointer.pre.timeStamp)
                 });
             } else if (!isMoved) {
                 if (pointer.end.timeStamp - pointer.start.timeStamp > 300) {
@@ -131,5 +140,3 @@ GestureTracker.prototype = {
         e.target.dispatchEvent(customEvent);
     }
 };
-
-exports.module = GestureTracker;
