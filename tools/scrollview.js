@@ -538,3 +538,5 @@ ScrollView.prototype = {
         }
     }
 };
+
+exports.module = ScrollView;

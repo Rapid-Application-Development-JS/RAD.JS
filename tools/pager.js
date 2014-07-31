@@ -499,3 +499,5 @@ Pager.prototype = {
         this._enabled = flag;
     }
 };
+
+exports.module = Pager;

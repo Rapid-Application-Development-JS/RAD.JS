@@ -422,3 +422,5 @@ Drawer.prototype = {
         this._enabled = flag;
     }
 };
+
+exports.module = Drawer;

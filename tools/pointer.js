@@ -157,3 +157,5 @@ PointerTracker.prototype = {
         e.target.dispatchEvent(customEvent);
     }
 };
+
+exports.module = PointerTracker;

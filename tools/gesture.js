@@ -140,3 +140,5 @@ GestureTracker.prototype = {
         e.target.dispatchEvent(customEvent);
     }
 };
+
+exports.module = GestureTracker;
