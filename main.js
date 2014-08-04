@@ -22,7 +22,7 @@ function build(mode, cb){
         console.log(e);
     }
 
-    child = exec('grunt ' + mode,
+    child = exec('./node_modules/.bin/grunt ' + mode,
         { cwd : __dirname },
         function (error, stdout, stderr) {
             console.log('stdout: ' + stdout);

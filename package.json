@@ -24,6 +24,7 @@
     "grunt-contrib-concat": "^0.4.0",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-uglify": "~0.2.4",
-    "grunt-pure-cjs": "^1.4.0"
+    "grunt-pure-cjs": "^1.4.0",
+    "grunt-cli": "~0.1.13"
   }
 }
