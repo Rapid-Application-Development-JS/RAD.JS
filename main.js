@@ -53,6 +53,11 @@ function getCssPath(){
     return path.join(__dirname, 'css');
 }
 
+function getRADPath(){
+    return path.join(__dirname, 'bin', 'rad.js');
+}
+
 exports.build = build;
 exports.getLibsPath = getLibsPath;
 exports.getCssPath = getCssPath;
+exports.getRADPath = getRADPath;
