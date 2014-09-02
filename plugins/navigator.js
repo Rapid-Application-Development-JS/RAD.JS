@@ -311,6 +311,8 @@ function Navigator() {
         if (view.el.timeout) {
             window.clearTimeout(view.el.timeout);
         }
+        document.body.removeEventListener('click', view.el.onCloseListener);
+
         core.publish('animateTransition', {
             pageOut: view.el,
             animation: view.el.animation + '-out',
