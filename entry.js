@@ -34,8 +34,9 @@ function isArray(value) {
  * */
 
 function namespace(destination, obj) {
-    if (typeof destination != 'string') {
-        throw new Error('Can\'t create namespace, destination or object specified incorrectly.');
+    if (typeof destination !== 'string') {
+        window.console.log('Can\'t create namespace, destination or object specified incorrectly:' + destination);
+        return;
     }
 
     // REAL HARDCODE! DON'T DO THIS AT HOME!

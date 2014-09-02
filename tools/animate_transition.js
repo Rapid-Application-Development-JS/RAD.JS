@@ -93,7 +93,7 @@ var animateTransition = (function(){
         if (pageIn === pageOut) { return; }
         // Stop animation if any of pages still in animation process
         if ( (pageIn && pageIn.busy) || (pageOut && pageOut.busy)) {
-            throw new Error("New animation cannot be applied to the same element until previous animation is not finished.");
+            window.console.log("You try apply new animation cannot be applied to the same element until previous animation is not finished.");
         }
 
         // You can use beforeTransition callback to define extra logic.

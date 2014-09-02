@@ -103,11 +103,13 @@ function PubSub() {
         subscribe: function (channel, fn, context) {
 
             if (!channel || typeof channel != 'string') {
-                throw new Error('Can\'t subscribe to channel, incorrect channel name');
+                window.console.log('Can\'t subscribe to channel, incorrect channel name:' + channel);
+                return;
             }
 
             if (typeof fn != 'function') {
-                throw new Error('Can\'t subscribe to channel, callback is not a function');
+                window.console.log('Can\'t subscribe to channel, callback is not a function:' + fn);
+                return;
             }
 
             var cntx = context || this,

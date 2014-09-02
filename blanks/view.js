@@ -172,7 +172,8 @@ var view = Backbone.View.extend({
             if (childView) {
                 childView.detach();
             } else {
-                throw new RAD.Errors.Render('Child view ['+children[index].content+'] is not registered. Please check parent view ['+ self.radID+'] ');
+                window.console.log('Child view ['+children[index].content+'] is not registered. Please check parent view ['+ self.radID+'] ');
+                return;
             }
         }
 
@@ -190,7 +191,8 @@ var view = Backbone.View.extend({
                 prepareInnerTemplates();
             }
         } catch (e) {
-            throw new Error(e.message + '. Caused during rendering: '+ self.radID );
+            window.console.log(e.message + '. Caused during rendering: '+ self.radID );
+            return;
         }
 
         //attach children
@@ -200,7 +202,8 @@ var view = Backbone.View.extend({
                 if (childView) {
                     this.insertSubview(children[index], check);
                 } else {
-                    throw new RAD.Errors.Render('Cannot insert child view ['+children[index].content+']. It is not registered. Please check parent view ['+ self.radID+'] ');
+                    window.console.log('Cannot insert child view ['+children[index].content+']. It is not registered. Please check parent view ['+ self.radID+'] ');
+                    return;
                 }
             }
         } else {
@@ -214,7 +217,8 @@ var view = Backbone.View.extend({
         var self = this;
 
         if (!container) {
-            throw new RAD.Errors.Render('Cannot insert view [' + self.radID + ']. Target container does not exist');
+            window.console.log('Cannot insert view [' + self.radID + ']. Target container does not exist');
+            return;
         }
 
         container.appendChild(this.el);

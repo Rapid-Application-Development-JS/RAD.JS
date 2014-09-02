@@ -275,10 +275,12 @@
                                 },
                                 subscribe: function (channel, fn, context) {
                                     if (!channel || typeof channel != 'string') {
-                                        throw new Error('Can\'t subscribe to channel, incorrect channel name');
+                                        window.console.log('Can\'t subscribe to channel, incorrect channel name:' + channel);
+                                        return;
                                     }
                                     if (typeof fn != 'function') {
-                                        throw new Error('Can\'t subscribe to channel, callback is not a function');
+                                        window.console.log('Can\'t subscribe to channel, callback is not a function:' + fn);
+                                        return;
                                     }
                                     var cntx = context || this, parts = channel.split(separator), index, length, currentChannel;
                                     channels[channel] = channels[channel] || [];
@@ -346,7 +348,8 @@
                             var loader = this, isLoaded = false;
                             function loadScript(url, checkCallback) {
                                 if (!url || typeof url != 'string') {
-                                    throw new Error('Can\'t load script, URL is incorrect');
+                                    window.console.log('Can\'t load script, URL is incorrect:' + url);
+                                    return;
                                 }
                                 var script = document.createElement('script');
                                 script.type = 'text/javascript';
@@ -618,8 +621,9 @@
                             return Object.prototype.toString.call(value) === '[object Array]';
                         }
                         function namespace(destination, obj) {
-                            if (typeof destination != 'string') {
-                                throw new Error('Can\'t create namespace, destination or object specified incorrectly.');
+                            if (typeof destination !== 'string') {
+                                window.console.log('Can\'t create namespace, destination or object specified incorrectly:' + destination);
+                                return;
                             }
                             var parts = destination.split('.'), parent = window.RAD, pl, i;
                             if (parts[0] === 'RAD') {
@@ -1050,7 +1054,8 @@
                             if (childView) {
                                 childView.detach();
                             } else {
-                                throw new RAD.Errors.Render('Child view [' + children[index].content + '] is not registered. Please check parent view [' + self.radID + '] ');
+                                window.console.log('Child view [' + children[index].content + '] is not registered. Please check parent view [' + self.radID + '] ');
+                                return;
                             }
                         }
                         try {
@@ -1072,7 +1077,8 @@
                                 prepareInnerTemplates();
                             }
                         } catch (e) {
-                            throw new Error(e.message + '. Caused during rendering: ' + self.radID);
+                            window.console.log(e.message + '. Caused during rendering: ' + self.radID);
+                            return;
                         }
                         if (children.length > 0) {
                             for (index = 0, length = children.length; index < length; index += 1) {
@@ -1080,7 +1086,8 @@
                                 if (childView) {
                                     this.insertSubview(children[index], check);
                                 } else {
-                                    throw new RAD.Errors.Render('Cannot insert child view [' + children[index].content + ']. It is not registered. Please check parent view [' + self.radID + '] ');
+                                    window.console.log('Cannot insert child view [' + children[index].content + ']. It is not registered. Please check parent view [' + self.radID + '] ');
+                                    return;
                                 }
                             }
                         } else {
@@ -1091,7 +1098,8 @@
                     appendIn: function (container, callback) {
                         var self = this;
                         if (!container) {
-                            throw new RAD.Errors.Render('Cannot insert view [' + self.radID + ']. Target container does not exist');
+                            window.console.log('Cannot insert view [' + self.radID + ']. Target container does not exist');
+                            return;
                         }
                         container.appendChild(this.el);
                         if (this.renderRequest) {
@@ -1469,7 +1477,11 @@
                     if (view.el.timeout) {
                         window.clearTimeout(view.el.timeout);
                     }
-                    document.body.removeEventListener('click', view.el.onCloseListener);
+                    if (view.el.onCloseListener) {
+                        view.el.removeEventListener('click', stopPropagation, false);
+                        document.body.removeEventListener('click', view.el.onCloseListener, false);
+                        view.el.onCloseListener = null;
+                    }
                     core.publish('animateTransition', {
                         pageOut: view.el,
                         animation: view.el.animation + '-out',
@@ -1676,7 +1688,7 @@
                             return;
                         }
                         if (pageIn && pageIn.busy || pageOut && pageOut.busy) {
-                            throw new Error('New animation cannot be applied to the same element until previous animation is not finished.');
+                            window.console.log('You try apply new animation cannot be applied to the same element until previous animation is not finished.');
                         }
                         if (beforeTransition && beforeTransition(pageIn, pageOut, container) === false) {
                             return;

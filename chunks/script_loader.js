@@ -7,7 +7,8 @@ function ScriptLoader() {
     function loadScript(url, checkCallback) {
 
         if (!url || typeof url != 'string') {
-            throw new Error('Can\'t load script, URL is incorrect');
+            window.console.log('Can\'t load script, URL is incorrect:' + url);
+            return;
         }
 
         var script = document.createElement("script");
