@@ -1396,6 +1396,11 @@
                     attachedViews = getSubviewsID(newView);
                     detachedViews.push(oldViewId);
                     attachedViews.push(newViewId);
+                    if (oldViewId === newViewId) {
+                        window.console.log('You try to navigate the same view:' + newViewId);
+                        data.callback(data, newView ? newView.el : null, oldView ? oldView.el : null, container);
+                        return;
+                    }
                     attachViews = function () {
                         publishToGroup('attach_start', attachedViews);
                         container.setAttribute('view', newViewId);
