@@ -48,6 +48,15 @@
                                 animationTimeout: 3000,
                                 debug: false
                             };
+                        function closest(element, className) {
+                            var result;
+                            if (element.classList && element.classList.contains(className)) {
+                                result = element;
+                            } else if (element.parentNode) {
+                                result = closest(element.parentNode, className);
+                            }
+                            return result;
+                        }
                         function preventBodyTouch(e) {
                             var tracker = this.scrollTracker;
                             if (!tracker.scrollView || tracker.scrollRequest && (e.touches[0].screenY > tracker.startIOSTouch && tracker.scrollView.scrollTop === 0 || tracker.scrollView.scrollTop >= tracker.scrollEnd && e.touches[0].screenY < tracker.startIOSTouch)) {
@@ -2096,7 +2105,7 @@
                     over: 'pointerover',
                     chancel: 'pointercancel'
                 },
-                tracks: {},
+                tracks: null,
                 handleEvent: function (e) {
                     switch (e.type) {
                     case this.TRACK_EVENTS.down:
@@ -2112,7 +2121,7 @@
                     }
                 },
                 _pointerDown: function (e) {
-                    this.tracks[e.pointerId] = {
+                    this.tracks = {
                         start: {
                             clientX: e.clientX,
                             clientY: e.clientY,
@@ -2136,43 +2145,41 @@
                     };
                 },
                 _pointerMove: function (e) {
-                    if (e.timeStamp - this.tracks[e.pointerId].last.timeStamp > 10) {
-                        this.tracks[e.pointerId].pre.clientX = this.tracks[e.pointerId].last.clientX;
-                        this.tracks[e.pointerId].pre.clientY = this.tracks[e.pointerId].last.clientY;
-                        this.tracks[e.pointerId].pre.timeStamp = this.tracks[e.pointerId].last.timeStamp;
-                        this.tracks[e.pointerId].last.clientX = e.clientX;
-                        this.tracks[e.pointerId].last.clientY = e.clientY;
-                        this.tracks[e.pointerId].last.timeStamp = e.timeStamp;
+                    if (e.timeStamp - this.tracks.last.timeStamp > 10) {
+                        this.tracks.pre.clientX = this.tracks.last.clientX;
+                        this.tracks.pre.clientY = this.tracks.last.clientY;
+                        this.tracks.pre.timeStamp = this.tracks.last.timeStamp;
+                        this.tracks.last.clientX = e.clientX;
+                        this.tracks.last.clientY = e.clientY;
+                        this.tracks.last.timeStamp = e.timeStamp;
                     }
                 },
                 _pointerUp: function (e) {
-                    this.tracks[e.pointerId].end.clientX = e.clientX;
-                    this.tracks[e.pointerId].end.clientY = e.clientY;
-                    this.tracks[e.pointerId].end.timeStamp = e.timeStamp;
+                    this.tracks.end.clientX = e.clientX;
+                    this.tracks.end.clientY = e.clientY;
+                    this.tracks.end.timeStamp = e.timeStamp;
                     this._checkGesture(e);
-                    this.tracks[e.pointerId] = null;
+                    this.tracks = null;
                 },
                 _checkGesture: function (e) {
-                    var isMoved, isFling, pointerId = e.pointerId, pointer = this.tracks[pointerId];
+                    var isMoved, isFling, pointer = this.tracks;
                     function distance(x1, x2, y1, y2) {
                         return Math.pow((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1), 0.5);
                     }
                     isMoved = Math.abs(distance(pointer.start.clientX, pointer.end.clientX, pointer.start.clientY, pointer.end.clientY)) > 20;
                     isFling = Math.abs(distance(pointer.end.clientX, pointer.pre.clientX, pointer.end.clientY, pointer.pre.clientY)) > 0 && pointer.end.timeStamp - pointer.start.timeStamp > 300;
-                    if (Object.keys(this.tracks).length === 1) {
-                        if (isFling) {
-                            this._fireEvent('fling', e, {
-                                start: pointer.start,
-                                end: pointer.end,
-                                speedX: (pointer.end.clientX - pointer.pre.clientX) / (pointer.end.timeStamp - pointer.pre.timeStamp),
-                                speedY: (pointer.end.clientY - pointer.pre.clientY) / (pointer.end.timeStamp - pointer.pre.timeStamp)
-                            });
-                        } else if (!isMoved) {
-                            if (pointer.end.timeStamp - pointer.start.timeStamp > 300) {
-                                this._fireEvent('longtap', e);
-                            } else {
-                                this._fireEvent('tap', e);
-                            }
+                    if (isFling) {
+                        this._fireEvent('fling', e, {
+                            start: pointer.start,
+                            end: pointer.end,
+                            speedX: (pointer.end.clientX - pointer.pre.clientX) / (pointer.end.timeStamp - pointer.pre.timeStamp),
+                            speedY: (pointer.end.clientY - pointer.pre.clientY) / (pointer.end.timeStamp - pointer.pre.timeStamp)
+                        });
+                    } else if (!isMoved) {
+                        if (pointer.end.timeStamp - pointer.start.timeStamp > 300) {
+                            this._fireEvent('longtap', e);
+                        } else {
+                            this._fireEvent('tap', e);
                         }
                     }
                 },

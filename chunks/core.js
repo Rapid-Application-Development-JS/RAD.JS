@@ -10,6 +10,16 @@ var defaultOptions = {
     debug: false
 };
 
+function closest(element, className) {
+    var result;
+    if (element.classList && element.classList.contains(className)) {
+        result = element;
+    } else if (element.parentNode) {
+        result = closest(element.parentNode, className);
+    }
+    return result;
+}
+
 function preventBodyTouch(e) {
     var tracker = this.scrollTracker;
     if (!tracker.scrollView || (tracker.scrollRequest && ((e.touches[0].screenY > tracker.startIOSTouch && tracker.scrollView.scrollTop === 0) || (tracker.scrollView.scrollTop >= tracker.scrollEnd && e.touches[0].screenY < tracker.startIOSTouch)))) {
