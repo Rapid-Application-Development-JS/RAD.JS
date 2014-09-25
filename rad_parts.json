@@ -80,11 +80,6 @@
             "file" : "blanks/view.js",
             "description" : "Basic view functionality"
         },
-        "render_exception" : {
-            "name" : "Render exception",
-            "file" : "exceptions/render.js",
-            "description" : "A scrollable view for lists and long data"
-        },
         "animate_transition" : {
             "name" : "Animate transition",
             "file" : "tools/animate_transition.js",

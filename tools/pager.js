@@ -500,4 +500,6 @@ Pager.prototype = {
     }
 };
 
-exports.module = Pager;
+if (typeof exports !== "undefined") {
+    exports.module = Pager;
+}

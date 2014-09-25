@@ -423,4 +423,6 @@ Drawer.prototype = {
     }
 };
 
-exports.module = Drawer;
+if (typeof exports !== "undefined") {
+    exports.module = Drawer;
+}

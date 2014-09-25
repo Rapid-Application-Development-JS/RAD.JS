@@ -387,4 +387,6 @@ function BackStack(core, id) {
     return self;
 }
 
-exports.module = BackStack;
+if (typeof exports !== "undefined") {
+    exports.module = BackStack;
+}

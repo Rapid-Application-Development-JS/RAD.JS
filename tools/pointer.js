@@ -158,4 +158,6 @@ PointerTracker.prototype = {
     }
 };
 
-exports.module = PointerTracker;
+if (typeof exports !== "undefined") {
+    exports.module = PointerTracker;
+}

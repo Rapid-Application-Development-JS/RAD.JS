@@ -539,4 +539,6 @@ ScrollView.prototype = {
     }
 };
 
-exports.module = ScrollView;
+if (typeof exports !== "undefined") {
+    exports.module = ScrollView;
+}

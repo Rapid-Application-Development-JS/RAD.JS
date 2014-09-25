@@ -147,11 +147,8 @@ var animateTransition = (function(){
             onTransitionStart(pageIn, pageOut, container, getFakeEventObj());
 
             if (pageOut) {
-                // Small timeout to prevent screen flickering
-                window.setTimeout(function(){
-                    container.removeChild(pageOut);
-                    onTransitionEnd(pageIn, pageOut, container, getFakeEventObj());
-                }, 50);
+                container.removeChild(pageOut);
+                onTransitionEnd(pageIn, pageOut, container, getFakeEventObj());
             } else {
                 onTransitionEnd(pageIn, pageOut, container, getFakeEventObj());
             }
@@ -189,4 +186,7 @@ var animateTransition = (function(){
     return pagesTransition;
 }());
 
-exports.module = animateTransition;
+
+if (typeof exports !== "undefined") {
+    exports.module = animateTransition;
+}
