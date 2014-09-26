@@ -2168,22 +2168,20 @@
                     function distance(x1, x2, y1, y2) {
                         return Math.pow((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1), 0.5);
                     }
-                    isMoved = Math.abs(distance(pointer.start.clientX, pointer.end.clientX, pointer.start.clientY, pointer.end.clientY)) > 10;
-                    isFling = Math.abs(distance(pointer.end.clientX, pointer.pre.clientX, pointer.end.clientY, pointer.pre.clientY)) > 0;
-                    if (Object.keys(this.tracks).length === 1) {
-                        if (isFling) {
-                            this._fireEvent('fling', e, {
-                                start: pointer.start,
-                                end: pointer.end,
-                                speedX: (pointer.end.clientX - pointer.pre.clientX) / (pointer.end.timeStamp - pointer.pre.timeStamp),
-                                speedY: (pointer.end.clientY - pointer.pre.clientY) / (pointer.end.timeStamp - pointer.pre.timeStamp)
-                            });
-                        } else if (!isMoved) {
-                            if (pointer.end.timeStamp - pointer.start.timeStamp > 300) {
-                                this._fireEvent('longtap', e);
-                            } else {
-                                this._fireEvent('tap', e);
-                            }
+                    isMoved = Math.abs(distance(pointer.start.clientX, pointer.end.clientX, pointer.start.clientY, pointer.end.clientY)) > 20;
+                    isFling = Math.abs(distance(pointer.end.clientX, pointer.pre.clientX, pointer.end.clientY, pointer.pre.clientY)) > 0 && pointer.end.timeStamp - pointer.start.timeStamp > 300;
+                    if (isFling) {
+                        this._fireEvent('fling', e, {
+                            start: pointer.start,
+                            end: pointer.end,
+                            speedX: (pointer.end.clientX - pointer.pre.clientX) / (pointer.end.timeStamp - pointer.pre.timeStamp),
+                            speedY: (pointer.end.clientY - pointer.pre.clientY) / (pointer.end.timeStamp - pointer.pre.timeStamp)
+                        });
+                    } else if (!isMoved) {
+                        if (pointer.end.timeStamp - pointer.start.timeStamp > 300) {
+                            this._fireEvent('longtap', e);
+                        } else {
+                            this._fireEvent('tap', e);
                         }
                     }
                 },
