@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+
+    <title>List View</title>
+    <script type="text/javascript" src="../../tools/imagemanager.js"></script>
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+</div>
+<script type="text/javascript">
+
+    var imageManager = new ImageManager(100, 1, '');
+
+    function fill() {
+        var count = 80, i, fragment = document.createDocumentFragment(), element, images, j = 0;
+
+        function getImage(url, image) {
+            imageManager.getImage(url, function (successURL) {
+                image.src = successURL;
+            });
+        }
+
+        for (i = 0; i < count; i += 1) {
+            element = document.createElement('img');
+            element.className = 'cell';
+            fragment.appendChild(element);
+        }
+        document.querySelector('.container').appendChild(fragment);
+
+        images = document.querySelectorAll('img');
+
+        for (i = 0; i < images.length; i += 1) {
+            getImage('http://lorempixel.com/100/100/?time=' + j, images[i]);
+            j += 1;
+        }
+        imageManager.stopImage('http://lorempixel.com/100/100/?time=0');
+    }
+
+    fill();
+
+</script>
+</body>
+</html>
