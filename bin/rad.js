@@ -1695,8 +1695,8 @@
                         };
                         onTransitionEnd = options.onTransitionEnd || function () {
                         };
-                        pageInClassName = 'transition-view-to-show';
-                        pageOutClassName = 'transition-view-to-hide';
+                        pageInClassName = animationName + '-transition-view-to-show';
+                        pageOutClassName = animationName + '-transition-view-to-hide';
                         transitionTypeName = 'transition-' + animationName;
                         if (pageIn === pageOut) {
                             return;
@@ -1759,6 +1759,7 @@
                         if (pageOut) {
                             pageOut.busy = true;
                             addClass(pageOut, pageOutClassName);
+                            pageOut.offsetHeight;
                         }
                         showOverlay();
                         timer = window.setTimeout(function () {

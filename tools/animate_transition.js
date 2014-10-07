@@ -86,9 +86,9 @@ var animateTransition = (function(){
         onTransitionStart   = options.onTransitionStart || function() {};
         onTransitionEnd     = options.onTransitionEnd   || function() {};
 
-        pageInClassName     = 'transition-view-to-show';
-        pageOutClassName    = 'transition-view-to-hide';
-        transitionTypeName  = 'transition-'+animationName;
+        pageInClassName     = animationName + '-transition-view-to-show';
+        pageOutClassName    = animationName + '-transition-view-to-hide';
+        transitionTypeName  = 'transition-' + animationName;
 
         if (pageIn === pageOut) { return; }
         // Stop animation if any of pages still in animation process
@@ -162,12 +162,12 @@ var animateTransition = (function(){
             pageIn.busy = true;
             addClass(pageIn, pageInClassName);
             container.appendChild(pageIn);
+            // we don't need pageOut.offsetHeight; because we add it with css class
         }
-
-        // Prepare current page for transition
         if (pageOut) {
             pageOut.busy = true;
             addClass(pageOut, pageOutClassName);
+            pageOut.offsetHeight; // plz don't delete it - it hack
         }
 
         // Enable overlay layer to protect from accidental clicks until animation ends
