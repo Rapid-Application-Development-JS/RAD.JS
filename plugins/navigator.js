@@ -210,6 +210,10 @@ function Navigator() {
         newViewId = data.content;
         newView = core.getView(newViewId, core.extractExtras(data));
 
+        if (newViewId && !newView) {
+            window.console.log('View not found:' + newViewId);
+        }
+
         detachedViews = getSubviewsID(oldView);
         attachedViews = getSubviewsID(newView);
         detachedViews.push(oldViewId);
