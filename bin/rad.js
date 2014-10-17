@@ -1128,7 +1128,7 @@
                     },
                     receiveMsg: function msgFunc(msg, data) {
                         var self = this, parts = msg.split('.');
-                        switch (parts[2]) {
+                        switch (parts[parts.length - 1]) {
                         case 'attach_start':
                             self.loader.done(function () {
                                 self.onBeforeAttach();
