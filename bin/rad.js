@@ -110,6 +110,8 @@
                                 if (options) {
                                     self.options = options;
                                 }
+                                pubsub.printLog(!!self.options.debug);
+                                serviceLocator.printLog(!!self.options.debug);
                                 if (self.options.plugins && isArray(self.options.plugins)) {
                                     self.registerAll(self.options.plugins);
                                 }
@@ -223,7 +225,7 @@
                             var channels = {}, sticky = {}, debug = false, separator = '.';
                             function log() {
                                 if (debug) {
-                                    console.log.apply(null, arguments);
+                                    window.console.log(arguments);
                                 }
                             }
                             function isObject(testObj) {
@@ -2353,5 +2355,5 @@
             }
         }
     ];
-    _require(1);
+    return _require(1);
 }());

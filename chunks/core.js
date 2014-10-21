@@ -91,6 +91,10 @@ function Core($, document, window) {
         if (options) {
             self.options = options;
         }
+
+        pubsub.printLog(!!self.options.debug);
+        serviceLocator.printLog(!!self.options.debug);
+
         if (self.options.plugins && isArray(self.options.plugins)) {
             self.registerAll(self.options.plugins);
         }

@@ -3,7 +3,7 @@ function PubSub() {
 
     function log() {
         if (debug) {
-            console.log.apply(null, arguments);
+            window.console.log(arguments);
         }
     }
     function isObject(testObj) {
