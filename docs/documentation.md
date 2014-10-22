@@ -616,6 +616,9 @@ onStartRender: function () {},
 // executed after creating HTML content from a template,
 // iScroll in inheritors of RAD.Blanks.ScrollableView does not exist during first displaying
 onEndRender: function () {},
+
+// executed before the start of animation embedded in view. Views html branch exist, but outside from DOM.
+onBeforeAttach: function () {},
  
 // executed before the start of animation embedded in view,
 // iScroll already exists in inheritors of RAD.Blanks.ScrollableView 
@@ -666,6 +669,12 @@ onNewExtras: function(extras){
 },
 ```
 Executed during transmission of new extras through navigator. Perfectly suits for transmission of either a new model or parameters of displayed module. Utilizes the extras parameter.
+
+####onBeforeAttach
+```javascript
+onBeforeAttach: function(){ },
+```
+Executed before displaying the module and before the beginning of animation (even if it does not exist). View html branch exist, but outside from DOM.
 
 ####onStartAttach
 ```javascript
