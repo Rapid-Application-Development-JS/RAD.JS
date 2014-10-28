@@ -121,7 +121,7 @@ var view = Backbone.View.extend({
         var virtualEl = document.createElement('div'),
             virtualTemplates,
             self = this,
-            json = (self.model) ? self.model.toJSON() : undefined,
+            json,
             children = self.getChildren(),
             counter = children.length,
             childView,
@@ -177,6 +177,7 @@ var view = Backbone.View.extend({
             }
         }
 
+        json = (self.model) ? self.model.toJSON() : undefined;
         try {
             if (self.innerTemplates && !self.renderRequest) {
                 virtualEl.innerHTML = self.template({model: json, view: self});

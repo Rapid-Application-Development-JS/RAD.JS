@@ -1031,7 +1031,7 @@
                         });
                     },
                     render: function (callback) {
-                        var virtualEl = document.createElement('div'), virtualTemplates, self = this, json = self.model ? self.model.toJSON() : undefined, children = self.getChildren(), counter = children.length, childView, index, length;
+                        var virtualEl = document.createElement('div'), virtualTemplates, self = this, json, children = self.getChildren(), counter = children.length, childView, index, length;
                         function check() {
                             counter -= 1;
                             if (counter <= 0) {
@@ -1069,6 +1069,7 @@
                                 return;
                             }
                         }
+                        json = self.model ? self.model.toJSON() : undefined;
                         try {
                             if (self.innerTemplates && !self.renderRequest) {
                                 virtualEl.innerHTML = self.template({
