@@ -2348,6 +2348,12 @@
                     }
                     customEvent.pointerId = this.touchID;
                     customEvent.pointerType = this.isTouched ? 'touch' : 'mouse';
+                    var isFirefox = typeof window.InstallTrigger !== 'undefined';
+                    if (isFirefox) {
+                        customEvent.__defineGetter__('timeStamp', function () {
+                            return e.timeStamp;
+                        });
+                    }
                     e.target.dispatchEvent(customEvent);
                 }
             };
@@ -2356,5 +2362,5 @@
             }
         }
     ];
-    return _require(1);
+    _require(1);
 }());

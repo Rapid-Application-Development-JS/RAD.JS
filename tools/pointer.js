@@ -154,6 +154,13 @@ PointerTracker.prototype = {
         customEvent.pointerId = this.touchID;
         customEvent.pointerType = this.isTouched ? "touch" : "mouse";
 
+        var isFirefox = typeof window.InstallTrigger !== 'undefined';   // detect Firefox 1.0+
+        if ( isFirefox ) {
+            customEvent.__defineGetter__('timeStamp', function (){
+                return e.timeStamp;
+            });
+        }
+
         e.target.dispatchEvent(customEvent);
     }
 };
