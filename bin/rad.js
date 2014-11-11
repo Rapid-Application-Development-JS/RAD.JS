@@ -2108,6 +2108,7 @@
                 };
             }
             GestureTracker.prototype = {
+                HOLD_TIMEOUT: 350,
                 TRACK_EVENTS: {
                     up: 'pointerup',
                     down: 'pointerdown',
@@ -2131,6 +2132,11 @@
                     }
                 },
                 _pointerDown: function (e) {
+                    var gesture = this;
+                    clearTimeout(this._holdID);
+                    this._holdID = setTimeout(function () {
+                        gesture._fireEvent('hold', e);
+                    }, this.HOLD_TIMEOUT);
                     this.tracks[e.pointerId] = {
                         start: {
                             clientX: e.clientX,
@@ -2156,6 +2162,7 @@
                 },
                 _pointerMove: function (e) {
                     if (e.timeStamp - this.tracks[e.pointerId].last.timeStamp > 10) {
+                        clearTimeout(this._holdID);
                         this.tracks[e.pointerId].pre.clientX = this.tracks[e.pointerId].last.clientX;
                         this.tracks[e.pointerId].pre.clientY = this.tracks[e.pointerId].last.clientY;
                         this.tracks[e.pointerId].pre.timeStamp = this.tracks[e.pointerId].last.timeStamp;
@@ -2165,6 +2172,7 @@
                     }
                 },
                 _pointerUp: function (e) {
+                    clearTimeout(this._holdID);
                     this.tracks[e.pointerId].end.clientX = e.clientX;
                     this.tracks[e.pointerId].end.clientY = e.clientY;
                     this.tracks[e.pointerId].end.timeStamp = e.timeStamp;
@@ -2362,5 +2370,5 @@
             }
         }
     ];
-    _require(1);
+    return _require(1);
 }());
