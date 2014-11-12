@@ -2300,8 +2300,7 @@
                     case STRINGS.touchcancel:
                     case STRINGS.mouseup:
                         if (this.isDown) {
-                            this.isDown = false;
-                            this._fireEvent(this.EVENTS.up, e);
+                            this.isDown = !this._fireEvent(this.EVENTS.up, e);
                         }
                         break;
                     case STRINGS.mouseover:
@@ -2326,7 +2325,7 @@
                     if (this.isTouched) {
                         if (e.type === STRINGS.touchstart) {
                             if (e.touches.length > 1) {
-                                return;
+                                return false;
                             }
                             touchEvent = e.touches[0];
                             this.touchID = e.touches[0].identifier;
@@ -2338,7 +2337,7 @@
                                 }
                             }
                             if (touchEvent.identifier !== this.touchID) {
-                                return;
+                                return false;
                             }
                         }
                     } else {
@@ -2367,6 +2366,7 @@
                         });
                     }
                     e.target.dispatchEvent(customEvent);
+                    return true;
                 }
             };
             if (typeof exports !== 'undefined') {
