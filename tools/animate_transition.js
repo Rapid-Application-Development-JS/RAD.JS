@@ -147,7 +147,11 @@ var animateTransition = (function(){
             onTransitionStart(pageIn, pageOut, container, getFakeEventObj());
 
             if (pageOut) {
-                container.removeChild(pageOut);
+                try {
+                    container.removeChild(pageOut);
+                } catch (err) {
+                    window.console.log('You try apply new animation without subject');
+                }
                 onTransitionEnd(pageIn, pageOut, container, getFakeEventObj());
             } else {
                 onTransitionEnd(pageIn, pageOut, container, getFakeEventObj());
