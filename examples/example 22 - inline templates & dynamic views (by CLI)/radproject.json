@@ -1,0 +1,14 @@
+{
+    "name": "untitled",
+    "application": null,
+    "libs": {},
+    "view": {
+        "view.parent": "/source/views/view.parent",
+        "view.child": "/source/views/view.child"
+    },
+    "model": {},
+    "service": {},
+    "screen": {},
+    "external": {},
+    "links": {}
+}
