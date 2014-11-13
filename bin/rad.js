@@ -960,7 +960,10 @@
                             RAD.core.stop(self.viewID);
                         };
                         self.getChildren();
-                        if (window.JST && window.JST[self.url]) {
+                        if (typeof self.template === 'function') {
+                            self.bindModel(self.model);
+                            self.loader.resolve();
+                        } else if (window.JST && window.JST[self.url]) {
                             self.template = window.JST[self.url];
                             self.bindModel(self.model);
                             self.loader.resolve();

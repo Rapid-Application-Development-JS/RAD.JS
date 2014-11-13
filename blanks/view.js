@@ -34,7 +34,10 @@ var view = Backbone.View.extend({
         self.getChildren();
 
         // Use compiled template if it exists. If no - use Ajax to load template.
-        if (window.JST && window.JST[self.url]) {
+        if (typeof self.template === 'function') {
+            self.bindModel(self.model);
+            self.loader.resolve();
+        } else if (window.JST && window.JST[self.url]) {
             self.template = window.JST[self.url];
             self.bindModel(self.model);
             self.loader.resolve();
