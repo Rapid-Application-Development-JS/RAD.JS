@@ -81,11 +81,9 @@
                             if (options.scrollBounce === undefined) {
                                 options.scrollBounce = true;
                             }
-                            _.templateSettings = options.templateSettings || {
-                                evaluate: /\{\{#([\s\S]+?)\}\}/g,
-                                interpolate: /\{\{[^#\{]([\s\S]+?)[^\}]\}\}/g,
-                                escape: /\{\{\{([\s\S]+?)\}\}\}/g
-                            };
+                            if (options.templateSettings !== undefined) {
+                                _.templateSettings = options.templateSettings;
+                            }
                             if (isIOS) {
                                 if (options.scrollBounce) {
                                     window.addEventListener('touchstart', startBodyTouch, false);
@@ -218,6 +216,11 @@
                             self.getLocator = serviceLocator.getLocator;
                             return self;
                         }
+                        _.templateSettings = {
+                            evaluate: /\{\{#([\s\S]+?)\}\}/g,
+                            interpolate: /\{\{[^#\{]([\s\S]+?)[^\}]\}\}/g,
+                            escape: /\{\{\{([\s\S]+?)\}\}\}/g
+                        };
                         exports.core = Core;
                     },
                     function (module, exports) {

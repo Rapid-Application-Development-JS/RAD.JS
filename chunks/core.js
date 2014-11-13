@@ -51,11 +51,9 @@ function prepareEnvironment(options) {
         options.scrollBounce = true;
     }
 
-    _.templateSettings = options.templateSettings || {
-        evaluate: /\{\{#([\s\S]+?)\}\}/g,
-        interpolate: /\{\{[^#\{]([\s\S]+?)[^\}]\}\}/g,
-        escape: /\{\{\{([\s\S]+?)\}\}\}/g
-    };
+    if (options.templateSettings !== undefined){
+        _.templateSettings = options.templateSettings;
+    }
 
     if (isIOS) {
         // Prevent window bounce while scrolling
@@ -232,5 +230,10 @@ function Core($, document, window) {
 
     return self;
 }
+_.templateSettings = {
+    evaluate: /\{\{#([\s\S]+?)\}\}/g,
+    interpolate: /\{\{[^#\{]([\s\S]+?)[^\}]\}\}/g,
+    escape: /\{\{\{([\s\S]+?)\}\}\}/g
+};
 
 exports.core = Core;
