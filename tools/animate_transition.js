@@ -123,7 +123,11 @@ var animateTransition = (function(){
             }
             if (pageOut) {
                 pageOut.busy = false;
-                container.removeChild(pageOut);
+                try{
+                    container.removeChild(pageOut);
+                } catch (e) {
+                    window.console.log(e);
+                }
                 removeClass(pageOut, pageOutClassName);
             }
             onTransitionEnd(pageIn, pageOut, container, e);
