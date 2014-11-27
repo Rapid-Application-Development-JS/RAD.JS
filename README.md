@@ -20,18 +20,28 @@ Javascript framework for Rapid Application Development
 
 ---
 
-What RAD.js is:
+RAD.js 2.0:
 ---
 
-A system-level framework. It allows to build a single-page application that looks and feels as a conventional multi-page one. It also takes over system-level tasks, such as message bus, creating and deleting certain part instances of the application, transactions between views, etc.
+MobiDev has finally released the long-awaited update of its open source multiplatform development toolkit – RAD.js Version 2.0. We designed it as the answer to the needs of business owners, software developers, and end users. Business owners and startuppers need profitable apps that work across many platforms. Software developers need to build these apps with more comfort and less effort and spent time. Target end users need apps of high quality and intuitiveness to solve their problems.
 
-What RAD.js isn't:
+All of these demands can be handled with experienced developers and great tools. MobiDev has both. Our talented developers are under constant self-improvement, and as for RAD.js – here's the second version that opens new opportunities for software owners.
+
+Every software owner wants to create the product faster, receive high quality, and reach across multiple platforms, with iOS and Android as the obvious must. The multiplatform may be the solution to various branded applications with unique user interfaces, PR and mass media apps (including blogs and portals), industry-specific apps that present certain products and/or services, online shops with strong backend, and many more. The exact opinion depends on the future app's functional requirements, and it should be voiced by a specialist in cross-platform development – and we are ready to help you with that.
+
+We'd also like to tell about the main upgrades in our toolkit:
 ---
 
-  - An MV* framework. In RAD.js, MV* is based upon BackboneJS;
-  - An application-level framework. Any JavaScript object can serve as an application. The framework does not require any special environments for creating an object of the application;
-  - A layout engine. The layout engine is implemented as a navigation plugin for the framework core;
-  - A UI framework. There is no reason in creating another UI framework, because in real-life projects UI patterns and appearance of applications change. ScrollableView, PopupView and ToastView serve as an extension to the basic view; all of these have extended and frequent behavior in different projects. You can easily write new views (such as ListView), which are frequently used in your projects.
+  1. What once was a framework, now has become a toolkit that consists of independent modules. All of them can be applied independently; they use CommonJS interface. In fact, RAD.js is compatible with other JS frameworks, which provides additional flexibility in making better software products faster.
+  2. We achieved the flexibility by rewriting the core of the toolkit, separating visual and logical components. The independence of each module was a priority, and we optimized RAD.js so that each module can be used without the framework, in case of need.
+  3. CLI (command line interface) was added.
+  4. Basic view classes for popups were optimized; now developers don't have to use special classes. The standard view is shown as a dialogue, which contains embedded views.
+  5. As for UI, we optimized it so that it works on low-power devices and older platform versions – even on Android 2.0. We rewrote transition animations and added several types.
+  6. Crossbrowser events were renamed according to the spec.
+  7. Examples were naturally changed and restyled.
+  8. Along the way we encountered several non-critical bugs, which were quickly eliminated. Now the toolkit is ready and waiting, and cross-platform developers can unleash their creativity.
+
+We are glad that RAD.js has been gathering a developer audience for quite a while, and we are willing to grow it by involving more people and expanding the functional filling (the nearest plans are adding a tutorial, infinite scroll, and drag-n-drop). But the real end goal is making great software for our Clients and their end users.
 
 Advantages:
 ---
