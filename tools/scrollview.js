@@ -1,6 +1,6 @@
 function addVendorPrefix(property) {
-    var arr = ["ms", "Ms", "moz", "Moz", "webkit", "Webkit", "o", "O"], i, tmp = document.createElement("div"),
-        result = null, arrayOfPrefixes = [];
+    var arr = ["ms", "moz", "webkit", "o"], i, tmp = document.createElement("div"),
+        result = property.toLowerCase(), arrayOfPrefixes = [];
 
     function capitalise(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -10,11 +10,9 @@ function addVendorPrefix(property) {
         arrayOfPrefixes.push(arr[i] + capitalise(property));
     }
 
-    arrayOfPrefixes.push(property);
-
     for (i = 0; i < arrayOfPrefixes.length; i += 1) {
         if (tmp.style[arrayOfPrefixes[i]] !== undefined) {
-            result = arrayOfPrefixes[i];
+            result = '-' + arr[i] + '-' + property;
             break;
         }
     }
