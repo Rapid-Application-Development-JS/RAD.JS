@@ -105,6 +105,11 @@ var view = Backbone.View.extend({
         }
 
         content.appendIn(container, function () {
+            var fakeContainer = document.querySelector('[view="' + data.content + '"]');
+            if (fakeContainer) {
+                fakeContainer.removeAttribute('view');
+            }
+
             container.setAttribute('view', data.content);
             if (typeof data.callback === 'function') {
                 if (typeof data.context === 'object') {

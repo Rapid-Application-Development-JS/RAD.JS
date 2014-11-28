@@ -1023,6 +1023,10 @@
                             RAD.core.publish('router.beginTransition', data);
                         }
                         content.appendIn(container, function () {
+                            var fakeContainer = document.querySelector('[view="' + data.content + '"]');
+                            if (fakeContainer) {
+                                fakeContainer.removeAttribute('view');
+                            }
                             container.setAttribute('view', data.content);
                             if (typeof data.callback === 'function') {
                                 if (typeof data.context === 'object') {
@@ -1424,6 +1428,10 @@
                         return;
                     }
                     attachViews = function () {
+                        var fakeContainer = document.querySelector('[view="' + newViewId + '"]');
+                        if (fakeContainer) {
+                            fakeContainer.removeAttribute('view');
+                        }
                         publishToGroup('attach_start', attachedViews);
                         container.setAttribute('view', newViewId);
                         core.publish('animateTransition', {

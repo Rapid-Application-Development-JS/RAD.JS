@@ -227,6 +227,11 @@ function Navigator() {
         }
 
         attachViews = function () {
+            var fakeContainer = document.querySelector('[view="' + newViewId + '"]');
+            if (fakeContainer) {
+                fakeContainer.removeAttribute('view');
+            }
+
             publishToGroup('attach_start', attachedViews);
             container.setAttribute('view', newViewId);
 
