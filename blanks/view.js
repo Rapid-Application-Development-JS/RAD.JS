@@ -200,7 +200,7 @@ var view = Backbone.View.extend({
                 prepareInnerTemplates();
             }
         } catch (e) {
-            window.console.log(e.message + '. Caused during rendering: '+ self.radID );
+            window.console.log(e.message + '. Caused during rendering: '+ self.radID + ':' +  e.stack);
             return;
         }
 

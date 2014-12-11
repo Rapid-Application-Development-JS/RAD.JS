@@ -358,64 +358,152 @@
                     },
                     function (module, exports) {
                         var execute = _require(4).execute;
-                        function ScriptLoader() {
-                            var loader = this, isLoaded = false;
-                            function loadScript(url, checkCallback) {
-                                if (!url || typeof url != 'string') {
-                                    window.console.log('Can\'t load script, URL is incorrect:' + url);
-                                    return;
-                                }
-                                var script = document.createElement('script');
-                                script.type = 'text/javascript';
-                                script.async = true;
-                                if (script.readyState) {
-                                    script.onreadystatechange = function () {
-                                        if (script.readyState === 'loaded' || script.readyState === 'complete') {
-                                            script.onreadystatechange = null;
-                                            checkCallback();
+                        var ScriptLoader = function () {
+                                var env, head, pending = {}, pollCount = 0, queue = {
+                                        css: [],
+                                        js: []
+                                    }, styleSheets = document.styleSheets;
+                                function createNode(name, attrs) {
+                                    var node = document.createElement(name), attr;
+                                    for (attr in attrs) {
+                                        if (attrs.hasOwnProperty(attr)) {
+                                            node.setAttribute(attr, attrs[attr]);
                                         }
-                                    };
-                                } else {
-                                    script.onload = checkCallback;
-                                    script.onerror = checkCallback;
+                                    }
+                                    return node;
                                 }
-                                script.src = url;
-                                document.head.appendChild(script);
-                            }
-                            function loadArray(urls, callback, context) {
-                                var i, l = urls.length, counter = 0;
-                                loader.arr = null;
-                                loader.callback = null;
-                                loader.context = null;
-                                function check() {
-                                    counter += 1;
-                                    if (counter === l) {
-                                        execute(callback, null, context);
+                                function finish(type) {
+                                    var p = pending[type], callback, urls;
+                                    if (p) {
+                                        callback = p.callback;
+                                        urls = p.urls;
+                                        urls.shift();
+                                        pollCount = 0;
+                                        if (!urls.length) {
+                                            callback && callback.call(p.context, p.obj);
+                                            pending[type] = null;
+                                            queue[type].length && load(type);
+                                        }
                                     }
                                 }
-                                for (i = 0; i < l; i += 1) {
-                                    loadScript(urls[i], check);
+                                function getEnv() {
+                                    var ua = navigator.userAgent;
+                                    env = { async: document.createElement('script').async === true };
+                                    (env.webkit = /AppleWebKit\//.test(ua)) || (env.ie = /MSIE|Trident/.test(ua)) || (env.opera = /Opera/.test(ua)) || (env.gecko = /Gecko\//.test(ua)) || (env.unknown = true);
                                 }
-                            }
-                            function onLoad() {
-                                isLoaded = true;
-                                loader.loadScripts = loadArray;
-                                if (loader.arr && loader.callback) {
-                                    loader.loadScripts(loader.arr, loader.callback, loader.context);
+                                function load(type, urls, callback, obj, context) {
+                                    var _finish = function () {
+                                            finish(type);
+                                        }, isCSS = type === 'css', nodes = [], i, len, node, p, pendingUrls, url;
+                                    env || getEnv();
+                                    if (urls) {
+                                        urls = typeof urls === 'string' ? [urls] : urls.concat();
+                                        if (isCSS || env.async || env.gecko || env.opera) {
+                                            queue[type].push({
+                                                urls: urls,
+                                                callback: callback,
+                                                obj: obj,
+                                                context: context
+                                            });
+                                        } else {
+                                            for (i = 0, len = urls.length; i < len; ++i) {
+                                                queue[type].push({
+                                                    urls: [urls[i]],
+                                                    callback: i === len - 1 ? callback : null,
+                                                    obj: obj,
+                                                    context: context
+                                                });
+                                            }
+                                        }
+                                    }
+                                    if (pending[type] || !(p = pending[type] = queue[type].shift())) {
+                                        return;
+                                    }
+                                    head || (head = document.head || document.getElementsByTagName('head')[0]);
+                                    pendingUrls = p.urls.concat();
+                                    for (i = 0, len = pendingUrls.length; i < len; ++i) {
+                                        url = pendingUrls[i];
+                                        if (isCSS) {
+                                            node = env.gecko ? createNode('style') : createNode('link', {
+                                                href: url,
+                                                rel: 'stylesheet'
+                                            });
+                                        } else {
+                                            node = createNode('script', { src: url });
+                                            node.async = false;
+                                        }
+                                        node.className = 'lazyload';
+                                        node.setAttribute('charset', 'utf-8');
+                                        if (env.ie && !isCSS && 'onreadystatechange' in node && !('draggable' in node)) {
+                                            node.onreadystatechange = function () {
+                                                if (/loaded|complete/.test(node.readyState)) {
+                                                    node.onreadystatechange = null;
+                                                    _finish();
+                                                }
+                                            };
+                                        } else if (isCSS && (env.gecko || env.webkit)) {
+                                            if (env.webkit) {
+                                                p.urls[i] = node.href;
+                                                pollWebKit();
+                                            } else {
+                                                node.innerHTML = '@import "' + url + '";';
+                                                pollGecko(node);
+                                            }
+                                        } else {
+                                            node.onload = node.onerror = _finish;
+                                        }
+                                        nodes.push(node);
+                                    }
+                                    for (i = 0, len = nodes.length; i < len; ++i) {
+                                        head.appendChild(nodes[i]);
+                                    }
                                 }
-                            }
-                            loader.loadScripts = function (urls, callback, context) {
-                                loader.arr = urls;
-                                loader.callback = callback;
-                                loader.context = context;
-                            };
-                            if (window.attachEvent) {
-                                window.attachEvent('onload', onLoad);
-                            } else {
-                                window.addEventListener('load', onLoad, false);
-                            }
-                            return loader;
-                        }
+                                function pollGecko(node) {
+                                    var hasRules;
+                                    try {
+                                        hasRules = !!node.sheet.cssRules;
+                                    } catch (ex) {
+                                        pollCount += 1;
+                                        if (pollCount < 200) {
+                                            setTimeout(function () {
+                                                pollGecko(node);
+                                            }, 50);
+                                        } else {
+                                            hasRules && finish('css');
+                                        }
+                                        return;
+                                    }
+                                    finish('css');
+                                }
+                                function pollWebKit() {
+                                    var css = pending.css, i;
+                                    if (css) {
+                                        i = styleSheets.length;
+                                        while (--i >= 0) {
+                                            if (styleSheets[i].href === css.urls[0]) {
+                                                finish('css');
+                                                break;
+                                            }
+                                        }
+                                        pollCount += 1;
+                                        if (css) {
+                                            if (pollCount < 200) {
+                                                setTimeout(pollWebKit, 50);
+                                            } else {
+                                                finish('css');
+                                            }
+                                        }
+                                    }
+                                }
+                                return {
+                                    css: function (urls, callback, obj, context) {
+                                        load('css', urls, callback, obj, context);
+                                    },
+                                    loadScripts: function (urls, callback, obj, context) {
+                                        load('js', urls, callback, obj, context);
+                                    }
+                                };
+                            }();
                         exports.scriptLoader = ScriptLoader;
                     },
                     function (module, exports) {
@@ -724,7 +812,7 @@
                             namespace('RAD.plugins', {});
                             namespace('RAD.models', {});
                             namespace('RAD.utils', {});
-                            namespace('RAD.scriptLoader', new ScriptLoader());
+                            namespace('RAD.scriptLoader', ScriptLoader);
                         }
                         exports.core = new Core(window.jQuery, document, window);
                         exports.model = modelMethod;
@@ -1099,7 +1187,7 @@
                                 prepareInnerTemplates();
                             }
                         } catch (e) {
-                            window.console.log(e.message + '. Caused during rendering: ' + self.radID);
+                            window.console.log(e.message + '. Caused during rendering: ' + self.radID + ':' + e.stack);
                             return;
                         }
                         if (children.length > 0) {

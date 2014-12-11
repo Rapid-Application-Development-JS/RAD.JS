@@ -158,7 +158,7 @@ function init(){
     namespace('RAD.plugins', {});
     namespace('RAD.models', {});
     namespace('RAD.utils', {});
-    namespace('RAD.scriptLoader', new ScriptLoader());
+    namespace('RAD.scriptLoader', ScriptLoader);
 }
 
 exports.core = new Core(window.jQuery, document, window);
