@@ -129,6 +129,15 @@ function PubSub() {
                 }
             }
 
+            // post sticky messages for subchannels
+            for (var key in sticky) {
+                if (sticky.hasOwnProperty(key)) {
+                    index = key.indexOf(channel);
+                    if (index == 0 && key.indexOf(channel + separator) === 0) {
+                        fn.apply(cntx, sticky[key]);
+                    }
+                }
+            }
             return this;
         },
         /**

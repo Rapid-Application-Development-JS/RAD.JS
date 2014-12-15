@@ -309,6 +309,14 @@
                                             fn.apply(cntx, sticky[currentChannel]);
                                         }
                                     }
+                                    for (var key in sticky) {
+                                        if (sticky.hasOwnProperty(key)) {
+                                            index = key.indexOf(channel);
+                                            if (index == 0 && key.indexOf(channel + separator) === 0) {
+                                                fn.apply(cntx, sticky[key]);
+                                            }
+                                        }
+                                    }
                                     return this;
                                 },
                                 unsubscribe: function (channel, fn, context) {
