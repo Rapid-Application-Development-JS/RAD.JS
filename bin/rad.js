@@ -1842,10 +1842,8 @@
                             }
                             if (pageOut) {
                                 pageOut.busy = false;
-                                try {
+                                if (pageOut.parentNode === container) {
                                     container.removeChild(pageOut);
-                                } catch (e) {
-                                    window.console.log(e);
                                 }
                                 removeClass(pageOut, pageOutClassName);
                             }
