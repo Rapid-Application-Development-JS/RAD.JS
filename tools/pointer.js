@@ -1,32 +1,66 @@
 var STRINGS = {
-    touchstart: "touchstart",
-    touchmove: "touchmove",
-    touchend: "touchend",
-    touchleave: "touchleave",
-    touchcancel: ".touchcancel",
-    mousedown: "mousedown",
-    mousemove: "mousemove",
-    mouseup: "mouseup",
-    mouseover: "mouseover",
-    mouseout: "mouseout"
+    pointerDown: 'pointerdown',
+    pointerMove: 'pointermove',
+    pointerUp: 'pointerup',
+    pointerCancel: 'pointercancel',
+    pointerOut: 'pointerout',
+    touchstart: 'touchstart',
+    touchmove: 'touchmove',
+    touchend: 'touchend',
+    touchleave: 'touchleave',
+    touchcancel: 'touchcancel',
+    mousedown: 'mousedown',
+    mousemove: 'mousemove',
+    mouseup: 'mouseup',
+    mouseover: 'mouseover',
+    mouseout: 'mouseout'
 };
+
+if (window.MSPointerEvent && !window.PointerEvent) {
+    STRINGS.pointerDown = 'MSPointerDown';
+    STRINGS.pointerMove = 'MSPointerMove';
+    STRINGS.pointerUp = 'MSPointerUp';
+    STRINGS.pointerCancel = 'MSPointerCancel';
+    STRINGS.pointerOut = 'MSPointerOut';
+}
 
 function PointerTracker(element) {
     this._el = element;
     this.isDown = false;
     this.chancelId = false;
+    if (!window.navigator.msPointerEnabled) {
+        if (!this.isTouched) {
+            this._el.addEventListener(STRINGS.mousedown, this, false);
+            this._el.addEventListener(STRINGS.mouseup, this, false);
+            this._el.addEventListener(STRINGS.mousemove, this, false);
+            this._el.addEventListener(STRINGS.mouseout, this, false);
+            this._el.addEventListener(STRINGS.mouseover, this, false);
+        } else {
+            this._el.addEventListener(STRINGS.touchstart, this, false);
+            this._el.addEventListener(STRINGS.touchend, this, false);
+            this._el.addEventListener(STRINGS.touchmove, this, false);
+            this._el.addEventListener(STRINGS.touchcancel, this, false);
+        }
 
-    if (!this.isTouched) {
-        this._el.addEventListener(STRINGS.mousedown, this, false);
-        this._el.addEventListener(STRINGS.mouseup, this, false);
-        this._el.addEventListener(STRINGS.mousemove, this, false);
-        this._el.addEventListener(STRINGS.mouseout, this, false);
-        this._el.addEventListener(STRINGS.mouseover, this, false);
     } else {
-        this._el.addEventListener(STRINGS.touchstart, this, false);
-        this._el.addEventListener(STRINGS.touchend, this, false);
-        this._el.addEventListener(STRINGS.touchmove, this, false);
-        this._el.addEventListener(STRINGS.touchcancel, this, false);
+        var self = this,
+            eventHandlerIE = function (e){
+                self.handleEventIE(e);
+            },
+            eventHandler = function (e){
+                self.handleEvent(e);
+            };
+        if (window.navigator.pointerEnabled) {
+            this._el.addEventListener(STRINGS.pointerDown, eventHandlerIE, true);
+            this._el.addEventListener(STRINGS.pointerMove, eventHandlerIE, true);
+            this._el.addEventListener(STRINGS.pointerUp, eventHandlerIE, true);
+        } else {
+            this._el.addEventListener(STRINGS.pointerDown, eventHandler, true);
+            this._el.addEventListener(STRINGS.pointerMove, eventHandler, true);
+            this._el.addEventListener(STRINGS.pointerUp, eventHandler, true);
+        }
+        this._el.addEventListener(STRINGS.pointerCancel, eventHandler, false);
+        this._el.addEventListener(STRINGS.pointerOut, eventHandler, false);
     }
 
     this.destroy = function () {
@@ -45,40 +79,57 @@ function PointerTracker(element) {
         delete this._el;
     };
 }
-
 PointerTracker.prototype = {
-
     EVENTS: {
-        up: "pointerup",
-        down: "pointerdown",
-        move: "pointermove",
-        over: "pointerover",
-        chancel: "pointercancel"
+        up: 'pointerup',
+        down: 'pointerdown',
+        move: 'pointermove',
+        over: 'pointerover',
+        chancel: 'pointercancel'
     },
-
-    isTouched: ('ontouchstart' in window),
-
+    isTouched: 'ontouchstart' in window || window.navigator.msPointerEnabled,
+    handleEventIE: function (e) {
+        if (!e.isPrimary) {
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            e.preventDefault();
+        } else {
+            switch (e.type) {
+                case STRINGS.pointerDown:
+                    this.isDown = true;
+                    break;
+                case STRINGS.pointerUp:
+                case STRINGS.pointerCancel:
+                case STRINGS.pointerOut:
+                    this.isDown = false;
+            }
+        }
+    },
     handleEvent: function (e) {
         if (this.chancelId !== null) {
             clearTimeout(this.chancelId);
         }
-
         switch (e.type) {
             case STRINGS.touchmove:
             case STRINGS.mousemove:
+            case STRINGS.pointerMove:
                 if (this.isDown) {
                     this._fireEvent(this.EVENTS.move, e);
                 }
                 break;
             case STRINGS.touchstart:
             case STRINGS.mousedown:
+            case STRINGS.pointerDown:
                 this.isDown = true;
                 this.chancelId = false;
                 this._fireEvent(this.EVENTS.down, e);
                 break;
             case STRINGS.touchend:
+            case STRINGS.pointerUp:
             case STRINGS.touchleave:
             case STRINGS.touchcancel:
+            case STRINGS.pointerCancel:
+            case STRINGS.pointerOut:
             case STRINGS.mouseup:
                 if (this.isDown) {
                     this.isDown = !this._fireEvent(this.EVENTS.up, e);
@@ -101,19 +152,16 @@ PointerTracker.prototype = {
                 break;
         }
     },
-    /**
-     *
-     * @param type {string}
-     * @param e {MouseEvent}
-     * @returns {boolean} - is event fired successfully
-     * @private
-     */
     _fireEvent: function (type, e) {
         var touchEvent = e, i, l, customEvent;
-
-        //get coords
         if (this.isTouched) {
-            if (e.type === STRINGS.touchstart) {
+            if (window.navigator.msPointerEnabled) {
+                if (!e.isPrimary) {
+                    return false;
+                }
+                touchEvent = e;
+                this.touchID = e.pointerId;
+            } else if (e.type === STRINGS.touchstart) {
                 if (e.touches.length > 1) {
                     return false;
                 }
@@ -130,22 +178,16 @@ PointerTracker.prototype = {
                     return false;
                 }
             }
-        } else { // mouse
+        } else {
             this.touchID = 1;
         }
-
         customEvent = document.createEvent('MouseEvents');
-        customEvent.initMouseEvent(type, true, true, window, 1, touchEvent.screenX, touchEvent.screenY,
-            touchEvent.clientX, touchEvent.clientY, e.ctrlKey, e.altKey, e.shiftKey, e.metaKey, e.button,
-            e.relatedTarget);
+        customEvent.initMouseEvent(type, true, true, window, 1, touchEvent.screenX, touchEvent.screenY, touchEvent.clientX, touchEvent.clientY, e.ctrlKey, e.altKey, e.shiftKey, e.metaKey, e.button, e.relatedTarget);
 
-        // preventDefault
         customEvent.preventDefault = function () {
             if (e.preventDefault !== undefined)
                 e.preventDefault();
         };
-
-        // stopPropagation
         if (customEvent.stopPropagation !== undefined) {
             var current = customEvent.stopPropagation;
             customEvent.stopPropagation = function () {
@@ -154,13 +196,12 @@ PointerTracker.prototype = {
                 current.call(this);
             };
         }
-
-        // Pointer values
         customEvent.pointerId = this.touchID;
-        customEvent.pointerType = this.isTouched ? "touch" : "mouse";
+        customEvent.pointerType = this.isTouched ? 'touch' : 'mouse';
+        customEvent.isPrimary = true;
 
-        var isFirefox = typeof window.InstallTrigger !== 'undefined';   // detect Firefox 1.0+
-        if ( isFirefox ) {
+        // direfox dirty hack
+        if (customEvent.__defineGetter__){
             customEvent.__defineGetter__('timeStamp', function (){
                 return e.timeStamp;
             });
@@ -170,7 +211,6 @@ PointerTracker.prototype = {
         return true;
     }
 };
-
-if (typeof exports !== "undefined") {
+if (typeof exports !== 'undefined') {
     exports.module = PointerTracker;
 }
