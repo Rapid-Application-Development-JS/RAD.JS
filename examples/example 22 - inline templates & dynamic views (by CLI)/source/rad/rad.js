@@ -176,7 +176,7 @@
                                         if (typeof view.destroy === 'function') {
                                             view.destroy();
                                         } else {
-                                            pubsub.unsubscribe(view);
+                                            pubsub.unregister(view, true);
                                         }
                                         serviceLocator.removeInstance(viewID);
                                         execute(callback, null, context);
@@ -309,6 +309,14 @@
                                             fn.apply(cntx, sticky[currentChannel]);
                                         }
                                     }
+                                    for (var key in sticky) {
+                                        if (sticky.hasOwnProperty(key)) {
+                                            index = key.indexOf(channel);
+                                            if (index == 0 && key.indexOf(channel + separator) === 0) {
+                                                fn.apply(cntx, sticky[key]);
+                                            }
+                                        }
+                                    }
                                     return this;
                                 },
                                 unsubscribe: function (channel, fn, context) {
@@ -358,64 +366,152 @@
                     },
                     function (module, exports) {
                         var execute = _require(4).execute;
-                        function ScriptLoader() {
-                            var loader = this, isLoaded = false;
-                            function loadScript(url, checkCallback) {
-                                if (!url || typeof url != 'string') {
-                                    window.console.log('Can\'t load script, URL is incorrect:' + url);
-                                    return;
-                                }
-                                var script = document.createElement('script');
-                                script.type = 'text/javascript';
-                                script.async = true;
-                                if (script.readyState) {
-                                    script.onreadystatechange = function () {
-                                        if (script.readyState === 'loaded' || script.readyState === 'complete') {
-                                            script.onreadystatechange = null;
-                                            checkCallback();
+                        var ScriptLoader = function () {
+                                var env, head, pending = {}, pollCount = 0, queue = {
+                                        css: [],
+                                        js: []
+                                    }, styleSheets = document.styleSheets;
+                                function createNode(name, attrs) {
+                                    var node = document.createElement(name), attr;
+                                    for (attr in attrs) {
+                                        if (attrs.hasOwnProperty(attr)) {
+                                            node.setAttribute(attr, attrs[attr]);
                                         }
-                                    };
-                                } else {
-                                    script.onload = checkCallback;
-                                    script.onerror = checkCallback;
+                                    }
+                                    return node;
                                 }
-                                script.src = url;
-                                document.head.appendChild(script);
-                            }
-                            function loadArray(urls, callback, context) {
-                                var i, l = urls.length, counter = 0;
-                                loader.arr = null;
-                                loader.callback = null;
-                                loader.context = null;
-                                function check() {
-                                    counter += 1;
-                                    if (counter === l) {
-                                        execute(callback, null, context);
+                                function finish(type) {
+                                    var p = pending[type], callback, urls;
+                                    if (p) {
+                                        callback = p.callback;
+                                        urls = p.urls;
+                                        urls.shift();
+                                        pollCount = 0;
+                                        if (!urls.length) {
+                                            callback && callback.call(p.context, p.obj);
+                                            pending[type] = null;
+                                            queue[type].length && load(type);
+                                        }
                                     }
                                 }
-                                for (i = 0; i < l; i += 1) {
-                                    loadScript(urls[i], check);
+                                function getEnv() {
+                                    var ua = navigator.userAgent;
+                                    env = { async: document.createElement('script').async === true };
+                                    (env.webkit = /AppleWebKit\//.test(ua)) || (env.ie = /MSIE|Trident/.test(ua)) || (env.opera = /Opera/.test(ua)) || (env.gecko = /Gecko\//.test(ua)) || (env.unknown = true);
                                 }
-                            }
-                            function onLoad() {
-                                isLoaded = true;
-                                loader.loadScripts = loadArray;
-                                if (loader.arr && loader.callback) {
-                                    loader.loadScripts(loader.arr, loader.callback, loader.context);
+                                function load(type, urls, callback, obj, context) {
+                                    var _finish = function () {
+                                            finish(type);
+                                        }, isCSS = type === 'css', nodes = [], i, len, node, p, pendingUrls, url;
+                                    env || getEnv();
+                                    if (urls) {
+                                        urls = typeof urls === 'string' ? [urls] : urls.concat();
+                                        if (isCSS || env.async || env.gecko || env.opera) {
+                                            queue[type].push({
+                                                urls: urls,
+                                                callback: callback,
+                                                obj: obj,
+                                                context: context
+                                            });
+                                        } else {
+                                            for (i = 0, len = urls.length; i < len; ++i) {
+                                                queue[type].push({
+                                                    urls: [urls[i]],
+                                                    callback: i === len - 1 ? callback : null,
+                                                    obj: obj,
+                                                    context: context
+                                                });
+                                            }
+                                        }
+                                    }
+                                    if (pending[type] || !(p = pending[type] = queue[type].shift())) {
+                                        return;
+                                    }
+                                    head || (head = document.head || document.getElementsByTagName('head')[0]);
+                                    pendingUrls = p.urls.concat();
+                                    for (i = 0, len = pendingUrls.length; i < len; ++i) {
+                                        url = pendingUrls[i];
+                                        if (isCSS) {
+                                            node = env.gecko ? createNode('style') : createNode('link', {
+                                                href: url,
+                                                rel: 'stylesheet'
+                                            });
+                                        } else {
+                                            node = createNode('script', { src: url });
+                                            node.async = false;
+                                        }
+                                        node.className = 'lazyload';
+                                        node.setAttribute('charset', 'utf-8');
+                                        if (env.ie && !isCSS && 'onreadystatechange' in node && !('draggable' in node)) {
+                                            node.onreadystatechange = function () {
+                                                if (/loaded|complete/.test(node.readyState)) {
+                                                    node.onreadystatechange = null;
+                                                    _finish();
+                                                }
+                                            };
+                                        } else if (isCSS && (env.gecko || env.webkit)) {
+                                            if (env.webkit) {
+                                                p.urls[i] = node.href;
+                                                pollWebKit();
+                                            } else {
+                                                node.innerHTML = '@import "' + url + '";';
+                                                pollGecko(node);
+                                            }
+                                        } else {
+                                            node.onload = node.onerror = _finish;
+                                        }
+                                        nodes.push(node);
+                                    }
+                                    for (i = 0, len = nodes.length; i < len; ++i) {
+                                        head.appendChild(nodes[i]);
+                                    }
                                 }
-                            }
-                            loader.loadScripts = function (urls, callback, context) {
-                                loader.arr = urls;
-                                loader.callback = callback;
-                                loader.context = context;
-                            };
-                            if (window.attachEvent) {
-                                window.attachEvent('onload', onLoad);
-                            } else {
-                                window.addEventListener('load', onLoad, false);
-                            }
-                            return loader;
-                        }
+                                function pollGecko(node) {
+                                    var hasRules;
+                                    try {
+                                        hasRules = !!node.sheet.cssRules;
+                                    } catch (ex) {
+                                        pollCount += 1;
+                                        if (pollCount < 200) {
+                                            setTimeout(function () {
+                                                pollGecko(node);
+                                            }, 50);
+                                        } else {
+                                            hasRules && finish('css');
+                                        }
+                                        return;
+                                    }
+                                    finish('css');
+                                }
+                                function pollWebKit() {
+                                    var css = pending.css, i;
+                                    if (css) {
+                                        i = styleSheets.length;
+                                        while (--i >= 0) {
+                                            if (styleSheets[i].href === css.urls[0]) {
+                                                finish('css');
+                                                break;
+                                            }
+                                        }
+                                        pollCount += 1;
+                                        if (css) {
+                                            if (pollCount < 200) {
+                                                setTimeout(pollWebKit, 50);
+                                            } else {
+                                                finish('css');
+                                            }
+                                        }
+                                    }
+                                }
+                                return {
+                                    css: function (urls, callback, obj, context) {
+                                        load('css', urls, callback, obj, context);
+                                    },
+                                    loadScripts: function (urls, callback, obj, context) {
+                                        load('js', urls, callback, obj, context);
+                                    }
+                                };
+                            }();
                         exports.scriptLoader = ScriptLoader;
                     },
                     function (module, exports) {
@@ -724,7 +820,7 @@
                             namespace('RAD.plugins', {});
                             namespace('RAD.models', {});
                             namespace('RAD.utils', {});
-                            namespace('RAD.scriptLoader', new ScriptLoader());
+                            namespace('RAD.scriptLoader', ScriptLoader);
                         }
                         exports.core = new Core(window.jQuery, document, window);
                         exports.model = modelMethod;
@@ -1023,6 +1119,10 @@
                             RAD.core.publish('router.beginTransition', data);
                         }
                         content.appendIn(container, function () {
+                            var fakeContainer = document.querySelector('[view="' + data.content + '"]');
+                            if (fakeContainer) {
+                                fakeContainer.removeAttribute('view');
+                            }
                             container.setAttribute('view', data.content);
                             if (typeof data.callback === 'function') {
                                 if (typeof data.context === 'object') {
@@ -1037,7 +1137,7 @@
                         });
                     },
                     render: function (callback) {
-                        var virtualEl = document.createElement('div'), virtualTemplates, self = this, json, children = self.getChildren(), counter = children.length, childView, index, length;
+                        var virtualEl = document.createElement('div'), virtualTemplates, self = this, json, children = self.getChildren(), counter, childView, index, length;
                         function check() {
                             counter -= 1;
                             if (counter <= 0) {
@@ -1066,13 +1166,16 @@
                             }
                         }
                         self.onStartRender();
+                        counter = children.length;
                         for (index = 0, length = children.length; index < length; index += 1) {
-                            childView = RAD.core.getView(children[index].content, children[index].extras);
-                            if (childView) {
-                                childView.detach();
-                            } else {
-                                window.console.log('Child view [' + children[index].content + '] is not registered. Please check parent view [' + self.radID + '] ');
-                                return;
+                            if (children[index].content) {
+                                childView = RAD.core.getView(children[index].content, children[index].extras);
+                                if (childView) {
+                                    childView.detach();
+                                } else {
+                                    window.console.log('Child view [' + children[index].content + '] is not registered. Please check parent view [' + self.radID + '] ');
+                                    return;
+                                }
                             }
                         }
                         json = self.model ? self.model.toJSON() : undefined;
@@ -1095,17 +1198,19 @@
                                 prepareInnerTemplates();
                             }
                         } catch (e) {
-                            window.console.log(e.message + '. Caused during rendering: ' + self.radID);
+                            window.console.log(e.message + '. Caused during rendering: ' + self.radID + ':' + e.stack);
                             return;
                         }
                         if (children.length > 0) {
                             for (index = 0, length = children.length; index < length; index += 1) {
-                                childView = RAD.core.getView(children[index].content, children[index].extras);
-                                if (childView) {
-                                    this.insertSubview(children[index], check);
-                                } else {
-                                    window.console.log('Cannot insert child view [' + children[index].content + ']. It is not registered. Please check parent view [' + self.radID + '] ');
-                                    return;
+                                if (children[index].content) {
+                                    childView = RAD.core.getView(children[index].content, children[index].extras);
+                                    if (childView) {
+                                        this.insertSubview(children[index], check);
+                                    } else {
+                                        window.console.log('Cannot insert child view [' + children[index].content + ']. It is not registered. Please check parent view [' + self.radID + '] ');
+                                        return;
+                                    }
                                 }
                             }
                         } else {
@@ -1424,6 +1529,10 @@
                         return;
                     }
                     attachViews = function () {
+                        var fakeContainer = document.querySelector('[view="' + newViewId + '"]');
+                        if (fakeContainer) {
+                            fakeContainer.removeAttribute('view');
+                        }
                         publishToGroup('attach_start', attachedViews);
                         container.setAttribute('view', newViewId);
                         core.publish('animateTransition', {
@@ -1738,7 +1847,9 @@
                             }
                             if (pageOut) {
                                 pageOut.busy = false;
-                                container.removeChild(pageOut);
+                                if (pageOut.parentNode === container) {
+                                    container.removeChild(pageOut);
+                                }
                                 removeClass(pageOut, pageOutClassName);
                             }
                             onTransitionEnd(pageIn, pageOut, container, e);
@@ -2232,32 +2343,63 @@
         },
         function (module, exports) {
             var STRINGS = {
+                    pointerDown: 'pointerdown',
+                    pointerMove: 'pointermove',
+                    pointerUp: 'pointerup',
+                    pointerCancel: 'pointercancel',
+                    pointerOut: 'pointerout',
                     touchstart: 'touchstart',
                     touchmove: 'touchmove',
                     touchend: 'touchend',
                     touchleave: 'touchleave',
-                    touchcancel: '.touchcancel',
+                    touchcancel: 'touchcancel',
                     mousedown: 'mousedown',
                     mousemove: 'mousemove',
                     mouseup: 'mouseup',
                     mouseover: 'mouseover',
                     mouseout: 'mouseout'
                 };
+            if (window.MSPointerEvent && !window.PointerEvent) {
+                STRINGS.pointerDown = 'MSPointerDown';
+                STRINGS.pointerMove = 'MSPointerMove';
+                STRINGS.pointerUp = 'MSPointerUp';
+                STRINGS.pointerCancel = 'MSPointerCancel';
+                STRINGS.pointerOut = 'MSPointerOut';
+            }
             function PointerTracker(element) {
                 this._el = element;
                 this.isDown = false;
                 this.chancelId = false;
-                if (!this.isTouched) {
-                    this._el.addEventListener(STRINGS.mousedown, this, false);
-                    this._el.addEventListener(STRINGS.mouseup, this, false);
-                    this._el.addEventListener(STRINGS.mousemove, this, false);
-                    this._el.addEventListener(STRINGS.mouseout, this, false);
-                    this._el.addEventListener(STRINGS.mouseover, this, false);
+                if (!window.navigator.msPointerEnabled) {
+                    if (!this.isTouched) {
+                        this._el.addEventListener(STRINGS.mousedown, this, false);
+                        this._el.addEventListener(STRINGS.mouseup, this, false);
+                        this._el.addEventListener(STRINGS.mousemove, this, false);
+                        this._el.addEventListener(STRINGS.mouseout, this, false);
+                        this._el.addEventListener(STRINGS.mouseover, this, false);
+                    } else {
+                        this._el.addEventListener(STRINGS.touchstart, this, false);
+                        this._el.addEventListener(STRINGS.touchend, this, false);
+                        this._el.addEventListener(STRINGS.touchmove, this, false);
+                        this._el.addEventListener(STRINGS.touchcancel, this, false);
+                    }
                 } else {
-                    this._el.addEventListener(STRINGS.touchstart, this, false);
-                    this._el.addEventListener(STRINGS.touchend, this, false);
-                    this._el.addEventListener(STRINGS.touchmove, this, false);
-                    this._el.addEventListener(STRINGS.touchcancel, this, false);
+                    var self = this, eventHandlerIE = function (e) {
+                            self.handleEventIE(e);
+                        }, eventHandler = function (e) {
+                            self.handleEvent(e);
+                        };
+                    if (window.navigator.pointerEnabled) {
+                        this._el.addEventListener(STRINGS.pointerDown, eventHandlerIE, true);
+                        this._el.addEventListener(STRINGS.pointerMove, eventHandlerIE, true);
+                        this._el.addEventListener(STRINGS.pointerUp, eventHandlerIE, true);
+                    } else {
+                        this._el.addEventListener(STRINGS.pointerDown, eventHandler, true);
+                        this._el.addEventListener(STRINGS.pointerMove, eventHandler, true);
+                        this._el.addEventListener(STRINGS.pointerUp, eventHandler, true);
+                    }
+                    this._el.addEventListener(STRINGS.pointerCancel, eventHandler, false);
+                    this._el.addEventListener(STRINGS.pointerOut, eventHandler, false);
                 }
                 this.destroy = function () {
                     if (!this.isTouched) {
@@ -2283,7 +2425,24 @@
                     over: 'pointerover',
                     chancel: 'pointercancel'
                 },
-                isTouched: 'ontouchstart' in window,
+                isTouched: 'ontouchstart' in window || window.navigator.msPointerEnabled,
+                handleEventIE: function (e) {
+                    if (!e.isPrimary) {
+                        e.stopImmediatePropagation();
+                        e.stopPropagation();
+                        e.preventDefault();
+                    } else {
+                        switch (e.type) {
+                        case STRINGS.pointerDown:
+                            this.isDown = true;
+                            break;
+                        case STRINGS.pointerUp:
+                        case STRINGS.pointerCancel:
+                        case STRINGS.pointerOut:
+                            this.isDown = false;
+                        }
+                    }
+                },
                 handleEvent: function (e) {
                     if (this.chancelId !== null) {
                         clearTimeout(this.chancelId);
@@ -2291,19 +2450,24 @@
                     switch (e.type) {
                     case STRINGS.touchmove:
                     case STRINGS.mousemove:
+                    case STRINGS.pointerMove:
                         if (this.isDown) {
                             this._fireEvent(this.EVENTS.move, e);
                         }
                         break;
                     case STRINGS.touchstart:
                     case STRINGS.mousedown:
+                    case STRINGS.pointerDown:
                         this.isDown = true;
                         this.chancelId = false;
                         this._fireEvent(this.EVENTS.down, e);
                         break;
                     case STRINGS.touchend:
+                    case STRINGS.pointerUp:
                     case STRINGS.touchleave:
                     case STRINGS.touchcancel:
+                    case STRINGS.pointerCancel:
+                    case STRINGS.pointerOut:
                     case STRINGS.mouseup:
                         if (this.isDown) {
                             this.isDown = !this._fireEvent(this.EVENTS.up, e);
@@ -2329,7 +2493,13 @@
                 _fireEvent: function (type, e) {
                     var touchEvent = e, i, l, customEvent;
                     if (this.isTouched) {
-                        if (e.type === STRINGS.touchstart) {
+                        if (window.navigator.msPointerEnabled) {
+                            if (!e.isPrimary) {
+                                return false;
+                            }
+                            touchEvent = e;
+                            this.touchID = e.pointerId;
+                        } else if (e.type === STRINGS.touchstart) {
                             if (e.touches.length > 1) {
                                 return false;
                             }
@@ -2365,8 +2535,8 @@
                     }
                     customEvent.pointerId = this.touchID;
                     customEvent.pointerType = this.isTouched ? 'touch' : 'mouse';
-                    var isFirefox = typeof window.InstallTrigger !== 'undefined';
-                    if (isFirefox) {
+                    customEvent.isPrimary = true;
+                    if (customEvent.__defineGetter__) {
                         customEvent.__defineGetter__('timeStamp', function () {
                             return e.timeStamp;
                         });

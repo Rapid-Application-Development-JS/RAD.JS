@@ -1,10 +1,10 @@
 {
-    "name": "untitled",
+    "name": "sticky_test",
     "application": null,
     "libs": {},
     "view": {
-        "view.parent": "/source/views/view.parent",
-        "view.child": "/source/views/view.child"
+        "second.screen": "/source/views/second.screen",
+        "first.screen": "/source/views/first.screen"
     },
     "model": {},
     "service": {},

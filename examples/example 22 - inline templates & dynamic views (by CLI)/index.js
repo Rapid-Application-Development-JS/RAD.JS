@@ -4,9 +4,11 @@
     
     var scripts = [
         
-        "source/views/view.child/view.child.js",
+        "source/views/first.screen/first.screen.js",
         
-        "source/views/view.parent/view.parent.js",
+        "source/views/second.screen/second.screen.js",
+        
+        "source/views/second.screen/view.child/view.child.js",
         
         "source/application/application.js"
     ];
@@ -16,8 +18,9 @@
         var core = window.RAD.core,
             application = window.RAD.application,
             coreOptions = {
-                defaultBackstack: false,
-                defaultAnimation: 'none',
+                backstackType: 'native',
+                defaultBackstack: true,
+                defaultAnimation: 'slide',
                 animationTimeout: 3000,
                 debug: false
             };
