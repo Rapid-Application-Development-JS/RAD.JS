@@ -179,7 +179,7 @@ function Core($, document, window) {
                 if (typeof view.destroy === 'function') {
                     view.destroy();
                 } else {
-                    pubsub.unsubscribe(view);
+                    pubsub.unregister(view, true);
                 }
 
                 serviceLocator.removeInstance(viewID);

@@ -176,7 +176,7 @@
                                         if (typeof view.destroy === 'function') {
                                             view.destroy();
                                         } else {
-                                            pubsub.unsubscribe(view);
+                                            pubsub.unregister(view, true);
                                         }
                                         serviceLocator.removeInstance(viewID);
                                         execute(callback, null, context);
@@ -1168,12 +1168,14 @@
                         self.onStartRender();
                         counter = children.length;
                         for (index = 0, length = children.length; index < length; index += 1) {
-                            childView = RAD.core.getView(children[index].content, children[index].extras);
-                            if (childView) {
-                                childView.detach();
-                            } else {
-                                window.console.log('Child view [' + children[index].content + '] is not registered. Please check parent view [' + self.radID + '] ');
-                                return;
+                            if (children[index].content) {
+                                childView = RAD.core.getView(children[index].content, children[index].extras);
+                                if (childView) {
+                                    childView.detach();
+                                } else {
+                                    window.console.log('Child view [' + children[index].content + '] is not registered. Please check parent view [' + self.radID + '] ');
+                                    return;
+                                }
                             }
                         }
                         json = self.model ? self.model.toJSON() : undefined;
@@ -1201,12 +1203,14 @@
                         }
                         if (children.length > 0) {
                             for (index = 0, length = children.length; index < length; index += 1) {
-                                childView = RAD.core.getView(children[index].content, children[index].extras);
-                                if (childView) {
-                                    this.insertSubview(children[index], check);
-                                } else {
-                                    window.console.log('Cannot insert child view [' + children[index].content + ']. It is not registered. Please check parent view [' + self.radID + '] ');
-                                    return;
+                                if (children[index].content) {
+                                    childView = RAD.core.getView(children[index].content, children[index].extras);
+                                    if (childView) {
+                                        this.insertSubview(children[index], check);
+                                    } else {
+                                        window.console.log('Cannot insert child view [' + children[index].content + ']. It is not registered. Please check parent view [' + self.radID + '] ');
+                                        return;
+                                    }
                                 }
                             }
                         } else {
@@ -2339,32 +2343,63 @@
         },
         function (module, exports) {
             var STRINGS = {
+                    pointerDown: 'pointerdown',
+                    pointerMove: 'pointermove',
+                    pointerUp: 'pointerup',
+                    pointerCancel: 'pointercancel',
+                    pointerOut: 'pointerout',
                     touchstart: 'touchstart',
                     touchmove: 'touchmove',
                     touchend: 'touchend',
                     touchleave: 'touchleave',
-                    touchcancel: '.touchcancel',
+                    touchcancel: 'touchcancel',
                     mousedown: 'mousedown',
                     mousemove: 'mousemove',
                     mouseup: 'mouseup',
                     mouseover: 'mouseover',
                     mouseout: 'mouseout'
                 };
+            if (window.MSPointerEvent && !window.PointerEvent) {
+                STRINGS.pointerDown = 'MSPointerDown';
+                STRINGS.pointerMove = 'MSPointerMove';
+                STRINGS.pointerUp = 'MSPointerUp';
+                STRINGS.pointerCancel = 'MSPointerCancel';
+                STRINGS.pointerOut = 'MSPointerOut';
+            }
             function PointerTracker(element) {
                 this._el = element;
                 this.isDown = false;
                 this.chancelId = false;
-                if (!this.isTouched) {
-                    this._el.addEventListener(STRINGS.mousedown, this, false);
-                    this._el.addEventListener(STRINGS.mouseup, this, false);
-                    this._el.addEventListener(STRINGS.mousemove, this, false);
-                    this._el.addEventListener(STRINGS.mouseout, this, false);
-                    this._el.addEventListener(STRINGS.mouseover, this, false);
+                if (!window.navigator.msPointerEnabled) {
+                    if (!this.isTouched) {
+                        this._el.addEventListener(STRINGS.mousedown, this, false);
+                        this._el.addEventListener(STRINGS.mouseup, this, false);
+                        this._el.addEventListener(STRINGS.mousemove, this, false);
+                        this._el.addEventListener(STRINGS.mouseout, this, false);
+                        this._el.addEventListener(STRINGS.mouseover, this, false);
+                    } else {
+                        this._el.addEventListener(STRINGS.touchstart, this, false);
+                        this._el.addEventListener(STRINGS.touchend, this, false);
+                        this._el.addEventListener(STRINGS.touchmove, this, false);
+                        this._el.addEventListener(STRINGS.touchcancel, this, false);
+                    }
                 } else {
-                    this._el.addEventListener(STRINGS.touchstart, this, false);
-                    this._el.addEventListener(STRINGS.touchend, this, false);
-                    this._el.addEventListener(STRINGS.touchmove, this, false);
-                    this._el.addEventListener(STRINGS.touchcancel, this, false);
+                    var self = this, eventHandlerIE = function (e) {
+                            self.handleEventIE(e);
+                        }, eventHandler = function (e) {
+                            self.handleEvent(e);
+                        };
+                    if (window.navigator.pointerEnabled) {
+                        this._el.addEventListener(STRINGS.pointerDown, eventHandlerIE, true);
+                        this._el.addEventListener(STRINGS.pointerMove, eventHandlerIE, true);
+                        this._el.addEventListener(STRINGS.pointerUp, eventHandlerIE, true);
+                    } else {
+                        this._el.addEventListener(STRINGS.pointerDown, eventHandler, true);
+                        this._el.addEventListener(STRINGS.pointerMove, eventHandler, true);
+                        this._el.addEventListener(STRINGS.pointerUp, eventHandler, true);
+                    }
+                    this._el.addEventListener(STRINGS.pointerCancel, eventHandler, false);
+                    this._el.addEventListener(STRINGS.pointerOut, eventHandler, false);
                 }
                 this.destroy = function () {
                     if (!this.isTouched) {
@@ -2390,7 +2425,24 @@
                     over: 'pointerover',
                     chancel: 'pointercancel'
                 },
-                isTouched: 'ontouchstart' in window,
+                isTouched: 'ontouchstart' in window || window.navigator.msPointerEnabled,
+                handleEventIE: function (e) {
+                    if (!e.isPrimary) {
+                        e.stopImmediatePropagation();
+                        e.stopPropagation();
+                        e.preventDefault();
+                    } else {
+                        switch (e.type) {
+                        case STRINGS.pointerDown:
+                            this.isDown = true;
+                            break;
+                        case STRINGS.pointerUp:
+                        case STRINGS.pointerCancel:
+                        case STRINGS.pointerOut:
+                            this.isDown = false;
+                        }
+                    }
+                },
                 handleEvent: function (e) {
                     if (this.chancelId !== null) {
                         clearTimeout(this.chancelId);
@@ -2398,19 +2450,24 @@
                     switch (e.type) {
                     case STRINGS.touchmove:
                     case STRINGS.mousemove:
+                    case STRINGS.pointerMove:
                         if (this.isDown) {
                             this._fireEvent(this.EVENTS.move, e);
                         }
                         break;
                     case STRINGS.touchstart:
                     case STRINGS.mousedown:
+                    case STRINGS.pointerDown:
                         this.isDown = true;
                         this.chancelId = false;
                         this._fireEvent(this.EVENTS.down, e);
                         break;
                     case STRINGS.touchend:
+                    case STRINGS.pointerUp:
                     case STRINGS.touchleave:
                     case STRINGS.touchcancel:
+                    case STRINGS.pointerCancel:
+                    case STRINGS.pointerOut:
                     case STRINGS.mouseup:
                         if (this.isDown) {
                             this.isDown = !this._fireEvent(this.EVENTS.up, e);
@@ -2436,7 +2493,13 @@
                 _fireEvent: function (type, e) {
                     var touchEvent = e, i, l, customEvent;
                     if (this.isTouched) {
-                        if (e.type === STRINGS.touchstart) {
+                        if (window.navigator.msPointerEnabled) {
+                            if (!e.isPrimary) {
+                                return false;
+                            }
+                            touchEvent = e;
+                            this.touchID = e.pointerId;
+                        } else if (e.type === STRINGS.touchstart) {
                             if (e.touches.length > 1) {
                                 return false;
                             }
@@ -2472,8 +2535,8 @@
                     }
                     customEvent.pointerId = this.touchID;
                     customEvent.pointerType = this.isTouched ? 'touch' : 'mouse';
-                    var isFirefox = typeof window.InstallTrigger !== 'undefined';
-                    if (isFirefox) {
+                    customEvent.isPrimary = true;
+                    if (customEvent.__defineGetter__) {
                         customEvent.__defineGetter__('timeStamp', function () {
                             return e.timeStamp;
                         });

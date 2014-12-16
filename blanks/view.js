@@ -177,12 +177,14 @@ var view = Backbone.View.extend({
 
         // detach children
         for (index = 0, length = children.length; index < length; index += 1) {
-            childView = RAD.core.getView(children[index].content, children[index].extras);
-            if (childView) {
-                childView.detach();
-            } else {
-                window.console.log('Child view ['+children[index].content+'] is not registered. Please check parent view ['+ self.radID+'] ');
-                return;
+            if (children[index].content) {
+                childView = RAD.core.getView(children[index].content, children[index].extras);
+                if (childView) {
+                    childView.detach();
+                } else {
+                    window.console.log('Child view [' + children[index].content + '] is not registered. Please check parent view [' + self.radID + '] ');
+                    return;
+                }
             }
         }
 
@@ -208,12 +210,14 @@ var view = Backbone.View.extend({
         //attach children
         if (children.length > 0) {
             for (index = 0, length = children.length; index < length; index += 1) {
-                childView = RAD.core.getView(children[index].content, children[index].extras);
-                if (childView) {
-                    this.insertSubview(children[index], check);
-                } else {
-                    window.console.log('Cannot insert child view ['+children[index].content+']. It is not registered. Please check parent view ['+ self.radID+'] ');
-                    return;
+                if (children[index].content) {
+                    childView = RAD.core.getView(children[index].content, children[index].extras);
+                    if (childView) {
+                        this.insertSubview(children[index], check);
+                    } else {
+                        window.console.log('Cannot insert child view [' + children[index].content + ']. It is not registered. Please check parent view [' + self.radID + '] ');
+                        return;
+                    }
                 }
             }
         } else {
