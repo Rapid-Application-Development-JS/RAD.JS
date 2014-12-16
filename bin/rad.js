@@ -1137,7 +1137,7 @@
                         });
                     },
                     render: function (callback) {
-                        var virtualEl = document.createElement('div'), virtualTemplates, self = this, json, children = self.getChildren(), counter = children.length, childView, index, length;
+                        var virtualEl = document.createElement('div'), virtualTemplates, self = this, json, children = self.getChildren(), counter, childView, index, length;
                         function check() {
                             counter -= 1;
                             if (counter <= 0) {
@@ -1166,6 +1166,7 @@
                             }
                         }
                         self.onStartRender();
+                        counter = children.length;
                         for (index = 0, length = children.length; index < length; index += 1) {
                             childView = RAD.core.getView(children[index].content, children[index].extras);
                             if (childView) {

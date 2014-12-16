@@ -131,7 +131,7 @@ var view = Backbone.View.extend({
             self = this,
             json,
             children = self.getChildren(),
-            counter = children.length,
+            counter,
             childView,
             index,
             length;
@@ -173,6 +173,7 @@ var view = Backbone.View.extend({
         }
 
         self.onStartRender();
+        counter = children.length;
 
         // detach children
         for (index = 0, length = children.length; index < length; index += 1) {
