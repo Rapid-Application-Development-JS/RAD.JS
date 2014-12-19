@@ -1001,7 +1001,9 @@
                         this.mScroll = new window.iScroll(wrapper, options);
                     },
                     detachScroll: function () {
-                        this.mScroll.destroy();
+                        if (this.mScroll) {
+                            this.mScroll.destroy();
+                        }
                         this.mScroll = null;
                     }
                 });
