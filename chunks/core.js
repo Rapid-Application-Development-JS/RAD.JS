@@ -22,8 +22,9 @@ function closest(element, className) {
 
 function preventBodyTouch(e) {
     var tracker = this.scrollTracker,
-        onTopBound = (e.changedTouches[0].screenY > tracker.startIOSTouch) && (tracker.scrollView.scrollTop <= 0),
-        onBottomBound = (e.changedTouches[0].screenY < tracker.startIOSTouch) && (tracker.scrollView.scrollTop >= tracker.scrollEnd);
+        top = tracker.scrollView ? tracker.scrollView.scrollTop : 0,
+        onTopBound = (e.changedTouches[0].screenY > tracker.startIOSTouch) && (top <= 0),
+        onBottomBound = (e.changedTouches[0].screenY < tracker.startIOSTouch) && (top >= tracker.scrollEnd);
 
     if ((!tracker.scrollView || tracker.scrollRequest) && (onTopBound || onBottomBound)) {
         e.preventDefault();
