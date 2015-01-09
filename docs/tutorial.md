@@ -700,6 +700,6 @@ function onEndLoad() {
 
 
 ---
-Sources of the tutorial are available here - [sources](rad_project.zip).
+Sources of the tutorial are available here - [sources](source/rad_project.zip).
 
 ---
