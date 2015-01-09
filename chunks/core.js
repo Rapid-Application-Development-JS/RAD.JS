@@ -40,7 +40,7 @@ function startBodyTouch(e) {
     if (!!tracker.scrollView && tracker.scrollView.firstElementChild) {
         tracker.startIOSTouch = e.touches[0].screenY;
         tracker.scrollRequest = true;
-        tracker.scrollEnd = tracker.scrollView.offsetHeight - tracker.scrollView.firstElementChild.offsetHeight;
+        tracker.scrollEnd = Math.abs(tracker.scrollView.offsetHeight - tracker.scrollView.firstElementChild.offsetHeight);
     }
     tracker = null;
 }
