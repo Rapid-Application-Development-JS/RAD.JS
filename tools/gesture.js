@@ -81,7 +81,7 @@ GestureTracker.prototype = {
     },
 
     _pointerMove: function (e) {
-        if (e.timeStamp - this.tracks[e.pointerId].last.timeStamp > 10) {
+        if ((this.tracks && this.tracks[e.pointerId]) && (e.timeStamp - this.tracks[e.pointerId].last.timeStamp > 10)) {
             clearTimeout(this._holdID);
 
             this.tracks[e.pointerId].pre.clientX = this.tracks[e.pointerId].last.clientX;
@@ -96,6 +96,9 @@ GestureTracker.prototype = {
 
     _pointerUp: function (e) {
         clearTimeout(this._holdID);
+        if (!this.tracks || !this.tracks[e.pointerId]) {
+            return;
+        }
 
         this.tracks[e.pointerId].end.clientX = e.clientX;
         this.tracks[e.pointerId].end.clientY = e.clientY;
