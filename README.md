@@ -6,7 +6,7 @@ Javascript framework for Rapid Application Development
 
 ---
 
-<!--- [Tutorial](tutorial.md) --->
+[Tutorial](docs/tutorial.md)
 
 <!--- [Developer Guide](guide.md) --->
 
