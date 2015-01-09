@@ -1,7 +1,5 @@
 var view = require('./view').module;
 
-console.log(view);
-
 var scrollable = view.extend({
     className: 'scroll-view',
 

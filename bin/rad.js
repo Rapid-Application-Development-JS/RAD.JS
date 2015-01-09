@@ -58,8 +58,8 @@
                             return result;
                         }
                         function preventBodyTouch(e) {
-                            var tracker = this.scrollTracker;
-                            if (!tracker.scrollView || tracker.scrollRequest && (e.touches[0].screenY > tracker.startIOSTouch && tracker.scrollView.scrollTop === 0 || tracker.scrollView.scrollTop >= tracker.scrollEnd && e.touches[0].screenY < tracker.startIOSTouch)) {
+                            var tracker = this.scrollTracker, onTopBound = e.changedTouches[0].screenY > tracker.startIOSTouch && tracker.scrollView.scrollTop <= 0, onBottomBound = e.changedTouches[0].screenY < tracker.startIOSTouch && tracker.scrollView.scrollTop >= tracker.scrollEnd;
+                            if ((!tracker.scrollView || tracker.scrollRequest) && (onTopBound || onBottomBound)) {
                                 e.preventDefault();
                             }
                             tracker = null;
@@ -71,7 +71,7 @@
                             if (!!tracker.scrollView && tracker.scrollView.firstElementChild) {
                                 tracker.startIOSTouch = e.touches[0].screenY;
                                 tracker.scrollRequest = true;
-                                tracker.scrollEnd = tracker.scrollView.firstElementChild.offsetHeight - tracker.scrollView.offsetHeight;
+                                tracker.scrollEnd = tracker.scrollView.offsetHeight - tracker.scrollView.firstElementChild.offsetHeight;
                             }
                             tracker = null;
                         }
@@ -959,7 +959,6 @@
         },
         function (module, exports) {
             var view = _require(7).module;
-            console.log(view);
             var scrollable = view.extend({
                     className: 'scroll-view',
                     onrender: function () {
