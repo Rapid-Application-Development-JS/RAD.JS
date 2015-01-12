@@ -1060,11 +1060,15 @@
                             RAD.core.stop(self.viewID);
                         };
                         self.getChildren();
+                        var modelBindingCallback = function () {
+                                self.bindModel(self.model);
+                            }, needBindModel = false;
                         if (typeof self.template === 'function') {
                             self.bindModel(self.model);
                             self.loader.resolve();
                         } else if (window.JST && window.JST[self.url]) {
                             self.template = window.JST[self.url];
+                            needBindModel = true;
                             self.bindModel(self.model);
                             self.loader.resolve();
                         } else {
@@ -1080,6 +1084,8 @@
                         self.subscribe(self.radID, self.receiveMsg, self);
                         self.oninit();
                         self.onInitialize();
+                        if (needBindModel)
+                            modelBindingCallback();
                         return self;
                     },
                     setExtras: function (extras) {

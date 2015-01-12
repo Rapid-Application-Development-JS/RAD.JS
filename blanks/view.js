@@ -18,27 +18,24 @@ var view = Backbone.View.extend({
 
     initialize: function () {
         var self = this;
-
-//        self.loader = RAD.Blanks.Deferred();
         self.loader = deferred();
         self.renderRequest = true;
-
-        // Backward compatibility
         self.viewID = this.radID;
-
         self.finish = function () {
             RAD.core.stop(self.viewID);
         };
-
-        // ensure that 'children' property will be always defined
         self.getChildren();
 
-        // Use compiled template if it exists. If no - use Ajax to load template.
+        var modelBindingCallback = function(){
+            self.bindModel(self.model);
+        }, needBindModel=false;
+
         if (typeof self.template === 'function') {
             self.bindModel(self.model);
             self.loader.resolve();
         } else if (window.JST && window.JST[self.url]) {
             self.template = window.JST[self.url];
+            needBindModel = true;
             self.bindModel(self.model);
             self.loader.resolve();
         } else {
@@ -51,12 +48,10 @@ var view = Backbone.View.extend({
                 self.ajax = null;
             }, 'text');
         }
-
         self.subscribe(self.radID, self.receiveMsg, self);
-
         self.oninit();
         self.onInitialize();
-
+        if (needBindModel) modelBindingCallback();
         return self;
     },
 
