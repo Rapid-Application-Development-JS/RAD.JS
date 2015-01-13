@@ -961,19 +961,27 @@
             var view = _require(7).module;
             var scrollable = view.extend({
                     className: 'scroll-view',
+                    refreshScrollListener: function (e) {
+                        if (this.mScroll) {
+                            this.mScroll.refresh();
+                        }
+                        e.stopPropagation();
+                    },
                     onrender: function () {
                         this.refreshScroll();
                     },
                     onattach: function () {
                         var self = this;
                         this.attachScroll();
-                        this.el.addEventListener('scrollRefresh', function (e) {
-                            self.mScroll.refresh();
-                            e.stopPropagation();
-                        });
+                        this._tmpWrapper = function (e) {
+                            self.refreshScrollListener(e);
+                        };
+                        this.el.addEventListener('scrollRefresh', this._tmpWrapper);
                     },
                     ondetach: function () {
-                        this.el.removeEventListener('scrollRefresh');
+                        if (this._tmpWrapper) {
+                            this.el.removeEventListener('scrollRefresh', this._tmpWrapper);
+                        }
                         this.detachScroll();
                     },
                     refreshScroll: function () {
