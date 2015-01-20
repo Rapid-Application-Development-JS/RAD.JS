@@ -221,10 +221,10 @@ function BackStack(core, id) {
             this.navigate(packURL(rootModule, timestamp, animation));
         },
 
-        onNewTransition: function () {
+        onNewTransition: function (data) {
             this.toBack = true;
             this.isBlocked = false;
-            this.pushToStackRequest = true;
+            this.pushToStackRequest = data.container_id + data.content;
         },
 
         back: function () {
@@ -337,10 +337,10 @@ function BackStack(core, id) {
         var parts = channel.split('.');
         switch (parts[1]) {
             case 'beginTransition':
-                router.onNewTransition();
+                router.onNewTransition(data);
                 break;
             case 'endTransition':
-                if (router.pushToStackRequest) {
+                if (router.pushToStackRequest === (data.container_id + data.content)) {
                     router.saveScoopeAsURL(data);
                 }
                 break;
