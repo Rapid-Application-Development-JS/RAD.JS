@@ -1642,11 +1642,17 @@
                     });
                 }
                 function showWindow(data) {
-                    var container = document.createElement('div'), className = data.className || 'modal-container';
+                    var container = document.createElement('div'), className = data.className || 'modal-container', modals = document.body.children, i, l;
                     if (data.position) {
                         className += ' pos-' + data.position;
                     } else {
                         className += ' pos-center-center';
+                    }
+                    for (i = 0, l = modals.length; i < l; i += 1) {
+                        if (modals[i].getAttribute('view') === data.content) {
+                            window.console.log('You try to navigate the same view:' + data.content);
+                            return;
+                        }
                     }
                     if (data.outsideClose) {
                         container.listener = function (e) {
