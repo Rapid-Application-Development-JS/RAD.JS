@@ -116,7 +116,7 @@ GestureTracker.prototype = {
         }
 
         isMoved = Math.abs(distance(pointer.start.clientX, pointer.end.clientX, pointer.start.clientY, pointer.end.clientY)) > 20;
-        isFling = Math.abs(distance(pointer.end.clientX, pointer.pre.clientX, pointer.end.clientY, pointer.pre.clientY)) > 0 && pointer.end.timeStamp - pointer.start.timeStamp > 300;
+        isFling = Math.abs(distance(pointer.end.clientX, pointer.pre.clientX, pointer.end.clientY, pointer.pre.clientY)) > 0 && pointer.end.timeStamp - pointer.start.timeStamp > 50;
         if (isFling) {
             this._fireEvent('fling', e, {
                 start: pointer.start,
