@@ -48,6 +48,10 @@ var view = Backbone.View.extend({
                 }
             }
 
+            if (!this.loader.isResolved()) {
+                return;
+            }
+
             this.onStartRender();
             counter = children.length;
 
