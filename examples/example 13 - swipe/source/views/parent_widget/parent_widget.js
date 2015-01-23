@@ -1,9 +1,14 @@
 RAD.view("view.parent_widget", RAD.Blanks.View.extend({
-    url: 'source/views/parent_widget/parent_widget.html',
+    tagName: 'div',
 
+    render: function () {
+        // important !!!
+        // you should redefine render method
+        // for avoid url & template using
+    },
+    
     onEndRender: function () {
         this._firstTimeAttach = true;
-
     },
 
     onStartAttach: function () {
@@ -13,7 +18,7 @@ RAD.view("view.parent_widget", RAD.Blanks.View.extend({
             }
 
             this._firstTimeAttach = false;
-            this._pageController = new Pager(this.$('.swipe-container')[0], this);
+            this._pageController = new Pager(this.el, this);
         }
     },
 

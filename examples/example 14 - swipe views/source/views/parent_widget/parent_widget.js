@@ -1,7 +1,13 @@
 RAD.view("view.parent_widget", RAD.Blanks.View.extend({
     swipe_content: ["view.inner_first_widget", "view.inner_second_widget", "view.inner_third_widget"],
 
-    url: 'source/views/parent_widget/parent_widget.html',
+    tagName: 'div',
+
+    render: function () {
+        // important !!!
+        // you should redefine render method
+        // for avoid url & template using
+    },
 
     onEndRender: function () {
         this._firstTimeAttach = true;
@@ -15,7 +21,7 @@ RAD.view("view.parent_widget", RAD.Blanks.View.extend({
             }
 
             this._firstTimeAttach = false;
-            this._pageController = new Pager(this.$('.swipe-container')[0], this);
+            this._pageController = new Pager(this.el, this);
         }
     },
 
