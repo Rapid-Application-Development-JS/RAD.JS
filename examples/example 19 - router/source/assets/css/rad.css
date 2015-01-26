@@ -1,0 +1,57 @@
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+body {
+    margin: 0;
+
+    /* Default iOS settings */
+    -webkit-text-size-adjust: 100%;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+    /* Enable WP8 fastclick */
+    -ms-touch-action: none;
+    -ms-touch-select: none;
+}
+
+img {
+    border-style: none
+}
+input, textarea, select {
+    font:100% Arial, Helvetica, sans-serif;
+    vertical-align:middle;
+    color:#000;
+}
+form, fieldset {
+    margin: 0;
+    padding: 0;
+    border-style: none
+}
+
+div[data-role=view] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.scroll-view {
+    height: 100%;
+}
+.scroll-view-body {
+    overflow: hidden;
+}
+#screen {
+    position: relative;
+    height: 100%;
+    overflow: hidden
+}
+
+.native-scroll {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch
+}

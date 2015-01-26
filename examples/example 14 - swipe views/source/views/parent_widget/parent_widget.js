@@ -11,7 +11,6 @@ RAD.view("view.parent_widget", RAD.Blanks.View.extend({
 
     onEndRender: function () {
         this._firstTimeAttach = true;
-
     },
 
     onStartAttach: function () {
