@@ -11,7 +11,6 @@ RAD.view("screen.home", RAD.Blanks.View.extend({
             action = target.getAttribute('data-action'),
             params = target.previousElementSibling.value;
 
-        this.application.action(action, (params && params.length > 0) ? {param: params} : null);
+        this.application.action(action, params);
     }
-
 }));

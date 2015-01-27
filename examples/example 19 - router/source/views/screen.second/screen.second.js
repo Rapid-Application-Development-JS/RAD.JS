@@ -5,7 +5,7 @@ RAD.view("screen.second", RAD.Blanks.View.extend({
     model: new (Backbone.Model.extend({}))(),
 
     onNewExtras: function (extras) {
-        this.model.set({string: extras.param});
+        this.model.set({string: extras});
     }
 
 }));
