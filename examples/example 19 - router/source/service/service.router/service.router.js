@@ -37,18 +37,39 @@ RAD.service("service.router", Backbone.Router.extend({
 
         options = {
             content: 'screen.' + this.checkLogin(action),
-            container_id: '#screen'
+            container_id: '#screen',
+            animation: this.isItForwardDirection(action) ? 'slide' : 'slide-out'
         };
-
         if (extras) {
             options.extras = extras;
         }
-        
+
         this.publish('navigation.show', options);
     },
 
     checkLogin: function (action) {
         return this.application.isLogined() ? action : 'login';
+    },
+
+    // start -------------- direction detected -----------------
+    actions: [],
+
+    lastAction: null,
+
+    isItForwardDirection: function (action) {
+        var forward = true;
+
+        if (action && this.actions[this.actions.length - 1] === action) {
+            this.actions.pop();
+            forward = false;
+        } else if(this.lastAction) {
+            this.actions.push(this.lastAction);
+        }
+        this.lastAction = action;
+
+        return forward;
     }
+
+    // end -------------- direction detected -----------------
 
 }));
