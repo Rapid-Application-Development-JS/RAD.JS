@@ -1,6 +1,9 @@
 RAD.application(function (core) {
     var app = this, isAuthorized = false;
 
+    app.DEFAULT_ACTION = 'home';
+    app.NOT_AUTHORIZED_ACTION = 'login';
+
     app.start = function () {
         core.startService('service.router');
     };
@@ -12,7 +15,7 @@ RAD.application(function (core) {
 
     app.logout = function () {
         isAuthorized = false;
-        core.publish('service.router.go', {action: 'login'});
+        core.publish('service.router.clear');
     };
 
     app.isLogined = function () {

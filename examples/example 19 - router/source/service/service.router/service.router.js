@@ -7,6 +7,10 @@ RAD.service("service.router", Backbone.Router.extend({
     },
 
     initialize: function () {
+        // for direction detect
+        this.actions = [];
+        this.lastAction = null;
+
         // Start Backbone history a necessary step for bookmarkable URL's
         Backbone.history.start();
 
@@ -18,6 +22,11 @@ RAD.service("service.router", Backbone.Router.extend({
         var parts = channel.split('.');
 
         switch (parts[parts.length - 1]) {
+            case 'clear':
+                this.actions = [];
+                this.lastAction = null;
+                window.location.hash = '';
+                break;
             case 'go':
                 window.location.hash = (data.parameter) ? data.action + '/' + data.parameter : data.action;
                 break;
@@ -30,15 +39,16 @@ RAD.service("service.router", Backbone.Router.extend({
     extrasRoute: function (action, extras) {
         var options;
         if (!this.application.isLogined() || !action) {
-            window.location.hash = 'login';
+            window.location.hash = this.application.NOT_AUTHORIZED_ACTION;
         } else if (!action) {
-            window.location.hash = 'home';
+            window.location.hash = this.application.DEFAULT_ACTION;
         }
 
+        action = this.checkLogin(action);
         options = {
-            content: 'screen.' + this.checkLogin(action),
+            content: 'screen.' + action,
             container_id: '#screen',
-            animation: this.isItForwardDirection(action) ? 'slide' : 'slide-out'
+            animation: this.isItForwardDirection(action) ? (action === this.application.NOT_AUTHORIZED_ACTION ? 'none' : 'slide' ) : 'slide-out'
         };
         if (extras) {
             options.extras = extras;
@@ -48,13 +58,8 @@ RAD.service("service.router", Backbone.Router.extend({
     },
 
     checkLogin: function (action) {
-        return this.application.isLogined() ? action : 'login';
+        return this.application.isLogined() ? action : this.application.NOT_AUTHORIZED_ACTION;
     },
-
-    // start -------------- direction detected -----------------
-    actions: [],
-
-    lastAction: null,
 
     isItForwardDirection: function (action) {
         var forward = true;
@@ -62,14 +67,11 @@ RAD.service("service.router", Backbone.Router.extend({
         if (action && this.actions[this.actions.length - 1] === action) {
             this.actions.pop();
             forward = false;
-        } else if(this.lastAction) {
+        } else if (this.lastAction) {
             this.actions.push(this.lastAction);
         }
         this.lastAction = action;
 
         return forward;
     }
-
-    // end -------------- direction detected -----------------
-
 }));
