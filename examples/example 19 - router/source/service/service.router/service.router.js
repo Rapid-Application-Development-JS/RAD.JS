@@ -38,12 +38,13 @@ RAD.service("service.router", Backbone.Router.extend({
 
     extrasRoute: function (action, extras) {
         var options;
-        if (!this.application.isLogined() || !action) {
+        if (!this.application.isLogined()) {
             window.location.hash = this.application.NOT_AUTHORIZED_ACTION;
         } else if (!action) {
             window.location.hash = this.application.DEFAULT_ACTION;
         }
 
+        // do something
         action = this.checkLogin(action);
         options = {
             content: 'screen.' + action,
@@ -53,7 +54,6 @@ RAD.service("service.router", Backbone.Router.extend({
         if (extras) {
             options.extras = extras;
         }
-
         this.publish('navigation.show', options);
     },
 
