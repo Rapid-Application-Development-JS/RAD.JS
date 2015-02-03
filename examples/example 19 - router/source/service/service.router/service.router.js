@@ -3,7 +3,7 @@ RAD.service("service.router", Backbone.Router.extend({
 
     routes: {
         ":screen/:action": "extrasRoute",
-        "*action": "defaultRoute" // Backbone will try match the route above first && index.html#...
+        "*action": "extrasRoute" // Backbone will try match the route above first && index.html#...
     },
 
     initialize: function () {
@@ -27,21 +27,26 @@ RAD.service("service.router", Backbone.Router.extend({
         }
     },
 
-    defaultRoute: function (action) {
-        action = this.checkLogin(action);
-        this.publish('navigation.show', {
-            content: 'screen.' + action,
-            container_id: '#screen'
-        });
-    },
-
     extrasRoute: function (action, extras) {
-        action = this.checkLogin(action);
-        this.publish('navigation.show', {
-            content: 'screen.' + action,
-            container_id: '#screen',
-            extras: extras
-        });
+        var options;
+
+        if (!action) {
+            if (this.application.isLogined()) {
+                window.location.hash = 'home';
+            } else {
+                window.location.hash = 'login';
+            }
+        }
+
+        options = {
+            content: 'screen.' + this.checkLogin(action),
+            container_id: '#screen'
+        };
+
+        if (extras) {
+            options.extras = extras;
+        }
+        this.publish('navigation.show', options);
     },
 
     checkLogin: function (action) {

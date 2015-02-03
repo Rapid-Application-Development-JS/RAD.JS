@@ -23,7 +23,7 @@
             application = window.RAD.application,
             coreOptions = {
                 defaultBackstack: false,
-                defaultAnimation: 'slide',
+                defaultAnimation: 'none',
                 animationTimeout: 3000,
                 debug: false
             };
