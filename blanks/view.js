@@ -17,29 +17,86 @@ var view = Backbone.View.extend({
     },
 
     initialize: function () {
-        var self = this;
-        self.loader = deferred();
-        self.renderRequest = true;
-        self.viewID = this.radID;
-        self.finish = function () {
-            RAD.core.stop(self.viewID);
+        var self = this, needBindModel, renderWrapper;
+
+        this.loader = deferred();
+        this.renderRequest = true;
+        this.viewID = this.radID; // for capability with old versions
+        this.finish = function () {
+            RAD.core.stop(this.radID);
         };
-        self.getChildren();
+        if (!this.children) {
+            this.children = [];
+        }
 
-        var modelBindingCallback = function(){
-            self.bindModel(self.model);
-        }, needBindModel=false;
+        // redefine render of view
+        renderWrapper = this.render;
+        this.render = function (callback) {
+            var self = this, counter, childView, index, length, children = this.getChildren();
 
-        if (typeof self.template === 'function') {
-            self.bindModel(self.model);
-            self.loader.resolve();
-        } else if (window.JST && window.JST[self.url]) {
-            self.template = window.JST[self.url];
-            needBindModel = true;
-            self.bindModel(self.model);
-            self.loader.resolve();
-        } else {
-            self.ajax = $.get(self.url, function (data) {
+            function check() {
+                counter -= 1;
+                if (counter <= 0) {
+                    self.onrender();
+                    self.onEndRender();
+                    self.dispatchScrollRefresh();
+                    self.renderRequest = false;
+
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }
+            }
+
+            if (!this.loader.isResolved()) {
+                return;
+            }
+
+            this.onStartRender();
+            counter = children.length;
+
+            // detach children
+            for (index = 0, length = children.length; index < length; index += 1) {
+                if (children[index].content) {
+                    childView = RAD.core.getView(children[index].content, children[index].extras);
+                    if (childView) {
+                        childView.detach();
+                    } else {
+                        window.console.log('Child view [' + children[index].content + '] is not registered. Please check parent view [' + this.radID + '] ');
+                    }
+                }
+            }
+
+            // view render
+            renderWrapper.apply(this, [callback]);
+
+            //attach children
+            if (children.length > 0) {
+                for (index = 0, length = children.length; index < length; index += 1) {
+                    if (children[index].content) {
+                        childView = RAD.core.getView(children[index].content, children[index].extras);
+                        if (childView) {
+                            this.insertSubview(children[index], check);
+                        } else {
+                            window.console.log('Cannot insert child view [' + children[index].content + ']. It is not registered. Please check parent view [' + this.radID + '] ');
+                        }
+                    }
+                }
+            } else {
+                check();
+            }
+        };
+
+        needBindModel = !this.model;
+        if (typeof this.template === 'function') {
+            this.bindModel(this.model);
+            this.loader.resolve();
+        } else if (window.JST && window.JST[this.url]) {
+            this.template = window.JST[this.url];
+            this.bindModel(this.model);
+            this.loader.resolve();
+        } else if(typeof this.url === 'string') {
+            this.ajax = $.get(this.url, function (data) {
                 if (self.ajax) {
                     self.template = _.template(data);
                     self.bindModel(self.model);
@@ -47,12 +104,20 @@ var view = Backbone.View.extend({
                 }
                 self.ajax = null;
             }, 'text');
+        } else {
+            this.bindModel(this.model);
+            this.loader.resolve();
         }
-        self.subscribe(self.radID, self.receiveMsg, self);
-        self.oninit();
-        self.onInitialize();
-        if (needBindModel) modelBindingCallback();
-        return self;
+
+        this.subscribe(this.radID, this.receiveMsg, this);
+        this.oninit();
+        this.onInitialize();
+
+        if (needBindModel) {
+            this.bindModel(this.model);
+        }
+
+        return this;
     },
 
     setExtras: function (extras) {
@@ -120,34 +185,12 @@ var view = Backbone.View.extend({
         });
     },
 
-    render: function (callback) {
-        var virtualEl = document.createElement('div'),
-            virtualTemplates,
-            self = this,
-            json,
-            children = self.getChildren(),
-            counter,
-            childView,
-            index,
-            length;
-
-        function check() {
-            counter -= 1;
-            if (counter <= 0) {
-                self.onrender();
-                self.onEndRender();
-                self.dispatchScrollRefresh();
-                self.renderRequest = false;
-
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }
-        }
+    render: function () {
+        var virtualEl = document.createElement('div'), virtualTemplates, self = this, index, length,
+            json = (this.model) ? this.model.toJSON() : undefined;
 
         function prepareInnerTemplates() {
-            var templates,
-                i, length;
+            var templates, i, length;
 
             // if innerTemplates property was set to 'false' - view was already checked and no [data-template] was found.
             if (self.innerTemplates === false) {
@@ -167,59 +210,22 @@ var view = Backbone.View.extend({
             }
         }
 
-        self.onStartRender();
-        counter = children.length;
-
-        // detach children
-        for (index = 0, length = children.length; index < length; index += 1) {
-            if (children[index].content) {
-                childView = RAD.core.getView(children[index].content, children[index].extras);
-                if (childView) {
-                    childView.detach();
-                } else {
-                    window.console.log('Child view [' + children[index].content + '] is not registered. Please check parent view [' + self.radID + '] ');
-                    return;
-                }
-            }
-        }
-
-        json = (self.model) ? self.model.toJSON() : undefined;
         try {
-            if (self.innerTemplates && !self.renderRequest) {
-                virtualEl.innerHTML = self.template({model: json, view: self});
+            if (this.innerTemplates && !this.renderRequest) {
+                virtualEl.innerHTML = this.template({model: json, view: this});
                 virtualTemplates = virtualEl.querySelectorAll('[data-template]');
 
-                for (index = 0, length = self.innerTemplates.length; index < length; index++ ) {
-                    self.innerTemplates[index].parentNode.replaceChild(virtualTemplates[index], self.innerTemplates[index]);
-                    self.innerTemplates[index] = virtualTemplates[index];
+                for (index = 0, length = this.innerTemplates.length; index < length; index++ ) {
+                    this.innerTemplates[index].parentNode.replaceChild(virtualTemplates[index], this.innerTemplates[index]);
+                    this.innerTemplates[index] = virtualTemplates[index];
                 }
             } else {
-                self.el.innerHTML = self.template({model: json, view: self});
+                this.el.innerHTML = this.template({model: json, view: this});
                 prepareInnerTemplates();
             }
         } catch (e) {
-            window.console.log(e.message + '. Caused during rendering: '+ self.radID + ':' +  e.stack);
-            return;
+            window.console.log(e.message + '. Caused during rendering: '+ this.radID + ':' +  e.stack);
         }
-
-        //attach children
-        if (children.length > 0) {
-            for (index = 0, length = children.length; index < length; index += 1) {
-                if (children[index].content) {
-                    childView = RAD.core.getView(children[index].content, children[index].extras);
-                    if (childView) {
-                        this.insertSubview(children[index], check);
-                    } else {
-                        window.console.log('Cannot insert child view [' + children[index].content + ']. It is not registered. Please check parent view [' + self.radID + '] ');
-                        return;
-                    }
-                }
-            }
-        } else {
-            check();
-        }
-
-        return self;
     },
 
     appendIn: function (container, callback) {

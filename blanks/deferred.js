@@ -1,5 +1,6 @@
 var def = function () {
     return {
+        isResolved: function () { return false; },
         listeners: [],
         done: function (fn) {
             this.listeners.push(fn);
@@ -12,6 +13,8 @@ var def = function () {
         },
         resolve: function () {
             var self = this, index, length, fn;
+
+            self.isResolved = function () { return true; };
             self.resolve = function () {
             };
             self.done = function (fn) {
