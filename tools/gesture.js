@@ -1,5 +1,16 @@
 function GestureTracker(element) {
-    var attr;
+    var attr, tracker = this;
+
+    function onReady(callback) {
+        var addListener = document.addEventListener || document.attachEvent,
+            removeListener = document.removeEventListener || document.detachEvent,
+            eventName = document.addEventListener ? "DOMContentLoaded" : "onreadystatechange";
+
+        addListener.call(document, eventName, function () {
+            removeListener(eventName, arguments.callee, false)
+            callback()
+        }, false)
+    }
 
     this._el = element;
 
@@ -18,6 +29,21 @@ function GestureTracker(element) {
 
         this._el = null;
     };
+
+    this.MOVE_LIMIT = 10;
+    onReady(function () {
+        var element = document.createElement('div'), ppi, dpi;
+        element.style.position = 'absolute';
+        element.style.height = '1in';
+        element.style.width = '1in';
+        element.style.top = '-100%';
+        element.style.left = '-100%';
+        document.body.appendChild(element);
+        ppi = element.offsetHeight;
+        document.body.removeChild(element);
+        dpi = ppi * devicePixelRatio * screen.pixelDepth / 24;
+        tracker.MOVE_LIMIT = dpi / 6;
+    });
 }
 
 GestureTracker.prototype = {
@@ -81,8 +107,14 @@ GestureTracker.prototype = {
     },
 
     _pointerMove: function (e) {
-        if ((this.tracks && this.tracks[e.pointerId]) && (e.timeStamp - this.tracks[e.pointerId].last.timeStamp > 10)) {
-            clearTimeout(this._holdID);
+        var isMovedByX, isMovedByY;
+        if (this.tracks && this.tracks[e.pointerId] && e.timeStamp - this.tracks[e.pointerId].last.timeStamp > 10) {
+
+            isMovedByX = this.tracks[e.pointerId].last.clientX - this.tracks[e.pointerId].pre.clientX > this.MOVE_LIMIT;
+            isMovedByY = this.tracks[e.pointerId].last.clientY - this.tracks[e.pointerId].pre.clientY > this.MOVE_LIMIT;
+            if (isMovedByX || isMovedByY) {
+                clearTimeout(this._holdID);
+            }
 
             this.tracks[e.pointerId].pre.clientX = this.tracks[e.pointerId].last.clientX;
             this.tracks[e.pointerId].pre.clientY = this.tracks[e.pointerId].last.clientY;
