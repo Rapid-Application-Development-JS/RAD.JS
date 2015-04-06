@@ -118,7 +118,7 @@ var options = {
 this.publish('navigation.show', options);
 ```
 We display the module specified in the `options.content` in the container `options.container_id` (CSS selector).  `options`parameters:
- - **container_id** - registered name of the `viewID` module, which will be displayed.
+ - **сontent** - registered name of the `viewID` module, which will be displayed.
  - **container_id** - selector of a container's element for displaying the module.
  - **animation** - animation used during the change of `view` in a specified container.
  - **callback** - function launched upon completion of displaying the `content` module.
