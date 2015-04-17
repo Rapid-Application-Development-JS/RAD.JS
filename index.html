@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>RAD.JS by Rapid-Application-Development-JS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">RAD.JS</h1>
+      <h2 class="project-tagline">RAD.JS Rapid Application Development (PhoneGap optimized javascript framework)</h2>
+      <a href="https://github.com/Rapid-Application-Development-JS/RAD.JS" class="btn">View on GitHub</a>
+      <a href="https://github.com/Rapid-Application-Development-JS/RAD.JS/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/Rapid-Application-Development-JS/RAD.JS/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="radjs-20" class="anchor" href="#radjs-20" aria-hidden="true"><span class="octicon octicon-link"></span></a>RAD.JS 2.0</h1>
+
+<hr>
+
+<p>Javascript framework for Rapid Application Development</p>
+
+<hr>
+
+<p><a href="docs/tutorial.md">Tutorial</a></p>
+
+
+
+<p><a href="docs/cli.md">Command Line Interface</a></p>
+
+<p><a href="docs/documentation.md">API Reference</a></p>
+
+<p><a href="docs/tools.md">Tools API Reference</a></p>
+
+
+
+<hr>
+
+<h2>
+<a id="radjs-20-1" class="anchor" href="#radjs-20-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>RAD.js 2.0:</h2>
+
+<p>MobiDev has finally released the long-awaited update of its open source multiplatform development toolkit – RAD.js Version 2.0. We designed it as the answer to the needs of business owners, software developers, and end users. Business owners and startuppers need profitable apps that work across many platforms. Software developers need to build these apps with more comfort and less effort and spent time. Target end users need apps of high quality and intuitiveness to solve their problems.</p>
+
+<p>All of these demands can be handled with experienced developers and great tools. MobiDev has both. Our talented developers are under constant self-improvement, and as for RAD.js – here's the second version that opens new opportunities for software owners.</p>
+
+<p>Every software owner wants to create the product faster, receive high quality, and reach across multiple platforms, with iOS and Android as the obvious must. The multiplatform may be the solution to various branded applications with unique user interfaces, PR and mass media apps (including blogs and portals), industry-specific apps that present certain products and/or services, online shops with strong backend, and many more. The exact opinion depends on the future app's functional requirements, and it should be voiced by a specialist in cross-platform development – and we are ready to help you with that.</p>
+
+<h2>
+<a id="wed-also-like-to-tell-about-the-main-upgrades-in-our-toolkit" class="anchor" href="#wed-also-like-to-tell-about-the-main-upgrades-in-our-toolkit" aria-hidden="true"><span class="octicon octicon-link"></span></a>We'd also like to tell about the main upgrades in our toolkit:</h2>
+
+<ol>
+<li>What once was a framework, now has become a toolkit that consists of independent modules. All of them can be applied independently; they use CommonJS interface. In fact, RAD.js is compatible with other JS frameworks, which provides additional flexibility in making better software products faster.</li>
+<li>We achieved the flexibility by rewriting the core of the toolkit, separating visual and logical components. The independence of each module was a priority, and we optimized RAD.js so that each module can be used without the framework, in case of need.</li>
+<li>CLI (command line interface) was added.</li>
+<li>Basic view classes for popups were optimized; now developers don't have to use special classes. The standard view is shown as a dialogue, which contains embedded views.</li>
+<li>As for UI, we optimized it so that it works on low-power devices and older platform versions – even on Android 2.0. We rewrote transition animations and added several types.</li>
+<li>Crossbrowser events were renamed according to the spec.</li>
+<li>Examples were naturally changed and restyled.</li>
+<li>Along the way we encountered several non-critical bugs, which were quickly eliminated. Now the toolkit is ready and waiting, and cross-platform developers can unleash their creativity.</li>
+</ol>
+
+<p>We are glad that RAD.js has been gathering a developer audience for quite a while, and we are willing to grow it by involving more people and expanding the functional filling (the nearest plans are adding a tutorial, infinite scroll, and drag-n-drop). But the real end goal is making great software for our Clients and their end users.</p>
+
+<h2>
+<a id="advantages" class="anchor" href="#advantages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advantages:</h2>
+
+<ul>
+<li>CLI</li>
+<li>The framework is optimized for PhoneGap and mobile browsers;</li>
+<li>Ability to dynamically control (create and delete) module instances of the application through the functionality of the core, at both view level and application level;</li>
+<li>Ability to build an application consisting of loosely bound modules: models, views, services (application part without visual representation); and of the object of the application;</li>
+<li>Tree-structured messaging;</li>
+<li>Debug mode of the core and messages;</li>
+<li>Flexible and loosely bound architecture - almost any extraneous code can be enveloped by the module with several lines of code. Failure of a module doesn't cause failure of the whole application;</li>
+<li>Ability to monitor the lifecycle of view and services. Callback methods for all lifecycle events;</li>
+<li>Templating. A template is an HTML file that can be created separately;</li>
+<li>Partial templating of view. Ability to determine parts of the view template, that will or will not be rerendered by changes of data within a model;</li>
+<li>Any JavaScript object can serve as the object of the application;</li>
+<li>Ability to extend functionality of the core via plugins;</li>
+<li>Complex embedded views and declarative transition animations between them;</li>
+<li>Ability to inherit views, services and models;</li>
+<li>Modal and non-modal self-positioning windows;</li>
+<li>Dynamic routing; it's enough to set the ''backstack: true'' parameter to enter transaction between views (new position of views on the screen) to the browser history;</li>
+<li>Reuse of modules in other projects;</li>
+<li>Module testing can be performed through external frameworks.</li>
+</ul>
+
+<h2>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies:</h2>
+
+<ul>
+<li>BackboneJS;</li>
+<li>UnderscoreJS;</li>
+<li>JQuery;</li>
+</ul>
+
+<hr>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software under the following conditions:
+Mobidev Corp. reserves the right to specify in any matter without any limitations</p>
+
+<ul>
+<li>the Publishers/Distributors which use "Software" in their products;</li>
+<li>products which contain "Software";</li>
+<li>sources containing "Software"
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</li>
+</ul>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHER WISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+
+<hr>
+
+<p><a href="http://rad-js.com/" title="rad-js.com">"rad-js.com"</a> </p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Rapid-Application-Development-JS/RAD.JS">RAD.JS</a> is maintained by <a href="https://github.com/Rapid-Application-Development-JS">Rapid-Application-Development-JS</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
