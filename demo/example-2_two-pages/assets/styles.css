@@ -1,0 +1,25 @@
+/* css perspective required for codrops PageTransitions  */
+.ptSlide,
+.moveTop,
+.moveFade,
+.scaleDown,
+.flip {
+    -webkit-perspective: 1200px;
+    -moz-perspective: 1200px;
+    perspective: 1200px;
+}
+.ptSlide .reverse,
+.moveFade .reverse {
+    -webkit-animation-direction: reverse !important;
+    animation-direction: reverse !important;
+}
+.pt-page-ontop {
+    z-index: 999;
+}
+
+.hinge,
+.rollIn,
+.lightSpeedIn,
+.lightSpeedOut {
+    z-index: 100;
+}

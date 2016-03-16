@@ -1,0 +1,39 @@
+{
+  "name": "RAD",
+  "version": "2.0.1",
+  "description": "Rapid Application Development",
+  "main": "build/rad.build.js",
+  "bin": {
+    "RAD": "build/rad.build.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --watch",
+    "demo": "cd demo && node buildAll",
+    "build": "webpack && webpack --config webpack.config.release.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.mobidev.biz:phonegap_tutorials/rad-2-0.git"
+  },
+  "keywords": [
+    "RAD.js"
+  ],
+  "author": "MobiDev",
+  "license": "MIT",
+  "devDependencies": {
+    "backbone": "^1.2.3",
+    "expose-loader": "^0.7.1",
+    "extract-text-webpack-plugin": "^0.8.2",
+    "idom-template": "git://github.com/Rapid-Application-Development-JS/itemplate",
+    "incremental-dom": "^0.3.0",
+    "jquery": "^2.2.0",
+    "jquery-ui": "^1.10.5",
+    "loader-utils": "^0.2.12",
+    "node-libs-browser": "^0.5.2",
+    "raw-loader": "^0.5.1",
+    "underscore": "^1.8.3",
+    "webpack": "^1.12.1",
+    "webpack-dev-server": "^1.9.0"
+  }
+}
