@@ -400,7 +400,7 @@ RAD.utils.IncrementalDOM.patch(container, template, {name: 'John'});
 ```ejs
 <ul>
     <%  data.listItems.forEach(function(listItem) { %>
-    <li key="<%= 'item_' + listItem.id %> static-array="listItem" class="..." style="...">
+    <li key="<%= 'item_' + listItem.id %>" static-array="listItem" class="..." style="...">
         <%= listItem.name %>
     </li>
     <%  }); %>
@@ -459,7 +459,28 @@ RAD.utils.IncrementalDOM.patch(container, template, {name: 'John'});
 > - если в значении атрибута в шаблоне будет указан знак `-`, например `my-container` то в javascript это значение будет преобразовано в соответствии с camelCase правилом в `myContainer`.
 
 ### динамические refs
+
+Вы можете также использовать динамически сгенерированные имена ссылок, например следующим образом:
+
+```ejs
+<ul>
+    <%  data.listItems.forEach(function(listItem) { %>
+    <li key="<%= 'item_' + listItem.id %>" ref="<%= 'item_' + listItem.id %>">
+        <%= listItem.name %>
+    </li>
+    <%  }); %>
+</ul>
+```
+В данном примере будут динамически сформированы ссылки на все элементы списка. А доступ к ним из javascript можно организовать например следующим образом:
+
+```javascript
+	var listItem = this.refs['item_'+index];
+```
+
 ### пример использования refs в хелперах
+
+Вы так же 
+
 ## форматирование текста, html escape, utf коды
 ## коментарии в шаблонах
 Вы можете использовать два типа коментариев в ваших шаблонах
