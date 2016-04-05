@@ -1,7 +1,7 @@
 "use strict";
-import { Base, publish, template } from 'RAD';
+import {View, publish, template} from 'RAD';
 
-class WelcomePage extends Base.View {
+class WelcomePage extends View {
 
     tagName() {
         return 'section';
@@ -30,3 +30,106 @@ publish('navigation.show', {
     container: '#screen',
     content: WelcomePage
 });
+
+/*
+ * =============================================
+ * one of way for dialog manager implementation
+ * =============================================
+ */
+
+const COMMAND = {
+    open: 'open',
+    close: 'close'
+};
+
+const CHANEL = 'dialogManager';
+
+// dynamic dialog class
+class Dialog extends View {
+    className = 'modal-overlay';
+    template = template('<div class="modal-frame"><%= this.props.get("dialog-content").content %></div>');
+}
+
+// modals manager
+class DialogManager extends View {
+    template = template(
+        `<% for (var viewID in this.props.toJSON()) { %>
+                <Dialog key="<%= viewID %>" dialog-content="<%= this.props.get(viewID) %>" />
+         <% } %>`,
+        { // place component classes for dynamic representation
+            components: {
+                Dialog: Dialog
+            }
+        });
+
+    attributes = {
+        style: {
+            display: 'none',
+            background: 'none'
+        }
+    };
+
+    getID() {
+        return CHANEL;
+    }
+    
+    display(type){
+        if (this.props.keys().length === 0) {
+            this.el.style.display = type;
+        }
+    }
+
+    onReceiveMsg(data) {
+        if (data)
+            switch (data.command) {
+                case COMMAND.open:
+                    this.display('block');
+                    this.props.set(data.id, data.dialogContent);
+                    break;
+                case COMMAND.close:
+                    this.props.unset(data.id);
+                    this.display('none');
+                    break;
+            }
+    }
+}
+
+//place the Dialog Manager into #modal container
+publish('navigation.show', {
+    container: '#modals',
+    content: DialogManager
+});
+
+// show First Dialog
+publish(CHANEL, {
+    id: 'id_1',
+    dialogContent: {
+        content: 'First Dialog (pls wait 5 sec)'
+    },
+    command: COMMAND.open
+});
+
+// show Second Dialog over First
+publish(CHANEL, {
+    id: 'id_2',
+    dialogContent: {
+        content: 'Second Dialog (pls wait 5 sec)'
+    },
+    command: COMMAND.open
+});
+
+// close first dialog
+setTimeout(()=> {
+    publish(CHANEL, {
+        id: 'id_2',
+        command: COMMAND.close
+    });
+}, 5000);
+
+// close second dialog
+setTimeout(()=> {
+    publish(CHANEL, {
+        id: 'id_1',
+        command: COMMAND.close
+    });
+}, 10000);
