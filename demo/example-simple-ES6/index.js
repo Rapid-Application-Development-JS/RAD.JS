@@ -47,7 +47,15 @@ const CHANEL = 'dialogManager';
 // dynamic dialog class
 class Dialog extends View {
     className = 'modal-overlay';
-    template = template('<div class="modal-frame"><%= this.props.get("dialog-content").content %></div>');
+    template = template(
+        `<div class="modal-frame">
+            <% var content = this.props.get("dialog-content").content;
+               if (typeof content === 'function') { 
+                    content(data);
+                } else { %>
+                <%= this.props.get("dialog-content").content %>
+            <% } %>
+        </div>`);
 }
 
 // modals manager
@@ -113,7 +121,7 @@ publish(CHANEL, {
 publish(CHANEL, {
     id: 'id_2',
     dialogContent: {
-        content: 'Second Dialog (pls wait 5 sec)'
+        content: template('<span style="color: red">Custom template</span>')
     },
     command: COMMAND.open
 });
