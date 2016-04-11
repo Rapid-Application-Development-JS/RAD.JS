@@ -11,7 +11,7 @@ var globalComponents = {};
 
 function componentIsView(component) {
     if (typeof component === 'function') {
-        return !!component.extend;
+        return !!component.extend || component.extend;
     }
     return component instanceof BaseView;
 }

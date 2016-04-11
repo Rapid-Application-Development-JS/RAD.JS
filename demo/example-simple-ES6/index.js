@@ -1,5 +1,5 @@
 "use strict";
-import {View, publish, template} from 'RAD';
+import {View, publish, template, utils} from 'RAD';
 
 class WelcomePage extends View {
 
@@ -58,15 +58,34 @@ class Dialog extends View {
         </div>`);
 }
 
+class CustomDialog extends View {
+    className = 'modal-overlay';
+    template = template(
+        `<div class="modal-frame" style="background-color: red;">
+            <span>Custom dialog</span>
+        </div>`);
+}
+
+function extendComp(option) {
+    if (option['dialog-content'] && option['dialog-content'].content instanceof View) {
+        return option['dialog-content'].content
+    }
+
+    // create standard type of view
+    return new Dialog(option);
+}
+// signal to layout manager about dynamic creation of view in template
+extendComp.extend = true;
+
 // modals manager
 class DialogManager extends View {
     template = template(
         `<% for (var viewID in this.props.toJSON()) { %>
                 <Dialog key="<%= viewID %>" dialog-content="<%= this.props.get(viewID) %>" />
          <% } %>`,
-        { // place component classes for dynamic representation
-            components: {
-                Dialog: Dialog
+        {
+            components: { // place component classes for dynamic representation
+                Dialog: extendComp
             }
         });
 
@@ -126,6 +145,14 @@ publish(CHANEL, {
     command: COMMAND.open
 });
 
+publish(CHANEL, {
+    id: 'id_3',
+    dialogContent: {
+        content: new CustomDialog()
+    },
+    command: COMMAND.open
+});
+
 // close first dialog
 setTimeout(()=> {
     publish(CHANEL, {
@@ -141,3 +168,11 @@ setTimeout(()=> {
         command: COMMAND.close
     });
 }, 10000);
+
+// close second dialog
+setTimeout(()=> {
+    publish(CHANEL, {
+        id: 'id_3',
+        command: COMMAND.close
+    });
+}, 2500);
