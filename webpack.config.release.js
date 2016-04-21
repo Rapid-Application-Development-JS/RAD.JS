@@ -40,12 +40,6 @@ module.exports = {
             amd: 'underscore'
         }
     },
-    resolve: {
-        alias: {
-            // Temporary version of IncrementalDOM until next release (current version 0.3)
-            'incremental-dom': Path.join(rootDir, 'libs', 'patchElement')
-        }
-    },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({ output: {comments: false} })
     ]

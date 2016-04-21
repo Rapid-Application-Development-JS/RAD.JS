@@ -14,7 +14,6 @@ function initView(View, options) {
     }
 
     if ( _.isFunction(View) ) {
-        options.autocreated = true;
         return new View(options);
     }
 

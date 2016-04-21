@@ -34,9 +34,15 @@ var LayoutManager = Module.extend({
     },
 
     onPatchStart: function(node) {
+        var views = this.getChildIDs(node);
+
+        if (node.hasAttribute(Attrs.ID)) {
+            views.unshift(node.getAttribute(Attrs.ID));
+        }
+
         this.activePatches.push({
             node: node,
-            views: this.getChildIDs(node)
+            views: views
         });
     },
 
@@ -44,25 +50,32 @@ var LayoutManager = Module.extend({
         var patchData = this.activePatches.pop();
 
         if (patchData.node !== node) {
-            throw new Error('Wrong patch order, please check layout manager');
+            throw new Error('Wrong patch order');
         }
+
         this.refreshLayout(patchData);
     },
 
     getChildIDs: function (el) {
         var els = el.querySelectorAll('['+Attrs.ID+']');
         var ids = [];
+        var index = 0;
 
-        for (var i = 0; i < els.length; i++) {
-            ids[i] = els[i].getAttribute(Attrs.ID);
+        for (index; index < els.length; index++) {
+            ids[index] = els[index].getAttribute(Attrs.ID);
         }
 
         return ids;
     },
 
     refreshLayout: function(patchData) {
+        var node = patchData.node;
         var viewsBefore = patchData.views;
-        var viewsAfter = this.getChildIDs(patchData.node);
+        var viewsAfter = this.getChildIDs(node);
+
+        if (node.hasAttribute(Attrs.ID)) {
+            viewsAfter.unshift(node.getAttribute(Attrs.ID));
+        }
 
         this.activeViews = viewsAfter;
         var detachedViews = _.difference(viewsBefore, viewsAfter);

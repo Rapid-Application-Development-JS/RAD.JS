@@ -33,13 +33,13 @@ function setAsProperty(el, prop, value) {
 
 attributeSetters.innerHTML = setAsProperty;
 
-function patchWrapper(patch, container, renderFn, data) {
-    publish(Events.PATCH_START, container);
-    patch.call(null, container, renderFn, data);
-    publish(Events.PATCH_END, container);
+function patchWrapper(patch, node, renderFn, data) {
+    publish(Events.PATCH_START, node);
+    patch.call(null, node, renderFn, data);
+    publish(Events.PATCH_END, node);
 }
 
-incrementalDOM.patch = _.wrap(incrementalDOM.patch, patchWrapper);
-incrementalDOM.patchElement = _.wrap(incrementalDOM.patchElement, patchWrapper);
+incrementalDOM.patch = incrementalDOM.patchInner = _.wrap(incrementalDOM.patch, patchWrapper);
+incrementalDOM.patchOuter = _.wrap(incrementalDOM.patchOuter, patchWrapper);
 
 module.exports = incrementalDOM;
