@@ -94,6 +94,7 @@ var ViewMixin = {
         var self = this;
 
         if (currentElement()) {
+
             return this._render();
         }
 
@@ -134,7 +135,10 @@ var ViewMixin = {
         elementOpenEnd();
     },
     _viewElClose: function () {
-        elementClose(this.el.tagName.toLowerCase());
+        var el = elementClose(this.el.tagName.toLowerCase());
+        if (this.el !== el) {
+            this.setElement();
+        }
     },
     _setElAttrs: function() {
         var attributes = _.result(this, 'attributes', {});
