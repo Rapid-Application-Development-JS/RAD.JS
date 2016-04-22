@@ -33,7 +33,15 @@ var LayoutManager = Module.extend({
         this.publishEvent(ids, Events.DETACH);
     },
 
+    isOnPage: function(node) {
+        return document.body.contains(node);
+    },
+
     onPatchStart: function(node) {
+        if (!this.isOnPage(node)) {
+            return;
+        }
+
         var views = this.getChildIDs(node);
 
         if (node.hasAttribute(Attrs.ID)) {
@@ -47,6 +55,10 @@ var LayoutManager = Module.extend({
     },
 
     onPatchEnd: function(node) {
+        if (!this.isOnPage(node)) {
+            return;
+        }
+
         var patchData = this.activePatches.pop();
 
         if (patchData.node !== node) {

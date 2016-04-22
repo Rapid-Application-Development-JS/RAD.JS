@@ -6,7 +6,7 @@ var Config = {
     },
 
     // List of BaseView parameters which can be applied by passing as an options.
-    ViewOptions: ['key', 'autocreated', 'model', 'collection', 'el', 'attributes', 'className', 'tagName', 'events'],
+    ViewOptions: ['key', 'propsModel', 'model', 'collection', 'el', 'id', 'attributes', 'className', 'tagName', 'events'],
 
     // Internal Events used to communicate with modules
     Events: {

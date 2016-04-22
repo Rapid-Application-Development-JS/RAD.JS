@@ -17,65 +17,81 @@ var Dispatcher = require('../core/dispatcher');
 var Config = require('../config');
 var Events = Config.Events;
 var Core = require('../core');
+var register = Core.register;
+var unregister = Core.unregister;
 
-
-function initSubscription(view, createdViaPatch) {
-    var id = view.getID();
-    var attachMsg = id + ':' + Events.ATTACH;
-    var detachMsg = id + ':' + Events.DETACH;
-
-    Dispatcher.subscribe(id, view.onReceiveMsg, view);
-    Dispatcher.subscribe(attachMsg, view.onAttach, view);
-    Dispatcher.subscribe(detachMsg, view.onDetach, view);
-
-    if (createdViaPatch) {
-        Dispatcher.subscribe(detachMsg, view.destroy, view);
-    }
+function isRendering() {
+    return !!currentElement();
 }
 
-var ViewMixin = {
-    // Model class to be used to store props.
-    // Override this property with constructor ot specify custom model
-    propsModel: Backbone.Model,
+function makeId(options) {
+    if (options && options.key) {
+        return 'key-' + options.key;
+    }
+    return _.result(options, 'id', _.uniqueId('view-'));
+}
 
-    constructor: function(options) {
-        options = options || {};
+function resolveTemplate(template) {
+    if (typeof template === 'string') {
+        return RAD.template(template);
+    }
 
-        if (options.key) {
-            this.vid = 'key-' + options.key;
-        } else {
-            this.vid = _.result(options, 'id', _.uniqueId('view-'));
+    return template;
+}
+
+var BaseView = function(options) {
+    _.extend(this, _.pick(options, Config.ViewOptions));
+
+    var Props = this.propsModel || Backbone.Model;
+
+    this.props = new Props( _.omit(options, Config.ViewOptions) );
+    this.cid = makeId(options);
+    this.refs = {};
+
+    this._bindChannels();
+    this._ensureElement();
+    this.initialize.apply(this, arguments);
+    this._syncElement();
+
+    this.template = resolveTemplate(this.template);
+
+    this.bindRender(this.props, 'change');
+    this.initialize.redy = true;
+
+    register(this.getID(), this);
+};
+
+BaseView.prototype = _.create(Backbone.View.prototype, {
+    _bindChannels: function() {
+        var id = this.getID();
+        var attachMsg = id + ':' + Events.ATTACH;
+        var detachMsg = id + ':' + Events.DETACH;
+
+        this.subscribe(id, this.onReceiveMsg, this);
+        this.subscribe(attachMsg, this.onAttach, this);
+        this.subscribe(detachMsg, this.onDetach, this);
+
+        if (isRendering()) {
+            this.subscribe(detachMsg, this.destroy, this);
         }
-
-        initSubscription(this, currentElement());
-
-        // Setup props model
-        this.props = new this.propsModel( _.omit(options, Config.ViewOptions) );
-
-        // Call Backbone constructor and initialize callback
-        Backbone.View.apply(this, arguments);
-
-        this.resolveTemplate();
-        this.bindRender(this.props, 'change');
-        Core.register(this.getID(), this);
     },
 
     getID: function() {
-        return this.vid;
+        return this.cid;
     },
 
-    setElement: function() {
+    setElement: function(el) {
         Backbone.View.prototype.setElement.apply(this, arguments);
+        if (this.initialize.redy && !isRendering()) {
+            this._syncElement();
+        }
+        return this;
+    },
 
+    _syncElement: function() {
         this.el.setAttribute('key', this.getID());
         patchOuter(this.el, this._renderOuter.bind(this));
         this.el.removeAttribute('key');
-    },
-
-    resolveTemplate: function() {
-        if (_.isString(this.template)) {
-            this.template = RAD.template(this.template);
-        }
     },
 
     getTemplateData: function() {
@@ -93,8 +109,7 @@ var ViewMixin = {
     render: function () {
         var self = this;
 
-        if (currentElement()) {
-
+        if (isRendering()) {
             return this._render();
         }
 
@@ -106,20 +121,24 @@ var ViewMixin = {
     },
 
     _render: function () {
-        // Skip content changes if render is not allowed
         if (this.onBeforeRender() === false) {
             return this._renderOuter();
         }
 
         this._viewElOpen();
+        this._renderTemplate();
+        this._viewElClose();
+
+        this.onRender();
+        return this;
+    },
+
+    _renderTemplate: function() {
         if (typeof this.template === 'function') {
             this.refs = this.template(this.getTemplateData());
         } else {
             skip();
         }
-        this._viewElClose();
-        this.onRender();
-        return this;
     },
 
     _renderOuter: function() {
@@ -136,8 +155,9 @@ var ViewMixin = {
     },
     _viewElClose: function () {
         var el = elementClose(this.el.tagName.toLowerCase());
-        if (this.el !== el) {
-            this.setElement();
+        if (this.el !== el || !this.initialize.redy) {
+            this.setElement(el);
+            this.onElementSet(el);
         }
     },
     _setElAttrs: function() {
@@ -165,7 +185,7 @@ var ViewMixin = {
 
     destroy: function () {
         this.unsubscribe(null, null, this);
-        Core.unregister(this.getID());
+        unregister(this.getID());
 
         this.remove();
         this.onDestroy();
@@ -174,10 +194,10 @@ var ViewMixin = {
         this.stopListening();
         this.undelegateEvents();
     }
-};
+});
 
-
-_.extend(ViewMixin, Dispatcher, {
+_.extend(BaseView.prototype, Dispatcher, {
+    onElementSet:   function() {},
     onReceiveMsg:   function () {},
     onBeforeRender: function () {},
     onRender:       function () {},
@@ -186,4 +206,8 @@ _.extend(ViewMixin, Dispatcher, {
     onDestroy:      function () {}
 });
 
-module.exports = Backbone.View.extend(ViewMixin);
+BaseView.extend = function(protoProps, staticProps) {
+    return Backbone.View.extend.apply(this, arguments)
+};
+
+module.exports = BaseView;
