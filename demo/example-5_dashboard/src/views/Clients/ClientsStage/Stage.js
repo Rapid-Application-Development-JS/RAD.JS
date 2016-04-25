@@ -21,12 +21,8 @@ var Stage = RAD.Base.View.extend({
         var stageID = parseInt(this.props.get('stage-id'), 10);
         this.props.set('clients', clients.where({stage: stageID}))
     },
-
     onAttach: function() {
         this.sortable = new Sortable(this.el);
-    },
-    onDetach: function() {
-        this.sortable.destroy();
     },
     onCardReceive: function (event, ui) {
         var stage = parseInt(this.props.get('stage-id'), 10);

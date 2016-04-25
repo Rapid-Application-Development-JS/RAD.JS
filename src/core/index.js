@@ -7,7 +7,10 @@ var modules = {};
 
 var defaults = {
     debug: false,
-    parameterName: 'data'
+    parameterName: 'data',
+    viewAttributes: {
+        'data-role': 'view'
+    }
 };
 
 function Core(Dispatcher) {

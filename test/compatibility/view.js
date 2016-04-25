@@ -2,14 +2,14 @@
 
   var view;
 
-  QUnit.module('Backbone.View', {
+  QUnit.module('RAD.View', {
 
     beforeEach: function(assert) {
       $('#qunit-fixture').append(
         '<div id="testElement"><h1>Test</h1></div>'
       );
 
-      view = new Backbone.View({
+      view = new RAD.View({
         id: 'test-view',
         className: 'test-view',
         other: 'non-special-option'
@@ -17,6 +17,7 @@
     },
 
     afterEach: function() {
+      view.destroy();
       $('#testElement').remove();
       $('#test-view').remove();
     }
@@ -32,7 +33,7 @@
 
   QUnit.test('$', function(assert) {
     assert.expect(2);
-    var myView = new Backbone.View;
+    var myView = new RAD.View;
     myView.setElement('<p><a><b>test</b></a></p>');
     var result = myView.$('a b');
 
@@ -42,17 +43,16 @@
 
   QUnit.test('$el', function(assert) {
     assert.expect(3);
-    var myView = new Backbone.View;
+    var myView = new RAD.View;
     myView.setElement('<p><a><b>test</b></a></p>');
     assert.strictEqual(myView.el.nodeType, 1);
-
     assert.ok(myView.$el instanceof Backbone.$);
     assert.strictEqual(myView.$el[0], myView.el);
   });
 
   QUnit.test('initialize', function(assert) {
     assert.expect(1);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       initialize: function() {
         this.one = 1;
       }
@@ -63,7 +63,7 @@
 
   QUnit.test('render', function(assert) {
     assert.expect(1);
-    var myView = new Backbone.View;
+    var myView = new RAD.View;
     assert.equal(myView.render(), myView, '#render returns the view instance');
   });
 
@@ -71,7 +71,7 @@
     assert.expect(6);
     var counter1 = 0, counter2 = 0;
 
-    var myView = new Backbone.View({el: '#testElement'});
+    var myView = new RAD.View({el: '#testElement'});
     myView.increment = function(){ counter1++; };
     myView.$el.on('click', function(){ counter2++; });
 
@@ -94,7 +94,7 @@
 
   QUnit.test('delegate', function(assert) {
     assert.expect(3);
-    var myView = new Backbone.View({el: '#testElement'});
+    var myView = new RAD.View({el: '#testElement'});
     myView.delegate('click', 'h1', function() {
       assert.ok(true);
     });
@@ -108,7 +108,7 @@
 
   QUnit.test('delegateEvents allows functions for callbacks', function(assert) {
     assert.expect(3);
-    var myView = new Backbone.View({el: '<p></p>'});
+    var myView = new RAD.View({el: '<p></p>'});
     myView.counter = 0;
 
     var events = {
@@ -132,7 +132,7 @@
 
   QUnit.test('delegateEvents ignore undefined methods', function(assert) {
     assert.expect(0);
-    var myView = new Backbone.View({el: '<p></p>'});
+    var myView = new RAD.View({el: '<p></p>'});
     myView.delegateEvents({'click': 'undefinedMethod'});
     myView.$el.trigger('click');
   });
@@ -141,7 +141,7 @@
     assert.expect(7);
     var counter1 = 0, counter2 = 0;
 
-    var myView = new Backbone.View({el: '#testElement'});
+    var myView = new RAD.View({el: '#testElement'});
     myView.increment = function(){ counter1++; };
     myView.$el.on('click', function(){ counter2++; });
 
@@ -167,7 +167,7 @@
 
   QUnit.test('undelegate', function(assert) {
     assert.expect(1);
-    var myView = new Backbone.View({el: '#testElement'});
+    var myView = new RAD.View({el: '#testElement'});
     myView.delegate('click', function() { assert.ok(false); });
     myView.delegate('click', 'h1', function() { assert.ok(false); });
 
@@ -181,7 +181,7 @@
 
   QUnit.test('undelegate with passed handler', function(assert) {
     assert.expect(1);
-    var myView = new Backbone.View({el: '#testElement'});
+    var myView = new RAD.View({el: '#testElement'});
     var listener = function() { assert.ok(false); };
     myView.delegate('click', listener);
     myView.delegate('click', function() { assert.ok(true); });
@@ -191,7 +191,7 @@
 
   QUnit.test('undelegate with selector', function(assert) {
     assert.expect(2);
-    var myView = new Backbone.View({el: '#testElement'});
+    var myView = new RAD.View({el: '#testElement'});
     myView.delegate('click', function() { assert.ok(true); });
     myView.delegate('click', 'h1', function() { assert.ok(false); });
     myView.undelegate('click', 'h1');
@@ -201,7 +201,7 @@
 
   QUnit.test('undelegate with handler and selector', function(assert) {
     assert.expect(2);
-    var myView = new Backbone.View({el: '#testElement'});
+    var myView = new RAD.View({el: '#testElement'});
     myView.delegate('click', function() { assert.ok(true); });
     var handler = function(){ assert.ok(false); };
     myView.delegate('click', 'h1', handler);
@@ -212,7 +212,7 @@
 
   QUnit.test('tagName can be provided as a string', function(assert) {
     assert.expect(1);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       tagName: 'span'
     });
 
@@ -221,7 +221,7 @@
 
   QUnit.test('tagName can be provided as a function', function(assert) {
     assert.expect(1);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       tagName: function() {
         return 'p';
       }
@@ -232,7 +232,7 @@
 
   QUnit.test('_ensureElement with DOM node el', function(assert) {
     assert.expect(1);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       el: document.body
     });
 
@@ -241,17 +241,17 @@
 
   QUnit.test('_ensureElement with string el', function(assert) {
     assert.expect(3);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       el: 'body'
     });
     assert.strictEqual(new View().el, document.body);
 
-    View = Backbone.View.extend({
+    View = RAD.View.extend({
       el: '#testElement > h1'
     });
     assert.strictEqual(new View().el, $('#testElement > h1').get(0));
 
-    View = Backbone.View.extend({
+    View = RAD.View.extend({
       el: '#nonexistent'
     });
     assert.ok(!new View().el);
@@ -259,7 +259,7 @@
 
   QUnit.test('with className and id functions', function(assert) {
     assert.expect(2);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       className: function() {
         return 'className';
       },
@@ -274,7 +274,7 @@
 
   QUnit.test('with attributes', function(assert) {
     assert.expect(2);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       attributes: {
         'id': 'id',
         'class': 'class'
@@ -287,7 +287,7 @@
 
   QUnit.test('with attributes as a function', function(assert) {
     assert.expect(1);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       attributes: function() {
         return {'class': 'dynamic'};
       }
@@ -298,7 +298,7 @@
 
   QUnit.test('should default to className/id properties', function(assert) {
     assert.expect(4);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       className: 'backboneClass',
       id: 'backboneId',
       attributes: {
@@ -319,7 +319,7 @@
     var count = 0;
     var $el = $('<p></p>');
 
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       el: $el,
       events: {
         click: function() {
@@ -343,7 +343,7 @@
 
   QUnit.test('custom events', function(assert) {
     assert.expect(2);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       el: $('body'),
       events: {
         fake$event: function() { assert.ok(true); }
@@ -361,7 +361,7 @@
     assert.expect(2);
     var $el = $('body');
 
-    var myView = new Backbone.View({el: $el});
+    var myView = new RAD.View({el: $el});
     assert.ok(myView.$el === $el);
 
     myView.setElement($el = $($el));
@@ -373,7 +373,7 @@
     var button1 = $('<button></button>');
     var button2 = $('<button></button>');
 
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       events: {
         click: function(e) {
           assert.ok(myView.el === e.target);
@@ -390,7 +390,7 @@
 
   QUnit.test('#1172 - Clone attributes object', function(assert) {
     assert.expect(2);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       attributes: {foo: 'bar'}
     });
 
@@ -403,7 +403,7 @@
 
   QUnit.test('views stopListening', function(assert) {
     assert.expect(0);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       initialize: function() {
         this.listenTo(this.model, 'all x', function(){ assert.ok(false); });
         this.listenTo(this.collection, 'all x', function(){ assert.ok(false); });
@@ -422,7 +422,7 @@
 
   QUnit.test('Provide function for el.', function(assert) {
     assert.expect(2);
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       el: function() {
         return '<p><a></a></p>';
       }
@@ -437,7 +437,7 @@
     assert.expect(1);
     var counter = 0;
 
-    var View = Backbone.View.extend({
+    var View = RAD.View.extend({
       el: '#testElement',
       increment: function() {
         counter++;
@@ -456,23 +456,23 @@
 
   QUnit.test('remove', function(assert) {
     assert.expect(2);
-    var myView = new Backbone.View;
+    var myView = new RAD.View;
     document.body.appendChild(view.el);
 
-    myView.delegate('click', function() { assert.ok(false); });
-    myView.listenTo(myView, 'all x', function() { assert.ok(false); });
+    myView.delegate('click', function() { assert.ok(false, 'click passed'); });
+    myView.listenTo(myView, 'all x', function() { assert.ok(false, 'custom event passed'); });
 
     assert.equal(myView.remove(), myView, '#remove returns the view instance');
     myView.$el.trigger('click');
     myView.trigger('x');
 
     // In IE8 and below, parentNode still exists but is not document.body.
-    assert.notEqual(myView.el.parentNode, document.body);
+    assert.notEqual(myView.el.parentNode, document.body, 'parentNode !== document.body');
   });
 
   QUnit.test('setElement', function(assert) {
     assert.expect(3);
-    var myView = new Backbone.View({
+    var myView = new RAD.View({
       events: {
         click: function() { assert.ok(false); }
       }

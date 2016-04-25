@@ -9,9 +9,6 @@ var WelcomePage = RAD.Base.View.extend({
     initialize: function() {
         console.log('initialize');
     },
-    onElementSet: function(newEl) {
-        console.log('element set', newEl);
-    },
     onAttach: function() {
         console.log('onAttach');
     },
@@ -26,16 +23,7 @@ var WelcomePage = RAD.Base.View.extend({
     }
 });
 
-//var page = new WelcomePage({
-//    el: '#screen'
-//});
-//page.render();
-
-//var page = new WelcomePage();
-//page.render();
-//page.setElement('#screen');
-
-//RAD.publish('navigation.show', {
-//    container: '#screen',
-//    content: WelcomePage
-//});
+var page = new WelcomePage({
+    el: '#screen'
+});
+page.render();
