@@ -27,7 +27,6 @@ attributeSetters.className = attributeSetters['class'] = function(el, attr, valu
 };
 
 function setAsProperty(el, prop, value) {
-    console.log('set prop', prop, value);
     el[prop] = value;
 }
 
@@ -39,7 +38,7 @@ function patchWrapper(patch, node, renderFn, data) {
     publish(Events.PATCH_END, node);
 }
 
-incrementalDOM.patch = incrementalDOM.patchInner = _.wrap(incrementalDOM.patch, patchWrapper);
+incrementalDOM.patch = incrementalDOM.patchInner = _.wrap(incrementalDOM.patchInner, patchWrapper);
 incrementalDOM.patchOuter = _.wrap(incrementalDOM.patchOuter, patchWrapper);
 
 module.exports = incrementalDOM;

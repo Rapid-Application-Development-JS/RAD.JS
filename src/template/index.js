@@ -52,9 +52,15 @@ function template(str, options) {
     var localComponents = wrapComponents(options.components);
     var components = _.extend({}, globalComponents, localComponents);
 
-    return function(data) {
+    function templateWrap(data) {
         return templateFn.call(this, data, IncrementalDOM, components);
+    }
+
+    templateWrap.source = function() {
+        return templateFn.toString();
     };
+
+    return templateWrap;
 }
 
 template.registerHelper = function (name, fn) {

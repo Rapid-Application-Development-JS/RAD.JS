@@ -26,7 +26,7 @@ function render(content, props) {
     props = props || {};
     props.key = props.key || props.id;
 
-    return initView(content, props).render().el;
+    return initView(content, props).render();
 }
 
 module.exports = render;

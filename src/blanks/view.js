@@ -4,14 +4,6 @@ var _ = require('underscore');
 var Backbone = require('backbone');
 
 var IncrementalDOM = require('../template/idom');
-var patchOuter = IncrementalDOM.patchOuter;
-var elementOpenStart = IncrementalDOM.elementOpenStart;
-var elementOpenEnd = IncrementalDOM.elementOpenEnd;
-var elementClose = IncrementalDOM.elementClose;
-var currentElement = IncrementalDOM.currentElement;
-var setAttribute = IncrementalDOM.attr;
-var skip = IncrementalDOM.skip;
-
 var Dispatcher = require('../core/dispatcher');
 var Config = require('../config');
 var Events = Config.Events;
@@ -22,7 +14,7 @@ var unregister = Core.unregister;
 
 
 function isRendering() {
-    return !!currentElement();
+    return !!IncrementalDOM.currentElement();
 }
 
 function makeId(options) {
@@ -100,7 +92,7 @@ BaseView.prototype = _.create(Backbone.View.prototype, {
             return this._render();
         }
 
-        patchOuter(this.el, function() {
+        IncrementalDOM.patchOuter(this.el, function() {
             self.el.setAttribute('key', self.getID());
             self._render();
             self.el.removeAttribute('key');
@@ -126,23 +118,23 @@ BaseView.prototype = _.create(Backbone.View.prototype, {
         if (typeof this.template === 'function') {
             this.refs = this.template(this.getTemplateData());
         } else {
-            skip();
+            IncrementalDOM.skip();
         }
     },
 
     _renderOuter: function() {
         this._viewElOpen();
-        skip();
+        IncrementalDOM.skip();
         this._viewElClose();
         return this;
     },
     _viewElOpen: function () {
-        elementOpenStart(this.el.tagName.toLowerCase(), this.getID());
+        IncrementalDOM.elementOpenStart(this.el.tagName.toLowerCase(), this.getID());
         this._setElAttributes();
-        elementOpenEnd();
+        IncrementalDOM.elementOpenEnd();
     },
     _viewElClose: function () {
-        var el = elementClose(this.el.tagName.toLowerCase());
+        var el = IncrementalDOM.elementClose(this.el.tagName.toLowerCase());
         if (this.el !== el) {
             this.setElement(el);
         }
@@ -154,7 +146,7 @@ BaseView.prototype = _.create(Backbone.View.prototype, {
         attributes[Config.Attributes.ID] = this.getID();
 
         _.each(attributes, function (value, name) {
-            setAttribute(name, value);
+            IncrementalDOM.attr(name, value);
         });
     },
 
