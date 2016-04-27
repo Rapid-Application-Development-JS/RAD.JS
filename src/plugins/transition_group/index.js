@@ -26,11 +26,19 @@ function rootElementOpen(options) {
         IncrementalDOM.attr(name, value);
     });
 
-    IncrementalDOM.elementOpenEnd();
+    var el = IncrementalDOM.elementOpenEnd();
+
+    if (el.__firstRender === undefined) {
+        el.__firstRender = true;
+    }
+
+    return el;
 }
 
 function rootElementClose(attrs) {
-    IncrementalDOM.elementClose(attrs.tagName);
+    var el = IncrementalDOM.elementClose(attrs.tagName);
+    el.__firstRender = false;
+    return el;
 }
 
 function initRenderData(rootEl, attrs) {
@@ -41,7 +49,9 @@ function initRenderData(rootEl, attrs) {
         keyMap: _.clone(utils.getNodeData(rootEl).keyMap) || {},
         keysRendered: {},
         keysToShow: {},
-        position: 0
+        position: 0,
+        firstRender: rootEl.__firstRender,
+        applyAnimation: !rootEl.__firstRender || attrs.initialAnimation !== 'none'
     };
 }
 
@@ -50,14 +60,13 @@ template.registerHelper('transition', function(options, renderContent) {
         console.warn('Warning: `name` is deprecated attribute for transitionGroup, use `animationName` instead');
     }
 
-    rootElementOpen(options);
+    var rootEl = rootElementOpen(options);
+    var renderData = initRenderData(rootEl, options);
 
-    var renderData = initRenderData(IncrementalDOM.currentElement(), options);
     contentHandler.start(renderData);
     renderContent();
     contentHandler.stop(renderData);
 
     rootElementClose(options);
-
     contentHandler.doTransition(renderData);
 });

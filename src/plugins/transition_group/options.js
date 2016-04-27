@@ -4,7 +4,6 @@ var DEFAULT_LEAVE_CLASS = 'leave';
 var DEFAULT_ENTER_CLASS = 'enter';
 var DEFAULT_ACTIVE_CLASS = 'animated';
 var DEFAULT_TIMEOUT = 3500;
-var INITIAL_ANIMATION = 'none';
 
 
 module.exports = function (attrs) {
@@ -13,7 +12,7 @@ module.exports = function (attrs) {
 
     return {
         animationName: attrs.name || attrs.animationName,
-        initialAnimation: attrs.initialAnimation || INITIAL_ANIMATION,
+        initialAnimation: attrs.initialAnimation,
 
         enterClass: attrs.enterClass || DEFAULT_ENTER_CLASS,
         leaveClass: attrs.leaveClass || DEFAULT_LEAVE_CLASS,

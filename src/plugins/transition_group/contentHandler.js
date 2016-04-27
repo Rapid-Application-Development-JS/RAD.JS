@@ -115,6 +115,10 @@ function doTransition(renderData) {
     var transitionOptions = initTransitionOptions(renderData.attrs);
     var children = Array.prototype.slice.call(rootEl.children);
 
+    if (!renderData.applyAnimation) {
+        transitionOptions.enterTimeout = transitionOptions.leaveTimeout = 0;
+    }
+
     _.each(children, function(node) {
         var key = utils.getNodeData(node).key;
         var render = utils.getRenderData(node);
