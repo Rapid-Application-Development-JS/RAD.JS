@@ -6,16 +6,21 @@ var iDOM = require('../../template/idom');
 var Events = require('../../config').Events;
 var utils = require('./utils');
 var transition = require('./transition');
-var initTransitionOptions = require('./transitionOptions');
+var initTransitionOptions = require('./options');
 
 var elementOpen = iDOM.elementOpen;
 var elementClose = iDOM.elementClose;
-
 var elementOpenStart = iDOM.elementOpenStart;
 var elementOpenEnd = iDOM.elementOpenEnd;
 
+var RenderStatus = {
+    ENTER: 'enter',
+    LEAVE: 'leave',
+    DONE: 'done'
+};
 
-function placeholder(node) {
+// TODO use elementOpenStart/End instead of elementOpen
+function createPlaceholder(node) {
     var key = utils.getNodeData(node).key;
     var tagName = node.tagName.toLowerCase();
 
@@ -29,7 +34,7 @@ function alignContent(children, position, key) {
     var node = children[position];
 
     while (position < length && node && utils.getNodeData(node).key !== key) {
-        placeholder(node);
+        createPlaceholder(node);
         node = children[++position];
     }
 
@@ -44,7 +49,7 @@ function renderStart(renderData) {
     var level = 0;
     var childLevel = 1;
 
-    function wrapper(elementCreator, tagName, key) {
+    function elementHandler(createMethod, tagName, key) {
         var isChild = (++level) === childLevel;
         var isNewChild = false;
 
@@ -59,7 +64,7 @@ function renderStart(renderData) {
             position++;
         }
 
-        var node = elementCreator.apply(null, utils.toArray(arguments, 1));
+        var node = createMethod.apply(null, utils.toArray(arguments, 1));
 
         if (isChild) {
             renderData.keysRendered[key] = node;
@@ -76,8 +81,14 @@ function renderStart(renderData) {
         return node;
     }
 
-    // Listen to element open to detect when new Child Element created
-    iDOM.elementOpen = _.wrap(iDOM.elementOpen, wrapper);
+    iDOM.elementOpen = _.wrap(iDOM.elementOpen, elementHandler);
+
+    iDOM.elementClose = _.wrap(iDOM.elementClose, function(elementClose, tagName) {
+        level--;
+        return elementClose.call(null, tagName);
+    });
+
+    //iDOM.elementVoid =
 
     var elementOpenKey;
     iDOM.elementOpenStart = _.wrap(iDOM.elementOpenStart, function(elementOpenStart, tagName, key, staticArray) {
@@ -85,67 +96,53 @@ function renderStart(renderData) {
         elementOpenStart(tagName, key, staticArray);
     });
     iDOM.elementOpenEnd = _.wrap(iDOM.elementOpenEnd, function(elementOpenEnd, tagName) {
-        wrapper(elementOpenEnd, tagName, elementOpenKey);
-    });
-
-    // Listen to element close
-    iDOM.elementClose = _.wrap(iDOM.elementClose, function(elementClose, tagName) {
-        level--;
-        return elementClose.call(null, tagName);
+        elementHandler(elementOpenEnd, tagName, elementOpenKey);
     });
 }
 
-function renderEnd(renderData) {
-    var rootEl = renderData.rootEl;
-    var activeKeys = utils.getNodeData(rootEl).keyMap;
-    var transitionOptions = initTransitionOptions(renderData.attrs);
-
-    // Restore IncrementalDOM API
+function renderStop(renderData) {
     iDOM.elementOpen = elementOpen;
     iDOM.elementClose = elementClose;
     iDOM.elementOpenStart = elementOpenStart;
     iDOM.elementOpenEnd = elementOpenEnd;
 
-    // Align remaining content
     alignContent(renderData.children, renderData.position);
+}
 
-    // Transition statuses
-    var enter = 'enter';
-    var leave = 'leave';
-    var done = 'done';
+function doTransition(renderData) {
+    var rootEl = renderData.rootEl;
+    var activeKeys = utils.getNodeData(rootEl).keyMap;
+    var transitionOptions = initTransitionOptions(renderData.attrs);
+    var children = Array.prototype.slice.call(rootEl.children);
 
-    // Apply transition
-    _.each(rootEl.children, function(node) {
+    _.each(children, function(node) {
         var key = utils.getNodeData(node).key;
         var render = utils.getRenderData(node);
 
         if (renderData.keysToShow[key]) {
-            render.status = enter;
+            render.status = RenderStatus.ENTER;
             transition.enter(node, transitionOptions, function() {
-                render.status = done;
+                render.status = RenderStatus.DONE;
             });
-
         } else if (!renderData.keysRendered[key]) {
-            render.status = leave;
+            render.status = RenderStatus.LEAVE;
             transition.leave(node, transitionOptions, function() {
-                render.status = done;
+                render.status = RenderStatus.DONE;
                 delete activeKeys[key];
                 publish(Events.NODE_REMOVED, node);
             });
 
-        } else {
-            // TODO: check statement render.status === enter
-            if (render.status === leave || render.status === enter) {
-                render.status = enter;
-                transition.enter(node, transitionOptions, function() {
-                    render.status = done;
-                });
-            }
+        } else if (render.status === RenderStatus.LEAVE) {
+            render.status = RenderStatus.ENTER;
+            transition.enter(node, transitionOptions, function() {
+                render.status = RenderStatus.DONE;
+            });
         }
     });
 }
 
 module.exports = {
     start: renderStart,
-    end: renderEnd
+    stop: renderStop,
+    doTransition: doTransition
 };

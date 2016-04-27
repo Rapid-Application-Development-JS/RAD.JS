@@ -21,16 +21,12 @@ function transition(node, options, timeout, callback) {
         animationEnd.unbindAll();
 
         utilsDOM.removeClass(node, [
-            options.name,
+            options.animationName,
             options.enterClass,
             options.leaveClass,
             options.activeClass
         ].join(sep));
     }
-
-    node.transitionId = setTimeout(function() {
-        done(node);
-    }, timeout);
 
     node.stopActiveTransition = function() {
         transitionEnd.unbindAll();
@@ -54,13 +50,22 @@ function transition(node, options, timeout, callback) {
     // force reflow
     //window.getComputedStyle(node).width;
 
+    if (!timeout) {
+        done(node);
+        return;
+    }
+
+    node.transitionId = setTimeout(function() {
+        done(node);
+    }, timeout);
+
     // Run transition
     utilsDOM.addClass(node, options.activeClass);
 }
 
 function transitionLeave(node, options, callback) {
     utilsDOM.addClass(node, [
-        options.name,
+        options.animationName,
         options.leaveClass
     ].join(sep));
 
@@ -79,7 +84,7 @@ function transitionLeave(node, options, callback) {
 function transitionEnter(node, options, callback) {
 
     utilsDOM.addClass(node, [
-        options.name,
+        options.animationName,
         options.enterClass
     ].join(sep));
 

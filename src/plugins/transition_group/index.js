@@ -1,19 +1,36 @@
 'use strict';
 
 var _ = require('underscore');
-var iDOM = require('../../template/idom');
+var IncrementalDOM = require('../../template/idom');
 var template = require('../../template');
 var utils = require('./utils');
-var content = require('./content');
+var contentHandler = require('./contentHandler');
 
-function rootElementOpen(attrs) {
-    iDOM.elementOpenStart(attrs.tagName);
-    iDOM.attr('class', attrs.class);
-    iDOM.elementOpenEnd(attrs.tagName);
+var reservedAttrs = [
+    'name', // deprecated
+    'animationName',
+    'initialAnimation',
+    'tagName',
+    'enterTimeout',
+    'leaveTimeout',
+    'enterClass',
+    'leaveClass',
+    'activeClass'
+];
+
+function rootElementOpen(options) {
+    IncrementalDOM.elementOpenStart(options.tagName);
+
+    var attributes = _.omit(options, reservedAttrs);
+    _.each(attributes, function (value, name) {
+        IncrementalDOM.attr(name, value);
+    });
+
+    IncrementalDOM.elementOpenEnd();
 }
 
 function rootElementClose(attrs) {
-    iDOM.elementClose(attrs.tagName);
+    IncrementalDOM.elementClose(attrs.tagName);
 }
 
 function initRenderData(rootEl, attrs) {
@@ -28,13 +45,19 @@ function initRenderData(rootEl, attrs) {
     };
 }
 
-template.registerHelper('transition', function(attrs, render) {
-    rootElementOpen(attrs);
+template.registerHelper('transition', function(options, renderContent) {
+    if (options.name) {
+        console.warn('Warning: `name` is deprecated attribute for transitionGroup, use `animationName` instead');
+    }
 
-    var renderData = initRenderData(iDOM.currentElement(), attrs);
-    content.start(renderData);
-    render();
-    content.end(renderData);
+    rootElementOpen(options);
 
-    rootElementClose(attrs);
+    var renderData = initRenderData(IncrementalDOM.currentElement(), options);
+    contentHandler.start(renderData);
+    renderContent();
+    contentHandler.stop(renderData);
+
+    rootElementClose(options);
+
+    contentHandler.doTransition(renderData);
 });
