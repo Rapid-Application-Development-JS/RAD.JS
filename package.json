@@ -24,7 +24,8 @@
   "license": "MIT",
   "dependencies": {
     "idom-template": "git://github.com/Rapid-Application-Development-JS/itemplate",
-    "incremental-dom": "^0.4.1"
+    "incremental-dom": "^0.4.1",
+    "webpack": "^1.12.1"
   },
   "devDependencies": {
     "backbone": "^1.2.3",
