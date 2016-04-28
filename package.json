@@ -2,9 +2,9 @@
   "name": "RAD",
   "version": "2.0.1",
   "description": "Rapid Application Development",
-  "main": "build/rad.build.js",
+  "main": "build/rad.js",
   "bin": {
-    "RAD": "build/rad.build.js"
+    "RAD": "build/rad.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
