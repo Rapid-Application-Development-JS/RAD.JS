@@ -2,16 +2,12 @@
   "name": "RAD",
   "version": "2.0.1",
   "description": "Rapid Application Development",
-  "main": "build/rad.js",
-  "bin": {
-    "RAD": "build/rad.js"
-  },
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --watch",
     "demo": "cd demo && node buildAll",
-    "build": "webpack && webpack --config webpack.config.release.js",
-    "preinstall": "npm run build"
+    "build": "webpack && webpack --config webpack.config.release.js"
   },
   "repository": {
     "type": "git",
