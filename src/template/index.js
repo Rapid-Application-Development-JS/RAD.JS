@@ -3,34 +3,19 @@
 var _ = require('underscore');
 var iTemplate = require('idom-template');
 var IncrementalDOM = require('./idom');
-var renderView = require('./render_view');
+var renderComponent = require('./render_component');
 var core = require('../core');
-var BaseView = require('../blanks/view');
 
 var globalComponents = {};
-
-function componentIsView(component) {
-    if (typeof component === 'function') {
-        return !!component.extend || component.extend;
-    }
-    return component instanceof BaseView;
-}
 
 
 function wrapComponents(componentsMap) {
     var components = {};
 
     _.each(componentsMap, function(component, name) {
-        if ( componentIsView(component) ) {
-            components[name] = function (attrs, innerRender) {
-                renderView(component, attrs, innerRender);
-            };
-        } else {
-            components[name] = function (attrs, innerRender) {
-                component(attrs, innerRender);
-            };
-        }
-
+        components[name] = function (attrs, innerRender) {
+            renderComponent(component, attrs, innerRender);
+        };
     });
 
     return components;

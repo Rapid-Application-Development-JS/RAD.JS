@@ -3,7 +3,7 @@ var _ = require('underscore');
 var core = require('../../core');
 var Module = require('../../blanks/module');
 var iDOM = require('../../template/idom');
-var renderView = require('../../template/render_view');
+var renderView = require('../../template/render_component');
 
 var Navigator = Module.extend({
 

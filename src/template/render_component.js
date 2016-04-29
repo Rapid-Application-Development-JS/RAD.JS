@@ -4,7 +4,7 @@ var _ = require("underscore");
 var core = require('../core');
 var Config = require('../config');
 
-function initView(View, options) {
+function initComponent(View, options) {
     var viewID = 'key-' + options.key;
     var registeredView = core.get(viewID);
 
@@ -22,11 +22,11 @@ function initView(View, options) {
     return View;
 }
 
-function render(content, props) {
+function render(component, props) {
     props = props || {};
     props.key = props.key || props.id;
 
-    return initView(content, props).render();
+    return initComponent(component, props).render();
 }
 
 module.exports = render;

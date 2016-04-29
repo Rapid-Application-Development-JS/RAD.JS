@@ -19,7 +19,7 @@ function isRendering() {
 
 function makeId(options) {
     if (options && options.key) {
-        return 'key-' + options.key;
+        return 'view-key-' + options.key;
     }
     return _.result(options, 'id', _.uniqueId('view-'));
 }
