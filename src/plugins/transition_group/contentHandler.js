@@ -93,10 +93,10 @@ function renderStart(renderData) {
     var elementOpenKey;
     iDOM.elementOpenStart = _.wrap(iDOM.elementOpenStart, function(elementOpenStart, tagName, key, staticArray) {
         elementOpenKey = key;
-        elementOpenStart(tagName, key, staticArray);
+        return elementOpenStart(tagName, key, staticArray);
     });
     iDOM.elementOpenEnd = _.wrap(iDOM.elementOpenEnd, function(elementOpenEnd, tagName) {
-        elementHandler(elementOpenEnd, tagName, elementOpenKey);
+        return elementHandler(elementOpenEnd, tagName, elementOpenKey);
     });
 }
 
