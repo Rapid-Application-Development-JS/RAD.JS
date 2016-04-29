@@ -3,30 +3,28 @@
 var _ = require("underscore");
 var core = require('../core');
 var Config = require('../config');
+var BaseView = require('../blanks/view');
 
-function initComponent(View, options) {
-    var viewID = 'key-' + options.key;
-    var registeredView = core.get(viewID);
-
-    if (registeredView) {
-        registeredView.props.set(_.omit(options, Config.ViewOptions), {silent:true});
-        return registeredView;
-    }
-
-    if ( _.isFunction(View) ) {
-        return new View(options);
-    }
-
-    View.props.set(_.omit(options, Config.ViewOptions), {silent:true});
-
-    return View;
-}
-
-function render(component, props) {
+function render(component, props, content) {
     props = props || {};
     props.key = props.key || props.id;
 
-    return initComponent(component, props).render();
+    // TODO move key prefix to config file
+    var registrationId = 'view-key-' + props.key;
+    var registeredComponent = core.get( registrationId );
+
+    if (registeredComponent) {
+        registeredComponent.props.set(_.omit(props, Config.ViewOptions), {silent:true});
+        return registeredComponent.render();
+    }
+
+    var newComponent = _.isFunction(component) ? new component(props, content) : component;
+
+    if (newComponent instanceof BaseView) {
+        return newComponent.render();
+    }
+
+    return newComponent;
 }
 
 module.exports = render;
