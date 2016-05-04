@@ -7,6 +7,8 @@ var RAD         = require('RAD');
 var Backbone    = require('Backbone');
 var todoList    = require('models/todos');
 
+window.todoList = todoList;
+
 var TodoList = RAD.Base.View.extend({
     template: RAD.template( require('./main-tpl.ejs'), {
         components: {
@@ -40,10 +42,10 @@ var TodoList = RAD.Base.View.extend({
 
     addTodo: function(e) {
         e.preventDefault();
-        todoList.create(
-            {title: this.refs['todoField'].value.trim()},
-            {wait: true}
-        );
+        todoList.create({
+            id: _.uniqueId('todo-'),
+            title: this.refs['todoField'].value.trim()
+        });
 
         this.refs['todoField'].value = '';
     },
