@@ -11,7 +11,10 @@ var HomeView  = RAD.Base.View.extend({
     navigate: function() {
         this.publish('navigation.show', {
             container: '#screen',
-            content: require('views/second_page')
+            content: require('views/second_page'),
+            options: {
+                date: Date.now()
+            }
         });
     }
 });
