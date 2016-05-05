@@ -23,3 +23,26 @@
 .lightSpeedOut {
     z-index: 100;
 }
+
+/* Adds revers animation for Animate.css */
+.animated {
+    pointer-events: none;
+}
+.backward .animated {
+    -webkit-animation-direction: reverse;
+    animation-direction: reverse;
+}
+.forward .animated.leave {
+    z-index: 1;
+}
+.forward .animated.enter {
+    z-index: 2;
+}
+
+.backward .animated.leave {
+    z-index: 2;
+}
+.backward .animated.enter {
+    z-index: 1;
+}
+

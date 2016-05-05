@@ -8,21 +8,25 @@ var contentHandler = require('./contentHandler');
 
 var reservedAttrs = [
     'name', // deprecated
-    'animationName',
-    'initialAnimation',
     'tagName',
+    'key',
+
+    'initialAnimation',
+    'animationName',
+    'animationEnter',
+    'animationLeave',
     'enterTimeout',
     'leaveTimeout',
+
     'enterClass',
     'leaveClass',
     'activeClass'
 ];
 
 function rootElementOpen(options) {
-    IncrementalDOM.elementOpenStart(options.tagName);
+    IncrementalDOM.elementOpenStart(options.tagName || 'div', options.key);
 
-    var attributes = _.omit(options, reservedAttrs);
-    _.each(attributes, function (value, name) {
+    _.each(_.omit(options, reservedAttrs), function (value, name) {
         IncrementalDOM.attr(name, value);
     });
 
@@ -66,7 +70,6 @@ template.registerHelper('transition', function(options, renderContent) {
     contentHandler.start(renderData);
     renderContent();
     contentHandler.stop(renderData);
-
     rootElementClose(options);
     contentHandler.doTransition(renderData);
 });

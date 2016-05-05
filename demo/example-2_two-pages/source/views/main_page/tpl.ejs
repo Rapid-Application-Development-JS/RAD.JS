@@ -1,0 +1,14 @@
+<transition id="animation-group"
+            class="<%= data.props.direction %>"
+            animationEnter="<%= data.props.animationEnter %>"
+            animationLeave="<%= data.props.animationLeave %>"
+            enterTimeout="400"
+            leaveTimeout="400" >
+
+    <% if (data.props.direction === 'forward') { %>
+    <SecondPage />
+    <% } else { %>
+    <FirstPage />
+    <% } %>
+
+</transition>

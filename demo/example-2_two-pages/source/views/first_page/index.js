@@ -2,21 +2,9 @@
 
 var RAD = require('RAD');
 
-var HomeView  = RAD.Base.View.extend({
+var HomeView  = RAD.View.extend({
     template: RAD.template(require('./tpl.ejs')),
-    className: 'native-scroll',
-    events: {
-        'click [data-animation]': 'navigate'
-    },
-    navigate: function() {
-        this.publish('navigation.show', {
-            container: '#screen',
-            content: require('views/second_page'),
-            options: {
-                date: Date.now()
-            }
-        });
-    }
+    className: 'native-scroll'
 });
 
-module.exports = new HomeView();
+module.exports = new HomeView;

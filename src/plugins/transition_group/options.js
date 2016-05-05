@@ -9,9 +9,11 @@ var DEFAULT_TIMEOUT = 3500;
 module.exports = function (attrs) {
     var enterTimeout = parseInt(attrs.enterTimeout, 10);
     var leaveTimeout = parseInt(attrs.leaveTimeout, 10);
+    var animationName = attrs.name || attrs.animationName;
 
     return {
-        animationName: attrs.name || attrs.animationName,
+        animationEnter: attrs.animationEnter || animationName,
+        animationLeave: attrs.animationLeave || animationName,
         initialAnimation: attrs.initialAnimation,
 
         enterClass: attrs.enterClass || DEFAULT_ENTER_CLASS,
