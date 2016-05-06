@@ -4,7 +4,7 @@ var RAD  = require('RAD');
 
 RAD.publish('navigation.show', {
     container: '#screen',
-    content: require('views/main_page')
+    content: require('views/main')
 });
 
 

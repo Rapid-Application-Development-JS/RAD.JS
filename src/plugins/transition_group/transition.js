@@ -5,6 +5,9 @@ var TransitionEnd = require('../../utils/transition/transitionEnd');
 var utilsDOM = require('../../utils/DOM_Utils');
 var sep = ' ';
 
+function forceReflow(node) {
+    return node.offsetWidth;
+}
 function transition(node, options, timeout, callback) {
     var transitionEnd = new TransitionEnd(node);
     var animationEnd = new AnimationEnd(node);
@@ -15,7 +18,7 @@ function transition(node, options, timeout, callback) {
     }
 
     function done(node) {
-        callback(node);
+        callback && callback(node);
 
         transitionEnd.unbindAll();
         animationEnd.unbindAll();
@@ -57,9 +60,6 @@ function transition(node, options, timeout, callback) {
         done(node);
     }, timeout);
 
-    // force reflow
-    //window.getComputedStyle(node).width;
-
     // Run transition
     utilsDOM.addClass(node, options.activeClass);
 }
@@ -76,26 +76,18 @@ function transitionLeave(node, options, callback) {
         if (node.parentNode) {
             node.parentNode.removeChild(node);
         }
-        if (typeof callback === 'function') {
-            callback();
-        }
+        callback && callback();
     });
 }
 
 function transitionEnter(node, options, callback) {
-
     utilsDOM.addClass(node, [
         options.animationEnter,
         options.enterClass
     ].join(sep));
-
     utilsDOM.removeClass(node, options.leaveClass);
 
-    transition(node, options, options.enterTimeout, function() {
-        if (typeof callback === 'function') {
-            callback();
-        }
-    });
+    transition(node, options, options.enterTimeout, callback);
 }
 
 module.exports.enter = transitionEnter;

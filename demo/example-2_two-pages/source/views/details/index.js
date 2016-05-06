@@ -5,4 +5,4 @@ var DetailsView = RAD.View.extend({
     template: RAD.template(require('./tpl.ejs'))
 });
 
-module.exports = new DetailsView;
+module.exports = DetailsView;

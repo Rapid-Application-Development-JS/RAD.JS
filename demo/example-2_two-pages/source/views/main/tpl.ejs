@@ -1,14 +1,15 @@
 <transition id="animation-group"
             class="<%= data.props.direction %>"
+            initialAnimation="none"
             animationEnter="<%= data.props.animationEnter %>"
             animationLeave="<%= data.props.animationLeave %>"
-            enterTimeout="400"
-            leaveTimeout="400" >
+            enterTimeout="<%= data.props.enterTimeout || 1000 %>"
+            leaveTimeout="<%= data.props.leaveTimeout || 1000 %>" >
 
     <% if (data.props.direction === 'forward') { %>
-    <SecondPage />
+    <Details key="details" />
     <% } else { %>
-    <FirstPage />
+    <List key="transitions-list" />
     <% } %>
 
 </transition>

@@ -1,48 +1,33 @@
+.root-view {
+    background-color: #000;
+}
 /* css perspective required for codrops PageTransitions  */
-.ptSlide,
-.moveTop,
-.moveFade,
-.scaleDown,
-.flip {
+#animation-group {
+    position: relative;
+    width:100%;
+    height:100%;
     -webkit-perspective: 1200px;
     -moz-perspective: 1200px;
     perspective: 1200px;
 }
-.ptSlide .reverse,
-.moveFade .reverse {
-    -webkit-animation-direction: reverse !important;
-    animation-direction: reverse !important;
+#animation-group [data-role="view"] {
+    z-index: 2;
 }
-.pt-page-ontop {
-    z-index: 999;
-}
-
-.hinge,
-.rollIn,
-.lightSpeedIn,
-.lightSpeedOut {
-    z-index: 100;
-}
-
 /* Adds revers animation for Animate.css */
 .animated {
     pointer-events: none;
 }
-.backward .animated {
-    -webkit-animation-direction: reverse;
-    animation-direction: reverse;
-}
-.forward .animated.leave {
-    z-index: 1;
-}
-.forward .animated.enter {
-    z-index: 2;
-}
+/*.backward .animated {*/
+    /*-webkit-animation-direction: reverse;*/
+    /*animation-direction: reverse;*/
+/*}*/
 
-.backward .animated.leave {
-    z-index: 2;
+.forward .leave,
+.backward .enter {
+    z-index: 1!important;
 }
-.backward .animated.enter {
-    z-index: 1;
+.forward .enter,
+.backward .leave {
+    z-index: 10 !important;
 }
 

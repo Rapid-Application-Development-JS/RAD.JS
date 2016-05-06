@@ -88,8 +88,6 @@ function renderStart(renderData) {
         return elementClose.call(null, tagName);
     });
 
-    //iDOM.elementVoid =
-
     var elementOpenKey;
     iDOM.elementOpenStart = _.wrap(iDOM.elementOpenStart, function(elementOpenStart, tagName, key, staticArray) {
         elementOpenKey = key;
@@ -114,35 +112,36 @@ function doTransition(renderData) {
     var activeKeys = utils.getNodeData(rootEl).keyMap;
     var transitionOptions = initTransitionOptions(renderData.attrs);
     var children = Array.prototype.slice.call(rootEl.children);
+    var index = children.length;
 
     if (!renderData.applyAnimation) {
         transitionOptions.enterTimeout = transitionOptions.leaveTimeout = 0;
     }
 
-    _.each(children, function(node) {
-        var key = utils.getNodeData(node).key;
-        var render = utils.getRenderData(node);
+    while (index--) {
+        (function (node) {
+            var key = utils.getNodeData(node).key;
+            var render = utils.getRenderData(node);
 
-        if (renderData.keysToShow[key]) {
-            render.status = RenderStatus.ENTER;
-            transition.enter(node, transitionOptions, function() {
-                render.status = RenderStatus.DONE;
-            });
-        } else if (!renderData.keysRendered[key]) {
-            render.status = RenderStatus.LEAVE;
-            transition.leave(node, transitionOptions, function() {
-                render.status = RenderStatus.DONE;
-                delete activeKeys[key];
-                publish(Events.NODE_REMOVED, node);
-            });
+            if (!renderData.keysRendered[key]) {
 
-        } else if (render.status === RenderStatus.LEAVE) {
-            render.status = RenderStatus.ENTER;
-            transition.enter(node, transitionOptions, function() {
-                render.status = RenderStatus.DONE;
-            });
-        }
-    });
+                render.status = RenderStatus.LEAVE;
+                transition.leave(node, transitionOptions, function() {
+                    render.status = RenderStatus.DONE;
+                    delete activeKeys[key];
+                    publish(Events.NODE_REMOVED, node);
+                });
+
+            } else if (renderData.keysToShow[key] || render.status === RenderStatus.LEAVE) {
+
+                render.status = RenderStatus.ENTER;
+                transition.enter(node, transitionOptions, function() {
+                    render.status = RenderStatus.DONE;
+                });
+            }
+
+        }(children[index]));
+    }
 }
 
 module.exports = {

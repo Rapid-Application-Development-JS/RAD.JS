@@ -2,9 +2,9 @@
 
 var RAD = require('RAD');
 
-var HomeView  = RAD.View.extend({
+var ListView  = RAD.View.extend({
     template: RAD.template(require('./tpl.ejs')),
-    className: 'native-scroll'
+    //className: 'native-scroll'
 });
 
-module.exports = new HomeView;
+module.exports = ListView;
