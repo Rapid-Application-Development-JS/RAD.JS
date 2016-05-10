@@ -19,11 +19,18 @@ var MainView  = RAD.View.extend({
     goBack: function () {
         this.props.set({direction: 'backward'});
     },
+    onRender: function() {
+        if (!this.interval) {
+            this.interval = window.setInterval(function() {
+                this.render();
+            }.bind(this), 50)
+        }
+    },
     navigate: function(e) {
         var animationData = animations.get(+e.currentTarget.id).toJSON();
 
         this.props.set(animationData, {silent: true});
-        this.props.set({direction: 'forward'})
+        this.props.set({direction: 'forward'});
     }
 });
 

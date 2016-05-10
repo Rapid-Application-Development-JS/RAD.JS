@@ -5,7 +5,9 @@
     var enterTimeout = (direction == 'forward') ? data.props.enterTimeout :  data.props.leaveTimeout;
     var leaveTimeout = (direction == 'forward') ? data.props.leaveTimeout :  data.props.enterTimeout;
 %>
-
+<div class="time-log" style="position: absolute; left:0; top:0; z-index: 100;">
+    <%= Date.now() %>
+</div>
 <transition id="animation-group"
             class="<%= direction %>"
             initialAnimation="none"
