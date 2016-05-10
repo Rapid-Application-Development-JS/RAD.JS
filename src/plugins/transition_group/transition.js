@@ -88,6 +88,8 @@ function transitionEnter(node, options, callback) {
         node.stopActiveTransition();
     }
 
+    forceReflow(node);
+
     utilsDOM.addClass(node, [options.animationEnter, options.enterClass].join(sep));
     utilsDOM.removeClass(node, options.leaveClass);
 
