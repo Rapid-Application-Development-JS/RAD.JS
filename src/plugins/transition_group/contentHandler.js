@@ -112,36 +112,30 @@ function doTransition(renderData) {
     var activeKeys = utils.getNodeData(rootEl).keyMap;
     var transitionOptions = initTransitionOptions(renderData.attrs);
     var children = Array.prototype.slice.call(rootEl.children);
-    var index = children.length;
 
     if (!renderData.applyAnimation) {
         transitionOptions.enterTimeout = transitionOptions.leaveTimeout = 0;
     }
 
-    while (index--) {
-        (function (node) {
-            var key = utils.getNodeData(node).key;
-            var render = utils.getRenderData(node);
+    _.each(children, function(node) {
+        var key = utils.getNodeData(node).key;
+        var render = utils.getRenderData(node);
 
-            if (!renderData.keysRendered[key]) {
+        if (!renderData.keysRendered[key]) {
+            render.status = RenderStatus.LEAVE;
+            transition.leave(node, transitionOptions, function() {
+                render.status = RenderStatus.DONE;
+                delete activeKeys[key];
+                publish(Events.NODE_REMOVED, node);
+            });
 
-                render.status = RenderStatus.LEAVE;
-                transition.leave(node, transitionOptions, function() {
-                    render.status = RenderStatus.DONE;
-                    delete activeKeys[key];
-                    publish(Events.NODE_REMOVED, node);
-                });
-
-            } else if (renderData.keysToShow[key] || render.status === RenderStatus.LEAVE) {
-
-                render.status = RenderStatus.ENTER;
-                transition.enter(node, transitionOptions, function() {
-                    render.status = RenderStatus.DONE;
-                });
-            }
-
-        }(children[index]));
-    }
+        } else if (renderData.keysToShow[key] || render.status === RenderStatus.LEAVE) {
+            render.status = RenderStatus.ENTER;
+            transition.enter(node, transitionOptions, function() {
+                render.status = RenderStatus.DONE;
+            });
+        }
+    });
 }
 
 module.exports = {

@@ -6,7 +6,7 @@ var TRANSITION_DATA = '__transitionData';
 function TransitionEnd(el) {
     this.el = el && (el[0] || el);
 
-    if (!this.el || !this.el.tagName) {
+    if (!(this.el instanceof HTMLElement)) {
         throw new Error('HTMLElement must be passed as an argument');
     }
 
@@ -50,9 +50,7 @@ TransitionEnd.prototype.unbind = function(fn) {
 };
 
 TransitionEnd.prototype.unbindAll = function() {
-    this._getData().callbacks.forEach(function(fn){
-        this.unbind(fn);
-    }, this);
+    this._getData().callbacks.forEach(this.unbind, this);
 };
 
 

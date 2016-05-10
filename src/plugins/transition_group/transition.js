@@ -8,42 +8,54 @@ var sep = ' ';
 function forceReflow(node) {
     return node.offsetWidth;
 }
+
+function clearTransitionTimeout(node) {
+    if (node.__transitionId) {
+        clearTimeout(node.__transitionId);
+        node.__transitionId = null;
+    }
+}
+
+function setTransitionTimeout(node, cb, timeout) {
+    node.__transitionId = setTimeout(function() {
+        cb(node);
+    }, timeout);
+}
+
+function hasActiveTransition(node) {
+    return node.__transitionId && node.stopActiveTransition;
+}
+
 function transition(node, options, timeout, callback) {
     var transitionEnd = new TransitionEnd(node);
     var animationEnd = new AnimationEnd(node);
+    var triggers = [
+        options.animationEnter,
+        options.animationLeave,
+        options.enterClass,
+        options.leaveClass,
+        options.activeClass
+    ].join(sep);
 
-    // Clear uncompleted transitions
-    if (node.transitionId) {
+    if (hasActiveTransition(node)) {
         node.stopActiveTransition();
     }
 
-    function done(node) {
-        callback && callback(node);
-
-        transitionEnd.unbindAll();
-        animationEnd.unbindAll();
-
-        utilsDOM.removeClass(node, [
-            options.animationEnter,
-            options.animationLeave,
-            options.enterClass,
-            options.leaveClass,
-            options.activeClass
-        ].join(sep));
-    }
-
     node.stopActiveTransition = function() {
+        clearTransitionTimeout(node);
         transitionEnd.unbindAll();
         animationEnd.unbindAll();
-        clearTimeout(node.transitionId);
-        node.transitionId = null;
+        utilsDOM.removeClass(node, triggers);
     };
 
+    function done() {
+        node.stopActiveTransition();
+        callback && callback(node);
+    }
 
     function onTransitionEnd (e) {
         if (e.target === node) {
-            done(node);
-            clearTimeout(node.transitionId);
+            done();
         }
     }
 
@@ -52,39 +64,27 @@ function transition(node, options, timeout, callback) {
     animationEnd.bind(onTransitionEnd);
 
     if (!timeout) {
-        done(node);
-        return;
+        return done();
     }
 
-    node.transitionId = setTimeout(function() {
-        done(node);
-    }, timeout);
+    setTransitionTimeout(node, done, timeout);
 
     // Run transition
     utilsDOM.addClass(node, options.activeClass);
 }
 
 function transitionLeave(node, options, callback) {
-    utilsDOM.addClass(node, [
-        options.animationLeave,
-        options.leaveClass
-    ].join(sep));
-
+    utilsDOM.addClass(node, [options.animationLeave, options.leaveClass].join(sep));
     utilsDOM.removeClass(node, options.enterClass);
 
     transition(node, options, options.leaveTimeout, function(node) {
-        if (node.parentNode) {
-            node.parentNode.removeChild(node);
-        }
+        node.parentNode && node.parentNode.removeChild(node);
         callback && callback();
     });
 }
 
 function transitionEnter(node, options, callback) {
-    utilsDOM.addClass(node, [
-        options.animationEnter,
-        options.enterClass
-    ].join(sep));
+    utilsDOM.addClass(node, [options.animationEnter, options.enterClass].join(sep));
     utilsDOM.removeClass(node, options.leaveClass);
 
     transition(node, options, options.enterTimeout, callback);
