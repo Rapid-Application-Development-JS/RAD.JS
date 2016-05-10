@@ -121,7 +121,7 @@ function doTransition(renderData) {
         var key = utils.getNodeData(node).key;
         var render = utils.getRenderData(node);
 
-        if (!renderData.keysRendered[key]) {
+        if (!renderData.keysRendered[key] && !render.status !== RenderStatus.LEAVE) {
             render.status = RenderStatus.LEAVE;
             transition.leave(node, transitionOptions, function() {
                 render.status = RenderStatus.DONE;

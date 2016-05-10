@@ -37,10 +37,6 @@ function transition(node, options, timeout, callback) {
         options.activeClass
     ].join(sep);
 
-    if (hasActiveTransition(node)) {
-        node.stopActiveTransition();
-    }
-
     node.stopActiveTransition = function() {
         clearTransitionTimeout(node);
         transitionEnd.unbindAll();
@@ -74,6 +70,10 @@ function transition(node, options, timeout, callback) {
 }
 
 function transitionLeave(node, options, callback) {
+    if (hasActiveTransition(node)) {
+        node.stopActiveTransition();
+    }
+
     utilsDOM.addClass(node, [options.animationLeave, options.leaveClass].join(sep));
     utilsDOM.removeClass(node, options.enterClass);
 
@@ -84,6 +84,10 @@ function transitionLeave(node, options, callback) {
 }
 
 function transitionEnter(node, options, callback) {
+    if (hasActiveTransition(node)) {
+        node.stopActiveTransition();
+    }
+
     utilsDOM.addClass(node, [options.animationEnter, options.enterClass].join(sep));
     utilsDOM.removeClass(node, options.leaveClass);
 
