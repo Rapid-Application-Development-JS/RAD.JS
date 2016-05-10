@@ -17,17 +17,22 @@
 .animated {
     pointer-events: none;
 }
-/*.backward .animated {*/
-    /*-webkit-animation-direction: reverse;*/
-    /*animation-direction: reverse;*/
-/*}*/
 
-.forward .leave,
-.backward .enter {
-    z-index: 1!important;
+#animation-group.forward .leave,
+#animation-group.backward .enter {
+    z-index: 1;
 }
-.forward .enter,
-.backward .leave {
-    z-index: 10 !important;
+#animation-group.forward .enter,
+#animation-group.backward .leave {
+    z-index: 10;
 }
-
+.pt-page-onbottom {
+    z-index: 1 !important;
+}
+.pt-page-ontop {
+    z-index: 20 !important;
+}
+#animation-group .pt-reverse {
+    -webkit-animation-direction: reverse;
+    animation-direction: reverse;
+}

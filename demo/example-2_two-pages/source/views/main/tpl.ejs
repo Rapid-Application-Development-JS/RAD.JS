@@ -1,10 +1,18 @@
+<%
+    var direction = data.props.direction;
+    var animationEnter = (direction == 'forward') ? data.props.animationEnter :  data.props.animationEnterBack;
+    var animationLeave = (direction == 'forward') ? data.props.animationLeave :  data.props.animationLeaveBack;
+    var enterTimeout = (direction == 'forward') ? data.props.enterTimeout :  data.props.leaveTimeout;
+    var leaveTimeout = (direction == 'forward') ? data.props.leaveTimeout :  data.props.enterTimeout;
+%>
+
 <transition id="animation-group"
-            class="<%= data.props.direction %>"
+            class="<%= direction %>"
             initialAnimation="none"
-            animationEnter="<%= data.props.animationEnter %>"
-            animationLeave="<%= data.props.animationLeave %>"
-            enterTimeout="<%= data.props.enterTimeout || 1000 %>"
-            leaveTimeout="<%= data.props.leaveTimeout || 1000 %>" >
+            animationEnter="<%= animationEnter %>"
+            animationLeave="<%= animationLeave %>"
+            enterTimeout="<%= enterTimeout || 1000 %>"
+            leaveTimeout="<%= leaveTimeout || 1000 %>" >
 
     <% if (data.props.direction === 'forward') { %>
     <Details key="details" />

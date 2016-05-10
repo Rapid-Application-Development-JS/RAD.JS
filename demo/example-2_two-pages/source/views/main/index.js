@@ -1,6 +1,8 @@
 "use strict";
 
 var RAD = require('RAD');
+var _ = require('underscore');
+var animations = require('../../collections/animations');
 
 var MainView  = RAD.View.extend({
     template: RAD.template(require('./tpl.ejs'), {
@@ -15,25 +17,13 @@ var MainView  = RAD.View.extend({
         'click #back': 'goBack'
     },
     goBack: function () {
-        // revers animation
-        this.props.set({
-            direction: 'backward',
-            animationEnter: this.props.get('animationEnterBack'),
-            animationLeave: this.props.get('animationLeaveBack'),
-            enterTimeout: this.props.get('leaveTimeout'),
-            leaveTimeout: this.props.get('enterTimeout')
-        })
+        this.props.set({direction: 'backward'});
     },
     navigate: function(e) {
-        this.props.set({
-            direction: 'forward',
-            animationEnter: e.currentTarget.getAttribute('data-animation-enter'),
-            animationLeave: e.currentTarget.getAttribute('data-animation-leave'),
-            animationEnterBack: e.currentTarget.getAttribute('data-animation-enter-back'),
-            animationLeaveBack: e.currentTarget.getAttribute('data-animation-leave-back'),
-            enterTimeout: e.currentTarget.getAttribute('data-enter-timeout'),
-            leaveTimeout: e.currentTarget.getAttribute('data-leave-timeout')
-        })
+        var animationData = animations.get(+e.currentTarget.id).toJSON();
+
+        this.props.set(animationData, {silent: true});
+        this.props.set({direction: 'forward'})
     }
 });
 

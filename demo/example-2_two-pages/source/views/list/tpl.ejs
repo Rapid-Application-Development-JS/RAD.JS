@@ -1,63 +1,30 @@
+<% var animationGroups = _.groupBy(data.collection, 'libName'); %>
+
 <div class="top-bar topcoat-navigation-bar">
     <div class="topcoat-navigation-bar__item center full">
         <h1 class="topcoat-navigation-bar__title">Select animation type</h1>
     </div>
 </div>
+
 <div class="main">
     <div class="section form-options topcoat-list">
+        <% _.each(animationGroups, function(animations, groupName) { %>
+
         <h2 class="topcoat-list__header">
-            CSS effects from&#160;<a href="https://daneden.github.io/animate.css/" target="_blank">Animate.css</a>
+            <%= groupName %>:
         </h2>
+
         <ul class="topcoat-list__container">
-            <li class="topcoat-list__item has-active"
-                data-animation-enter="bounceInDown"
-                data-animation-leave="bounceOutDown">
+            <% _.each(animations, function(animation) { %>
 
-                bounceInDown
+            <li id="<%= animation.id %>" class="topcoat-list__item has-active">
+                <%= animation.name %>
                 <i class="fa fa-angle-right"></i>
             </li>
-            <li class="topcoat-list__item has-active"
-                data-animation-enter="slideInUp"
-                data-leave-timeout="400" >
 
-                slideInUp
-                <i class="fa fa-angle-right"></i>
-            </li>
-            <li class="topcoat-list__item has-active"
-                data-animation-enter="slideInRight"
-                data-animation-leave="slideOutLeft">
-
-                slideInRight
-                <i class="fa fa-angle-right"></i>
-            </li>
+            <% }); %>
         </ul>
-        <h2 class="topcoat-list__header">
-            CSS effects from Codrops &#160; <a target="_blank" href="https://github.com/codrops/PageTransitions">PageTransitions</a>:
-        </h2>
-        <ul class="topcoat-list__container">
-            <li class="topcoat-list__item has-active"
-                data-animation-enter="pt-page-moveFromRight"
-                data-animation-leave="pt-page-fade">
 
-                Fade from right
-                <i class="fa fa-angle-right"></i>
-            </li>
-            <li class="topcoat-list__item has-active"
-                data-animation-enter="pt-page-scaleUpDown"
-                data-animation-leave="pt-page-scaleDown"
-                data-animation-enter-back="pt-page-scaleUp"
-                data-animation-leave-back="pt-page-scaleDownUp">
-
-                Scale down
-                <i class="fa fa-angle-right"></i>
-            </li>
-            <li class="topcoat-list__item has-active"
-                data-animation-enter="pt-page-rotateSlideIn"
-                data-animation-leave="pt-page-rotateSlideOut">
-
-                Slide
-                <i class="fa fa-angle-right"></i>
-            </li>
-        </ul>
+        <% }); %>
     </div>
 </div>
