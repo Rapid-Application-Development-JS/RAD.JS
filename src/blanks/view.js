@@ -28,6 +28,10 @@ function compileTemplate(template) {
     return typeof template === 'string' ? RAD.template(template) : template;
 }
 
+function hasKey(node) {
+    return node.__incrementalDOMData && node.__incrementalDOMData.key;
+}
+
 var BaseView = function(options) {
     this.viewId = makeId(options);
     this.refs = {};
@@ -86,24 +90,31 @@ BaseView.prototype = _.create(Backbone.View.prototype, {
     },
 
     render: function () {
-        var self = this;
-
         if (isRendering()) {
-            return this._render();
+            this._render();
+        } else {
+            this._renderOuter();
         }
+        return this;
+    },
 
+    _renderOuter: function() {
+        var self = this;
         IncrementalDOM.patchOuter(this.el, function() {
-            self.el.setAttribute('key', self.getID());
-            self._render();
-            self.el.removeAttribute('key');
+            if (hasKey(self.el)) {
+                self._render();
+            } else {
+                self.el.setAttribute('key', self.getID());
+                self._render();
+                self.el.removeAttribute('key');
+            }
         });
-
         return this;
     },
 
     _render: function () {
         if (this.onBeforeRender() === false) {
-            return this._renderOuter();
+            return this._skip();
         }
 
         this._viewElOpen();
@@ -122,7 +133,7 @@ BaseView.prototype = _.create(Backbone.View.prototype, {
         }
     },
 
-    _renderOuter: function() {
+    _skip: function() {
         this._viewElOpen();
         IncrementalDOM.skip();
         this._viewElClose();

@@ -20,23 +20,13 @@ function getRenderData(node) {
     return node[RENDER_DATA] || setRenderData(node, {});
 }
 
-// array of [key,value]
-function getNodeAttrs(node) {
-    return _.flatten(_.map(node.attributes, function (attr) {
-        return [attr.name, attr.value];
-    }));
-}
-
 function toArray(args, startIndex) {
     return Array.prototype.slice.call(args, startIndex || 0);
 }
 
 module.exports = {
     getNodeData: getNodeData,
-    getNodeAttrs: getNodeAttrs,
-
     getRenderData: getRenderData,
     setRenderData: setRenderData,
-
     toArray: toArray
 };

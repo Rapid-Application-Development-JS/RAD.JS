@@ -19,12 +19,11 @@ var RenderStatus = {
     DONE: 'done'
 };
 
-// TODO use elementOpenStart/End instead of elementOpen
 function createPlaceholder(node) {
     var key = utils.getNodeData(node).key;
     var tagName = node.tagName.toLowerCase();
 
-    elementOpen.apply(null, [tagName, key, null].concat( utils.getNodeAttrs(node) ));
+    elementOpen.apply(null, [tagName, key, null].concat( utils.getNodeData(node).attrsArr ));
     iDOM.skip();
     elementClose.call(null, tagName);
 }
@@ -117,23 +116,29 @@ function doTransition(renderData) {
         transitionOptions.enterTimeout = transitionOptions.leaveTimeout = 0;
     }
 
+    //console.log('rendered', _.clone(renderData.keysRendered));
+    //console.log('toShow', _.clone(renderData.keysToShow));
+
     _.each(children, function(node) {
         var key = utils.getNodeData(node).key;
         var render = utils.getRenderData(node);
 
-        if (!renderData.keysRendered[key] && !render.status !== RenderStatus.LEAVE) {
-            render.status = RenderStatus.LEAVE;
-            transition.leave(node, transitionOptions, function() {
-                render.status = RenderStatus.DONE;
-                delete activeKeys[key];
-                publish(Events.NODE_REMOVED, node);
-            });
-
+        if (!renderData.keysRendered[key]) {
+            if (render.status !== RenderStatus.LEAVE) {
+                render.status = RenderStatus.LEAVE;
+                transition.leave(node, transitionOptions, function() {
+                    render.status = RenderStatus.DONE;
+                    delete activeKeys[key];
+                    publish(Events.NODE_REMOVED, node);
+                });
+            }
         } else if (renderData.keysToShow[key] || render.status === RenderStatus.LEAVE) {
-            render.status = RenderStatus.ENTER;
-            transition.enter(node, transitionOptions, function() {
-                render.status = RenderStatus.DONE;
-            });
+            if (render.status !== RenderStatus.ENTER) {
+                render.status = RenderStatus.ENTER;
+                transition.enter(node, transitionOptions, function() {
+                    render.status = RenderStatus.DONE;
+                });
+            }
         }
     });
 }

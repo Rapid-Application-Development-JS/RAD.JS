@@ -34,7 +34,9 @@ var animationsList = [
         animationEnter: "pt-page-moveFromRight",
         animationLeave: "pt-page-fade",
         animationEnterBack: "pt-page-moveFromLeft pt-page-ontop",
-        animationLeaveBack: "pt-page-fade pt-page-onbottom"
+        animationLeaveBack: "pt-page-fade pt-page-onbottom",
+        enterTimeout: 600,
+        leaveTimeout: 600
     },
     {
         id: 5,
@@ -43,7 +45,9 @@ var animationsList = [
         animationEnter: "pt-page-scaleUpDown",
         animationLeave: "pt-page-scaleDown",
         animationEnterBack: "pt-page-scaleUp",
-        animationLeaveBack: "pt-page-scaleDownUp"
+        animationLeaveBack: "pt-page-scaleDownUp",
+        enterTimeout: 500,
+        leaveTimeout: 500
     },
     {
         id: 6,
@@ -52,7 +56,9 @@ var animationsList = [
         animationEnter: "pt-page-rotateSlideIn",
         animationLeave: "pt-page-rotateSlideOut",
         animationEnterBack: "pt-page-rotateSlideOut pt-reverse",
-        animationLeaveBack: "pt-page-rotateSlideIn pt-reverse"
+        animationLeaveBack: "pt-page-rotateSlideIn pt-reverse",
+        enterTimeout: 2000,
+        leaveTimeout: 2000
     }
 ];
 

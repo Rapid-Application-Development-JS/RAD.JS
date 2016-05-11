@@ -1,6 +1,21 @@
 .root-view {
     background-color: #000;
 }
+.time-log {
+    position: absolute;
+    right:0;
+    top:0;
+    z-index: 100;
+    padding:10px;
+
+    text-shadow: 1px 1px #000;
+    -webkit-transition: background-color 500ms;
+    transition: background-color 500ms;
+}
+.topcoat-list__item {
+    -webkit-transition: color 300ms;
+    transition: color 300ms;
+}
 /* css perspective required for codrops PageTransitions  */
 #animation-group {
     position: relative;

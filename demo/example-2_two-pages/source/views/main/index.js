@@ -20,10 +20,11 @@ var MainView  = RAD.View.extend({
         this.props.set({direction: 'backward'});
     },
     onRender: function() {
+        // Used to show how animation works during continuous render
         if (!this.interval) {
             this.interval = window.setInterval(function() {
                 this.render();
-            }.bind(this), 50)
+            }.bind(this), 100);
         }
     },
     navigate: function(e) {
