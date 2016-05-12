@@ -1,0 +1,26 @@
+<%
+var myConsole = require('./inner/simple');
+var HOC = require('./inner/HOC');
+
+var SimpleView = require('./inner/simple_view');
+%>
+<div class="intro">
+    <h1>Hello World!</h1>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lectus nisl, luctus at nulla a, volutpat
+        viverra leo. Ut ut lobortis erat. Fusce ultrices interdum viverra. Etiam tristique tellus ac placerat varius.
+        Quisque at fringilla odio, sit amet laoreet ligula. Nam a mi in enim scelerisque tempus non vitae velit.
+    </p>
+
+    <!--simple function-->
+    <::myConsole data="any data" context="<%=this%>"/>
+
+    <!--HOC function with inner function-->
+    <::HOC data="any data" attr="some attr" context="<%=this%>">
+        <div><span>Some HOC DOM structure</span></div>
+        <::myConsole data="any data" context="<%=this%>"/>
+    </::HOC>
+
+    <!--RAD view-->
+    <::SimpleView />
+</div>

@@ -127,7 +127,7 @@ BaseView.prototype = _.create(Backbone.View.prototype, {
 
     _renderTemplate: function() {
         if (typeof this.template === 'function') {
-            this.refs = this.template(this.getTemplateData());
+            this.refs = this.template(this.getTemplateData(), IncrementalDOM);
         } else {
             IncrementalDOM.skip();
         }
