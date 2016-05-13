@@ -3,9 +3,11 @@
 var _ = require("underscore");
 var core = require('../core');
 var Config = require('../config');
-var BaseView = require('../blanks/view');
 
-function render(component, props, content) {
+function binder(component, props, content) {
+
+    var BaseView = require('./view');
+    
     props = props || {};
     props.key = props.key || props.id;
 
@@ -33,4 +35,4 @@ function render(component, props, content) {
     return newComponent;
 }
 
-module.exports = render;
+module.exports = binder;

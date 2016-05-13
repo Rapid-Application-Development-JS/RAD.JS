@@ -3,7 +3,7 @@
 var _ = require('underscore');
 var iTemplate = require('idom-template');
 var IncrementalDOM = require('./idom');
-var renderComponent = require('./render_component');
+var renderComponent = require('./../blanks/binder');
 var core = require('../core');
 
 var globalComponents = {};
