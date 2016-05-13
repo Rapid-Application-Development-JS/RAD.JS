@@ -1,6 +1,3 @@
 'use strict';
-
-var RAD = require('RAD');
-var template = RAD.template(require('./tpl.ejs'));
-
-RAD.template.registerHelper('SliderItem', template);
+var ITemplate = require('RAD').utils.ITemplate;
+ITemplate.registerHelper('i-SliderItem', require('./tpl.ejs'));

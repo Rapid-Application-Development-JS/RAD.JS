@@ -12,10 +12,6 @@ var defaultAttributes = Core.options.viewAttributes;
 var register = Core.register;
 var unregister = Core.unregister;
 
-var itemplate = require('idom-template');
-var binder = require('./binder');
-
-
 function isRendering() {
     return !!IncrementalDOM.currentElement();
 }
@@ -130,7 +126,7 @@ BaseView.prototype = _.create(Backbone.View.prototype, {
 
     _renderTemplate: function() {
         if (typeof this.template === 'function') {
-            this.refs = this.template(this.getTemplateData(), IncrementalDOM, itemplate.helpers, null, binder);
+            this.refs = this.template(this.getTemplateData());
         } else {
             IncrementalDOM.skip();
         }

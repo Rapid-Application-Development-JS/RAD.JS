@@ -5,6 +5,7 @@ var IncrementalDOM = require('../../template/idom');
 var template = require('../../template');
 var utils = require('./utils');
 var contentHandler = require('./contentHandler');
+var iTemplate = require('idom-template');
 
 var reservedAttrs = [
     'name', // deprecated
@@ -59,7 +60,7 @@ function initRenderData(rootEl, attrs) {
     };
 }
 
-template.registerHelper('transition', function(options, renderContent) {
+iTemplate.registerHelper('i-transition', function(options, renderContent) {
     if (options.name) {
         console.warn('Warning: `name` is deprecated attribute for transitionGroup, use `animationName` instead');
     }

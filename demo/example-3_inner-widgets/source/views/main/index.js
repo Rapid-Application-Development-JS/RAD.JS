@@ -4,16 +4,7 @@ var RAD = require('RAD');
 
 
 var HomeView = RAD.Base.View.extend({
-    template: RAD.template( require('./tpl.ejs'), {
-        components: {
-            // Dummy component
-            TopBar: RAD.template( require('../header/tpl.ejs') ),
-
-            // Smart components
-            FirstTab: require('../inner/tab-first'),
-            SecondTab: require('../inner/tab-second')
-        }
-    }),
+    template: require('./tpl.ejs'),
 
     events: {
         'click .switch-to': 'switchTab'

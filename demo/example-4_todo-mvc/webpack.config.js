@@ -26,7 +26,11 @@ module.exports = {
         loaders: [
             {
                 test: /\.ejs$/,
-                loader: "raw-loader"
+                exclude: /node_modules/,
+                loader: 'itemplate-loader',
+                query: {
+                    // pass itemplate option here
+                }
             }
         ]
     }

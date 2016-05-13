@@ -2,9 +2,9 @@
 
 var RAD = require('RAD');
 var Backbone = require('Backbone');
-var linkTemplate = RAD.template.compileHelper( require('./tpl.ejs'), {parameterName: 'link'} );
+var linkTemplate = require('./tpl.ejs');
 
-RAD.template.registerHelper('NavItem', function(attrs) {
+RAD.utils.ITemplate.registerHelper('i-NavItem', function(attrs) {
     linkTemplate({
         href: attrs.href,
         title: attrs.title,

@@ -10,11 +10,7 @@ var todoList    = require('models/todos');
 window.todoList = todoList;
 
 var TodoList = RAD.Base.View.extend({
-    template: RAD.template( require('./main-tpl.ejs'), {
-        components: {
-            TodoItem: require('../todo-view/')
-        }
-    }),
+    template: require('./main-tpl.ejs'),
 
     events: {
         'submit .form-todo': 'addTodo',

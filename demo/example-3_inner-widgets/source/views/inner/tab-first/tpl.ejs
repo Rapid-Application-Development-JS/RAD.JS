@@ -1,9 +1,12 @@
+<%
+var ImageView = require('../gallery');
+%>
 <div class="scroll-view-body">
 <div class="section">
     <div class="section__header">Article</div>
     <div class="section__content">
         <div class="gallery" style="float:left; width:200px; height:200px; position: relative; margin: 5px 15px 0 0;">
-            <ImageView url="source/assets/pic01.jpg" key="gallery" />
+            <::ImageView url="source/assets/pic01.jpg" key="gallery" />
         </div>
 
         <p> <b>Created at: <%= new Date() %>.</b> Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin

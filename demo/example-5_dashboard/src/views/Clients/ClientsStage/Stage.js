@@ -4,24 +4,18 @@ var RAD = require('RAD');
 var Sortable = require('./SortableStage');
 var clients = require('../../../models/Clients/Clients');
 
-var template = RAD.template( require('./Stage.ejs'), {
-    components: {
-        ClientCard: require('../ClientCard/ClientCard')
-    }
-});
-
 var Stage = RAD.Base.View.extend({
-    template: template,
+    template: require('./Stage.ejs'),
     className: 'stage js-sortable',
     events: {
         'sortreceive': 'onCardReceive'
     },
 
-    initialize: function(props) {
+    initialize: function (props) {
         var stageID = parseInt(this.props.get('stage-id'), 10);
         this.props.set('clients', clients.where({stage: stageID}))
     },
-    onAttach: function() {
+    onAttach: function () {
         this.sortable = new Sortable(this.el);
     },
     onCardReceive: function (event, ui) {

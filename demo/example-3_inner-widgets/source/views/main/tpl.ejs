@@ -1,4 +1,11 @@
 <%
+/* Dummy component  */
+var TopBar = require('../header/tpl.ejs');
+
+/* Smart components */
+var FirstTab = require('../inner/tab-first');
+var SecondTab = require('../inner/tab-second');
+
 var firstTabState = '';
 var secondTabState = '';
 var title;
@@ -10,11 +17,10 @@ if (data.tabName === 'first') {
     secondTabState = 'active';
     title = 'Second tab'
 }
-
 %>
 
 <div class="top-bar">
-    <TopBar title="<%= title %>" />
+    <::TopBar title="<%= title %>"/>
 </div>
 
 <div class="bottom-bar topcoat-tab-bar">
@@ -36,11 +42,11 @@ if (data.tabName === 'first') {
 
     <% if (data.tabName === 'first') { %>
 
-    <FirstTab />
+    <::FirstTab/>
 
     <% } else { %>
 
-    <SecondTab />
+    <::SecondTab/>
 
     <% } %>
 

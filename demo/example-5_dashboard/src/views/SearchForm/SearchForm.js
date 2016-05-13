@@ -9,16 +9,16 @@ var clients = require('../../models/Clients/Clients');
 
 var Form = RAD.Base.View.extend({
     tagName: 'form',
-    template: RAD.template( require('./SearchForm.ejs') ),
+    template: require('./SearchForm.ejs'),
 
-    className: function() {
+    className: function () {
         return this.props.get('class');
     },
 
-    onAttach: function() {
+    onAttach: function () {
         this.initAutoComplete();
     },
-    onDetach: function() {
+    onDetach: function () {
         this.$searchField.autocomplete('destroy');
     },
     initAutoComplete: function () {
@@ -29,16 +29,16 @@ var Form = RAD.Base.View.extend({
 
         // Custom item template with highlighting matches
         this.$searchField.data("uiAutocomplete")._renderItem = function (ul, item) {
-            var matcher = new RegExp( "(" + this.term + ")", "gi" );
+            var matcher = new RegExp("(" + this.term + ")", "gi");
             var template = "<span class='highlight'>$1</span>";
-            var label = '<a>' + item.label.replace( matcher, template ) + '</a>';
+            var label = '<a>' + item.label.replace(matcher, template) + '</a>';
 
-            return $("<li>").append(label).appendTo( ul );
+            return $("<li>").append(label).appendTo(ul);
         };
     },
 
     search: function (request, response) {
-        response(clients.filterByName(request.term).map(function(client){
+        response(clients.filterByName(request.term).map(function (client) {
             return {
                 value: client.get('name')
             };

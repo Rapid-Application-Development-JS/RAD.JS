@@ -3,15 +3,8 @@
 var RAD = require('RAD');
 var clients = require('../../models/Clients/Clients');
 
-// Compile template with predefined list of components.
-var template = RAD.template( require('./Clients.ejs'), {
-    components: {
-        Stage: require('./ClientsStage/Stage')
-    }
-});
-
 var Clients = RAD.Base.View.extend({
-    template: template,
+    template: require('./Clients.ejs'),
 
     events: {
         'submit': 'preventSubmit',

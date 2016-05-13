@@ -1,3 +1,4 @@
+<% var ClientCard = require('../ClientCard/ClientCard'); %>
 <div class="stage-header">
     <h2 class="h2--stage">Stage <%= data.props['stage-id'] %></h2>
     <p class="text--stage">$182.000.00</p>
@@ -5,6 +6,6 @@
 
 <% _.each(data.props.clients, function(client){ %>
 
-<ClientCard client="<%= client.toJSON() %>" key="<%= client.get('id') %>" id="<%= client.get('id') %>"/>
+<::ClientCard client="<%= client.toJSON() %>" key="<%= client.get('id') %>" id="<%= client.get('id') %>"/>
 
 <% }); %>

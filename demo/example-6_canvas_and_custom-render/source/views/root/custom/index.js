@@ -1,5 +1,4 @@
 "use strict";
-
 var RAD = require('RAD');
 
 // custom underscore template

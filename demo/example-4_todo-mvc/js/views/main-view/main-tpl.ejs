@@ -1,5 +1,5 @@
 <%
-var view = this;
+var TodoItem = require('../todo-view/');
 %>
 
 <header class="header">
@@ -25,7 +25,7 @@ var view = this;
 
         <% } %>
 
-        <transition tagName="ul"
+        <i-transition tagName="ul"
                     class="todo-list"
                     key="list"
                     animationName="height"
@@ -35,13 +35,13 @@ var view = this;
 
             <% data.todos.each(function(todo) { %>
 
-                <TodoItem key="<%= todo.get('id') %>"
+                <::TodoItem key="<%= todo.get('id') %>"
                           model="<%= todo %>"
                           tagName="li" />
 
-            <% }, view); %>
+            <% }, this); %>
 
-        </transition>
+        </i-transition>
 
     </section>
 
@@ -58,13 +58,13 @@ var view = this;
 
         <ul class="filters">
             <li>
-                <NavItem href="" title="All" />
+                <i-NavItem href="" title="All" />
             </li>
             <li>
-                <NavItem href="active" title="Active" />
+                <i-NavItem href="active" title="Active" />
             </li>
             <li>
-                <NavItem href="completed" title="Completed" />
+                <i-NavItem href="completed" title="Completed" />
             </li>
         </ul>
 

@@ -1,11 +1,15 @@
+<%
+var TopBar = require('./TopBar/TopBar');
+var Clients = require('./Clients/Clients');
+%>
 <div class="content">
     <header class="header">
-        <TopBar />
+        <::TopBar />
     </header>
 
     <main class="main">
         <% if (data.props.pageName === 'home') { %>
-            <Clients />
+            <::Clients />
         <% } else { %>
         <h1>Ooops: 404 Page not found!!!</h1>
         <% } %>
@@ -14,23 +18,23 @@
 
 <div class="sidebar">
     <nav>
-        <NavItem class="link--logo" href="">
+        <i-NavItem class="link--logo" href="">
             <span class="icon icon--logo s-center-abs"></span>
-        </NavItem>
+        </i-NavItem>
 
-        <NavItem class="link--sidebar" href="">
+        <i-NavItem class="link--sidebar" href="">
             <span class="icon icon--speed s-center-abs"></span>
             <span class="icon icon--speed-active s-center-abs"></span>
-        </NavItem>
+        </i-NavItem>
 
-        <NavItem class="link--sidebar" href="details">
+        <i-NavItem class="link--sidebar" href="details">
             <span class="icon icon--workflow s-center-abs"></span>
             <span class="icon icon--workflow-active s-center-abs"></span>
-        </NavItem>
+        </i-NavItem>
 
-        <NavItem class="link--sidebar" href="calendar">
+        <i-NavItem class="link--sidebar" href="calendar">
             <span class="icon icon--calendar s-center-abs"></span>
             <span class="icon icon--calendar-active s-center-abs"></span>
-        </NavItem>
+        </i-NavItem>
     </nav>
 </div>

@@ -29,7 +29,11 @@ module.exports = {
         loaders: [
             {
                 test: /\.ejs$/,
-                loader: "raw-loader"
+                exclude: /node_modules/,
+                loader: 'itemplate-loader',
+                query: {
+                    // pass itemplate option here
+                }
             },
             {
                 test: /\.css$/,
@@ -38,6 +42,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({ output: {comments: false} })
+//        new webpack.optimize.UglifyJsPlugin({ output: {comments: false} })
     ]
 };

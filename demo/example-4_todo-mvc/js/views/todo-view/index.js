@@ -9,7 +9,7 @@ var ESC_KEY = 27;
 var ENTER_KEY = 13;
 
 var TodoView = RAD.Base.View.extend({
-    template: RAD.template( require('./todo-tpl.ejs')),
+    template: require('./todo-tpl.ejs'),
 
     events: {
         'click .toggle': 'toggle',

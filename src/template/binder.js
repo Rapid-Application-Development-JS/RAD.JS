@@ -1,12 +1,12 @@
 "use strict";
 
 var _ = require("underscore");
-var core = require('../core');
-var Config = require('../config');
+var core = require('../core/index');
+var Config = require('../config/index');
 
 function binder(component, props, content) {
 
-    var BaseView = require('./view');
+    var BaseView = require('./../blanks/view');
     
     props = props || {};
     props.key = props.key || props.id;

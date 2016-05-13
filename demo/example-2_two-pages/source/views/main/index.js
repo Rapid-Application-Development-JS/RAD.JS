@@ -5,12 +5,7 @@ var _ = require('underscore');
 var animations = require('../../collections/animations');
 
 var MainView  = RAD.View.extend({
-    template: RAD.template(require('./tpl.ejs'), {
-        components: {
-            List: require('../list'),
-            Details: require('../details')
-        }
-    }),
+    template: require('./tpl.ejs'),
     className: 'root-view',
     events: {
         'click .topcoat-list__item': 'navigate',

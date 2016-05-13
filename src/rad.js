@@ -10,7 +10,8 @@ require('./plugins');
  * RAD namespace.
  * @namespace
  */
-var RAD = window.RAD || {};
+
+var RAD = {};
 
 RAD.core = require('./core');
 RAD.utils = require('./utils');

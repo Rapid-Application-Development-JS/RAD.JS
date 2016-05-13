@@ -3,7 +3,7 @@
 var RAD = require('RAD');
 
 var ImageView = RAD.Blanks.View.extend({
-    template: RAD.template( require('./gallery.ejs') ),
+    template: require('./gallery.ejs'),
     onAttach: function() {
         console.log('attach', this.getID());
     },

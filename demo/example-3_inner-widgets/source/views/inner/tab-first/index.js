@@ -3,11 +3,7 @@
 var RAD = require('RAD');
 
 var TabView = RAD.Base.View.extend({
-    template: RAD.template( require('./tpl.ejs'), {
-        components: {
-            ImageView: require('../gallery')
-        }
-    } ),
+    template: require('./tpl.ejs'),
 
     onAttach: function () {
         console.log('attach', this.getID());

@@ -21,6 +21,7 @@
   "dependencies": {
     "idom-template": "git://github.com/Rapid-Application-Development-JS/itemplate",
     "incremental-dom": "^0.4.1",
+    "itemplate-loader": "^0.1.3",
     "webpack": "^1.12.1"
   },
   "devDependencies": {
