@@ -5,9 +5,9 @@ var skip = iDOM.skip;
 
 // Be careful, component was developed to work only with static content
 
-RAD.template.registerHelper('x-code-format', function (data, renderContent) {
+RAD.utils.ITemplate.registerHelper('i-code-format', function (data, renderContent) {
     var block = elementOpen('pre');
-    if (!block.mutable) {
+    if (!block.immutable) {
         elementOpen('code', null, ['class', data.type]);
 
         // render content
@@ -20,7 +20,7 @@ RAD.template.registerHelper('x-code-format', function (data, renderContent) {
         hljs.highlightBlock(block);
 
         // marker for skipping future component update
-        block.mutable = true;
+        block.immutable = true;
     } else {
         skip();
         elementClose('pre');

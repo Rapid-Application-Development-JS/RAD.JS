@@ -1,12 +1,12 @@
 "use strict";
-import { View, publish, template } from 'RAD';
+import {View, publish} from 'RAD';
 
 // require to load all components
 require('./bootstrap-components');
 
 class WelcomePage extends View {
 
-    template = template(require('./template.ejs'));
+    template = require('./template.ejs');
 
     constructor() {
         super();

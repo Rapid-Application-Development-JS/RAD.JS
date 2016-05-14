@@ -1,3 +1,1 @@
-var templateFn = RAD.template.compileHelper(require('./template.ejs'));
-
-RAD.template.registerHelper('x-accordion-group', templateFn);
+RAD.utils.ITemplate.registerHelper('i-accordion-group', require('./template.ejs'));

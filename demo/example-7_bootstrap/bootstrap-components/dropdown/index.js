@@ -1,6 +1,6 @@
-var template = RAD.template.compileHelper(require('./template.ejs'));
+var template = require('./template.ejs');
 
-RAD.template.registerHelper('x-dropdown', function (data) {
+RAD.utils.ITemplate.registerHelper('i-dropdown', function (data) {
     // render template
     var refs = template(data);
 
