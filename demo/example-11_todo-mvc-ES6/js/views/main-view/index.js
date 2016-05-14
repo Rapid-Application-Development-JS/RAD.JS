@@ -18,8 +18,7 @@ class TodoList extends View {
         this.bindRender(todoList, 'add remove reset change:completed');
         this.subscribe('filter', this.filter, this);
     }
-
-
+    
     preventSubmit(e) {
         e.preventDefault();
     }

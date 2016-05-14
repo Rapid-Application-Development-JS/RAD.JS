@@ -1,7 +1,4 @@
 "use strict";
-
-var $ = require('jQuery');
-var _ = require('underscore');
 var RAD = require('RAD');
 
 
@@ -35,13 +32,14 @@ var TodoView = RAD.View.extend({
     },
 
     editMode: function () {
+        this.field = this.refs.edit;
         this.props.set('editing', true);
-        this.refs.title.focus();
+        this.field.focus();
     },
 
     closeEditMode: function () {
         this.props.set('editing', false);
-        this.refs.title.blur();
+        this.field.blur();
     },
 
     handleInput: function (event) {
@@ -54,12 +52,12 @@ var TodoView = RAD.View.extend({
     },
 
     revertAndClose: function () {
-        this.refs.title.value = this.model.get('title');
+        this.field.value = this.model.get('title');
         this.closeEditMode();
     },
 
     saveAndClose: function () {
-        var title = this.refs.title.value.trim();
+        var title = this.field.value.trim();
 
         if (!this.props.get('editing')) {
             return;
@@ -73,6 +71,7 @@ var TodoView = RAD.View.extend({
             this.model.destroy();
         }
     },
+
     removeTodo: function () {
         this.model.destroy();
     }

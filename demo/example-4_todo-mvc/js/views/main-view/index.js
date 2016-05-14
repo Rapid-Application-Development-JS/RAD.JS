@@ -12,6 +12,7 @@ var TodoList = RAD.View.extend({
     template: require('./main-tpl.ejs'),
 
     events: {
+        'submit': 'preventSubmit',
         'submit .form-todo': 'addTodo',
         'change .toggle-all': 'toggleAll',
         'click .clear-completed': 'clearCompleted'
@@ -21,6 +22,10 @@ var TodoList = RAD.View.extend({
         todoList.fetch({reset: true});
         this.bindRender(todoList, 'add remove reset change:completed');
         this.subscribe('filter', this.filter, this);
+    },
+
+    preventSubmit: function (e) {
+        e.preventDefault();
     },
 
     filter: function (value) {

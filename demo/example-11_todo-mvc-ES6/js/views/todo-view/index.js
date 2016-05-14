@@ -32,7 +32,7 @@ class TodoView extends View {
     }
 
     editMode() {
-        this.field = this.el.querySelector('.edit');
+        this.field = this.refs.edit;
         this.props.set('editing', true);
         this.field.focus();
     }
