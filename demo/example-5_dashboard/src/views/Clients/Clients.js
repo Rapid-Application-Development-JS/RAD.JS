@@ -3,7 +3,7 @@
 var RAD = require('RAD');
 var clients = require('../../models/Clients/Clients');
 
-var Clients = RAD.Base.View.extend({
+var Clients = RAD.View.extend({
     template: require('./Clients.ejs'),
 
     events: {

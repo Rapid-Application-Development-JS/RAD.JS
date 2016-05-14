@@ -86,7 +86,7 @@ function drawChart(canvasEl, percent, color) {
     context.fillText(percent + ' %', x, y);
 }
 
-var ChartView = RAD.Base.View.extend({
+var ChartView = RAD.View.extend({
 
     className: 'block',
 

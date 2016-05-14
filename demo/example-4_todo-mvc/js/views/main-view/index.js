@@ -9,7 +9,7 @@ var todoList    = require('models/todos');
 
 window.todoList = todoList;
 
-var TodoList = RAD.Base.View.extend({
+var TodoList = RAD.View.extend({
     template: require('./main-tpl.ejs'),
 
     events: {

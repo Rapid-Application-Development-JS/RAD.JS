@@ -1,6 +1,6 @@
 "use strict";
 
-var WelcomePage = RAD.Base.View.extend({
+var WelcomePage = RAD.View.extend({
     tagName: 'section',
     template: document.getElementById('hello-page').innerHTML,
     events: {

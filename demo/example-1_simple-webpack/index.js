@@ -2,7 +2,7 @@
 var template = require('./template.ejs');
 console.log(template);
 
-var WelcomePage = RAD.Base.View.extend({
+var WelcomePage = RAD.View.extend({
     tagName: 'section',
     template: template,
     events: {

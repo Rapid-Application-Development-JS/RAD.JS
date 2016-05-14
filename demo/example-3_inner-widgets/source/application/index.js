@@ -1,7 +1,7 @@
 "use strict";
 var RAD = require('RAD');
 
-var App = RAD.Blanks.Module.extend({
+var App = RAD.Module.extend({
     onInitialize: function() {
         this.start();
     },

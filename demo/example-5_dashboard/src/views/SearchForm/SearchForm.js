@@ -7,7 +7,7 @@ var _ = require('underscore');
 var RAD = require('RAD');
 var clients = require('../../models/Clients/Clients');
 
-var Form = RAD.Base.View.extend({
+var Form = RAD.View.extend({
     tagName: 'form',
     template: require('./SearchForm.ejs'),
 

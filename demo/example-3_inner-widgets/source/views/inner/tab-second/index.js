@@ -2,7 +2,7 @@
 
 var RAD = require('RAD');
 
-var TabView = RAD.Base.View.extend({
+var TabView = RAD.View.extend({
     template: require('./tpl.ejs')
 });
 

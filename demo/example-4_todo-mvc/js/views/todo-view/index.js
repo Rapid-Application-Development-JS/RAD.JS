@@ -8,7 +8,7 @@ var RAD = require('RAD');
 var ESC_KEY = 27;
 var ENTER_KEY = 13;
 
-var TodoView = RAD.Base.View.extend({
+var TodoView = RAD.View.extend({
     template: require('./todo-tpl.ejs'),
 
     events: {

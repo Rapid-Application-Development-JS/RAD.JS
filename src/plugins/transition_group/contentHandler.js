@@ -8,24 +8,22 @@ var utils = require('./utils');
 var transition = require('./transition');
 var initTransitionOptions = require('./options');
 
-var elementOpen = iDOM.elementOpen;
-var elementClose = iDOM.elementClose;
-var elementOpenStart = iDOM.elementOpenStart;
-var elementOpenEnd = iDOM.elementOpenEnd;
-
 var RenderStatus = {
     ENTER: 'enter',
     LEAVE: 'leave',
     DONE: 'done'
 };
 
+var isPlaceholder = false;
+
 function createPlaceholder(node) {
     var key = utils.getNodeData(node).key;
     var tagName = node.tagName.toLowerCase();
-
-    elementOpen.apply(null, [tagName, key, null].concat( utils.getNodeData(node).attrsArr ));
+    isPlaceholder = true;
+    iDOM.elementOpen.apply(null, [tagName, key, null].concat( utils.getNodeData(node).attrsArr ));
     iDOM.skip();
-    elementClose.call(null, tagName);
+    iDOM.elementClose(tagName);
+    isPlaceholder = false;
 }
 
 function alignContent(children, position, key) {
@@ -44,13 +42,17 @@ function renderStart(renderData) {
     var position = renderData.position;
     var children = renderData.children;
     var keyMap = renderData.keyMap;
-
     var level = 0;
     var childLevel = 1;
+    var isNewChild = false;
 
-    function elementHandler(createMethod, tagName, key) {
+    function beforeCreate(tagName, key) {
+        if (isPlaceholder) {
+            return;
+        }
+
         var isChild = (++level) === childLevel;
-        var isNewChild = false;
+        isNewChild = false;
 
         if (isChild) {
             // Check if opened Element is already present in the list.
@@ -62,13 +64,18 @@ function renderStart(renderData) {
             }
             position++;
         }
+    }
+    function afterCreate(tagName, key) {
+        if (isPlaceholder) {
+            return;
+        }
 
-        var node = createMethod.apply(null, utils.toArray(arguments, 1));
+        var isChild = level === childLevel;
+        var node = iDOM.currentElement();
 
         if (isChild) {
             renderData.keysRendered[key] = node;
         }
-
         if (isNewChild) {
             children.splice(position - 1, 0, node);
             keyMap[key] = node;
@@ -76,32 +83,33 @@ function renderStart(renderData) {
         }
 
         renderData.position = position;
-
-        return node;
     }
 
-    iDOM.elementOpen = _.wrap(iDOM.elementOpen, elementHandler);
-
-    iDOM.elementClose = _.wrap(iDOM.elementClose, function(elementClose, tagName) {
-        level--;
-        return elementClose.call(null, tagName);
-    });
+    iDOM.events.on('elementOpen:before', beforeCreate, renderData);
+    iDOM.events.on('elementOpen:after', afterCreate, renderData);
+    iDOM.events.on('elementClose:after', function() {
+        if (!isPlaceholder) {
+            level--;
+        }
+    }, renderData);
 
     var elementOpenKey;
-    iDOM.elementOpenStart = _.wrap(iDOM.elementOpenStart, function(elementOpenStart, tagName, key, staticArray) {
-        elementOpenKey = key;
-        return elementOpenStart(tagName, key, staticArray);
-    });
-    iDOM.elementOpenEnd = _.wrap(iDOM.elementOpenEnd, function(elementOpenEnd, tagName) {
-        return elementHandler(elementOpenEnd, tagName, elementOpenKey);
-    });
+    iDOM.events.on('elementOpenStart:before', function(tagName, key) {
+        if (!isPlaceholder) {
+            elementOpenKey = key;
+            beforeCreate(tagName, key);
+        }
+    }, renderData);
+
+    iDOM.events.on('elementOpenEnd:after', function(tagName, key) {
+        if (!isPlaceholder) {
+            afterCreate(tagName, elementOpenKey);
+        }
+    }, renderData);
 }
 
 function renderStop(renderData) {
-    iDOM.elementOpen = elementOpen;
-    iDOM.elementClose = elementClose;
-    iDOM.elementOpenStart = elementOpenStart;
-    iDOM.elementOpenEnd = elementOpenEnd;
+    iDOM.events.off(null, null, renderData);
 
     alignContent(renderData.children, renderData.position);
 }
@@ -115,9 +123,6 @@ function doTransition(renderData) {
     if (!renderData.applyAnimation) {
         transitionOptions.enterTimeout = transitionOptions.leaveTimeout = 0;
     }
-
-    //console.log('rendered', _.clone(renderData.keysRendered));
-    //console.log('toShow', _.clone(renderData.keysToShow));
 
     _.each(children, function(node) {
         var key = utils.getNodeData(node).key;

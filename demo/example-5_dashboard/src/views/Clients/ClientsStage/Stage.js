@@ -4,7 +4,7 @@ var RAD = require('RAD');
 var Sortable = require('./SortableStage');
 var clients = require('../../../models/Clients/Clients');
 
-var Stage = RAD.Base.View.extend({
+var Stage = RAD.View.extend({
     template: require('./Stage.ejs'),
     className: 'stage js-sortable',
     events: {

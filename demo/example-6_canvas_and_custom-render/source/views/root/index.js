@@ -1,7 +1,7 @@
 "use strict";
 var RAD = require('RAD');
 
-var RootView = RAD.Base.View.extend({
+var RootView = RAD.View.extend({
     charData: 10,
 
     template: require('./tpl.ejs'),

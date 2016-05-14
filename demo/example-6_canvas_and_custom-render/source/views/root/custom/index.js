@@ -4,7 +4,7 @@ var RAD = require('RAD');
 // custom underscore template
 var template = _.template('<div>Custom Rendering: <%= date %><span class="data"></span></div>');
 
-var CustomView = RAD.Base.View.extend({
+var CustomView = RAD.View.extend({
     className: 'block',
 
     onBeforeRender: function () {

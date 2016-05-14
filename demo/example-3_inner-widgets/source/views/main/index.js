@@ -3,7 +3,7 @@
 var RAD = require('RAD');
 
 
-var HomeView = RAD.Base.View.extend({
+var HomeView = RAD.View.extend({
     template: require('./tpl.ejs'),
 
     events: {

@@ -2,7 +2,7 @@
 
 var RAD = require('RAD');
 
-var Card = RAD.Base.View.extend({
+var Card = RAD.View.extend({
     template: require('./ClientCard.ejs'),
     className: 'tile'
 });

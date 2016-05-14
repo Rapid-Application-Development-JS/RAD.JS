@@ -2,7 +2,7 @@
 
 var RAD = require('RAD');
 
-var MainPage = RAD.Base.View.extend({
+var MainPage = RAD.View.extend({
     template: require('./MainLayout.ejs'),
     initialize: function() {
         this.subscribe('route:change', this.setActivePage, this);
