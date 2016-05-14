@@ -23,44 +23,44 @@ publish(POPUP_CHANEL, {
     },
     command: COMMAND.open
 });
-//
-// // show Second Dialog over First
-// publish(POPUP_CHANEL, {
-//     id: 'id_2',
-//     dialogContent: {
-//         content: template('<span style="color: orange">Custom template</span>')
-//     },
-//     command: COMMAND.open
-// });
-//
-// publish(POPUP_CHANEL, {
-//     id: 'id_3',
-//     dialogContent: {
-//         content: new CustomPopup()
-//     },
-//     command: COMMAND.open
-// });
-//
-// // close first dialog
-// setTimeout(()=> {
-//     publish(POPUP_CHANEL, {
-//         id: 'id_2',
-//         command: COMMAND.close
-//     });
-// }, 5000);
-//
-// // close second dialog
-// setTimeout(()=> {
-//     publish(POPUP_CHANEL, {
-//         id: 'id_1',
-//         command: COMMAND.close
-//     });
-// }, 10000);
-//
-// // close second dialog
-// setTimeout(()=> {
-//     publish(POPUP_CHANEL, {
-//         id: 'id_3',
-//         command: COMMAND.close
-//     });
-// }, 2500);
+
+// show Second Dialog over First
+publish(POPUP_CHANEL, {
+    id: 'id_2',
+    dialogContent: {
+        content: template('<span style="color: orange">Custom template</span>')
+    },
+    command: COMMAND.open
+});
+
+publish(POPUP_CHANEL, {
+    id: 'id_3',
+    dialogContent: {
+        content: new CustomPopup()
+    },
+    command: COMMAND.open
+});
+
+// close first dialog
+setTimeout(()=> {
+    publish(POPUP_CHANEL, {
+        id: 'id_2',
+        command: COMMAND.close
+    });
+}, 5000);
+
+// close second dialog
+setTimeout(()=> {
+    publish(POPUP_CHANEL, {
+        id: 'id_1',
+        command: COMMAND.close
+    });
+}, 10000);
+
+// close second dialog
+setTimeout(()=> {
+    publish(POPUP_CHANEL, {
+        id: 'id_3',
+        command: COMMAND.close
+    });
+}, 2500);

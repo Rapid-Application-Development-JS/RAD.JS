@@ -1,8 +1,8 @@
 <div class="modal-frame">
-    <% var content = this.props.get("dialog-content").content;
+    <% var content = this.props.get("popup-content").content;
     if (typeof content === 'function') {
         content(data);
     } else { %>
-    <%= this.props.get("dialog-content").content %>
+    <%= this.props.get("popup-content").content %>
     <% } %>
 </div>

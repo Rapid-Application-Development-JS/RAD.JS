@@ -2,13 +2,15 @@ import {View} from 'RAD'
 import Popup from './popup'
 
 function factory(option) {
-    console.log('factory:',option);
-    if (option['dialog-content'] && option['dialog-content'].content instanceof View) {
-        return option['dialog-content'].content
+    if (option['popup-content'] && option['popup-content'].content instanceof View) {
+        return option['popup-content'].content
     }
-
+    
     // create standard type of view
     return new Popup(option);
 }
 
-export default factory
+/* Be careful! You must export the modules to the template by CommonJS format.
+ * In current case, you should have a pure function in the template.
+ */
+module.exports = factory;

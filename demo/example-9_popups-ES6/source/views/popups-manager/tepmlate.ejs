@@ -1,7 +1,7 @@
-<% var Dialog = require('./factory');
-console.log(this.props.toJSON());
+<% var Factory = require('./factory');
+console.log(this.props.toJSON(), Factory);
 for (var viewID in this.props.toJSON()) { %>
-<div style="color: red"><%= viewID %></div>
-    <::Dialog key="<%= viewID %>" dialog-content="<%= this.props.get(viewID) %>"/>
+
+    <::Factory key="<%= viewID %>" popup-content="<%= this.props.get(viewID) %>"/>
 
 <% } %>
