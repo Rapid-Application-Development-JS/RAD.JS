@@ -4,7 +4,7 @@ var RAD = require('RAD');
 
 var ImageView = RAD.View.extend({
     template: require('./gallery.ejs'),
-    onAttach: function() {
+    onAttach: function () {
         console.log('attach', this.getID());
     },
     onDetach: function () {

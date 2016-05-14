@@ -26,25 +26,25 @@ var TodoView = RAD.View.extend({
         return className + ' ' + state;
     },
 
-    initialize: function() {
+    initialize: function () {
         this.bindRender(this.model, 'change:title');
     },
 
-    toggle: function() {
+    toggle: function () {
         this.model.toggle();
     },
 
-    editMode: function() {
+    editMode: function () {
         this.props.set('editing', true);
         this.refs.title.focus();
     },
 
-    closeEditMode: function() {
+    closeEditMode: function () {
         this.props.set('editing', false);
         this.refs.title.blur();
     },
 
-    handleInput: function(event) {
+    handleInput: function (event) {
         if (event.keyCode == ENTER_KEY) {
             this.saveAndClose();
 
@@ -53,12 +53,12 @@ var TodoView = RAD.View.extend({
         }
     },
 
-    revertAndClose: function() {
+    revertAndClose: function () {
         this.refs.title.value = this.model.get('title');
         this.closeEditMode();
     },
 
-    saveAndClose: function() {
+    saveAndClose: function () {
         var title = this.refs.title.value.trim();
 
         if (!this.props.get('editing')) {
@@ -73,7 +73,7 @@ var TodoView = RAD.View.extend({
             this.model.destroy();
         }
     },
-    removeTodo: function() {
+    removeTodo: function () {
         this.model.destroy();
     }
 });

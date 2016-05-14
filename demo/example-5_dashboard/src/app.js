@@ -9,4 +9,3 @@ RAD.publish('navigation:show', {
     content: require('./views/MainPage'),
     options: router.activePage()
 });
-

@@ -10,7 +10,7 @@ var Client = Backbone.Model.extend({
         stage: 1,
         date: Date.now()
     },
-    validate: function(attrs) {
+    validate: function (attrs) {
         if (!attrs.name.trim()) {
             return 'Client name cannot be blank';
         }

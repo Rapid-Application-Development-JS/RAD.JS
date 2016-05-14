@@ -1,11 +1,10 @@
 "use strict";
+var $ = require('jQuery');
+var _ = require('underscore');
 
-var $  = require('jQuery');
-var _  = require('underscore');
-
-var RAD         = require('RAD');
-var Backbone    = require('Backbone');
-var todoList    = require('models/todos');
+var RAD = require('RAD');
+var Backbone = require('Backbone');
+var todoList = require('models/todos');
 
 window.todoList = todoList;
 
@@ -18,25 +17,25 @@ var TodoList = RAD.View.extend({
         'click .clear-completed': 'clearCompleted'
     },
 
-    initialize: function() {
+    initialize: function () {
         todoList.fetch({reset: true});
         this.bindRender(todoList, 'add remove reset change:completed');
         this.subscribe('filter', this.filter, this);
     },
 
-    filter: function(value) {
+    filter: function (value) {
         this.props.set('filter', value);
     },
 
-    getTemplateData: function() {
+    getTemplateData: function () {
         return {
-            todos: _( todoList.filterBy(this.props.get('filter')) ),
+            todos: _(todoList.filterBy(this.props.get('filter'))),
             remaining: todoList.active().length,
             length: todoList.length
         }
     },
 
-    addTodo: function(e) {
+    addTodo: function (e) {
         e.preventDefault();
         todoList.create({
             id: _.uniqueId('todo-'),
@@ -46,8 +45,8 @@ var TodoList = RAD.View.extend({
         this.refs['todoField'].value = '';
     },
 
-    toggleAll: function(e) {
-        todoList.each(function(todo){
+    toggleAll: function (e) {
+        todoList.each(function (todo) {
             todo.save(
                 {completed: e.target.checked},
                 {silent: true}
@@ -56,7 +55,7 @@ var TodoList = RAD.View.extend({
         this.render();
     },
 
-    clearCompleted: function() {
+    clearCompleted: function () {
         _.invoke(todoList.completed(), 'destroy');
         this.render();
     }

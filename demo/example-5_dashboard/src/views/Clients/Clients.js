@@ -1,5 +1,4 @@
 'use strict';
-
 var RAD = require('RAD');
 var clients = require('../../models/Clients/Clients');
 
@@ -11,16 +10,16 @@ var Clients = RAD.View.extend({
         'submit #add-client': 'addClient'
     },
 
-    initialize: function() {
+    initialize: function () {
         clients.fetch();
         this.bindRender(clients, 'add remove');
     },
 
-    preventSubmit: function(e) {
+    preventSubmit: function (e) {
         e.preventDefault();
     },
 
-    addClient: function(e) {
+    addClient: function (e) {
         var input = e.target.elements['clientName'];
         var name = input.value;
         input.value = '';

@@ -1,6 +1,5 @@
 "use strict";
 var RAD = require('RAD');
-
 require('../components/slider');
 
 var app = {

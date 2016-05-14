@@ -9,11 +9,11 @@ var RootView = RAD.View.extend({
     events: {
         'input .slider': 'changeData'
     },
-    
+
     initialize: function () {
         this.props.set('charData', 10);
     },
-    
+
     changeData: function (e) {
         this.props.set('charData', parseInt(e.target.value));
     }

@@ -17,7 +17,8 @@
         <ul class="topcoat-list__container">
             <% _.each(animations, function(animation) { %>
 
-            <li id="<%= animation.id %>" class="topcoat-list__item has-active" style="color: <%= RAD.getRandomColor() %>;">
+            <li id="<%= animation.id %>" class="topcoat-list__item has-active"
+                style="color: <%= RAD.getRandomColor() %>;">
                 <%= animation.name %>
                 <i class="fa fa-angle-right"></i>
             </li>

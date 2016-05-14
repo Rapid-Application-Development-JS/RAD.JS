@@ -1,5 +1,4 @@
 'use strict';
-
 var RAD = require('RAD');
 var Sortable = require('./SortableStage');
 var clients = require('../../../models/Clients/Clients');

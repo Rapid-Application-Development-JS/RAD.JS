@@ -1,5 +1,4 @@
 'use strict';
-
 var Backbone = require('backbone');
 var RAD = require('RAD');
 
@@ -9,15 +8,15 @@ var AppRouter = Backbone.Router.extend({
         '*pages': 'notFound'
     },
 
-    initialize: function() {
+    initialize: function () {
         Backbone.history.start();
     },
 
-    home: function() {
+    home: function () {
         this.publishRoute('home');
     },
 
-    notFound: function() {
+    notFound: function () {
         this.publishRoute('404');
     },
 
@@ -26,12 +25,12 @@ var AppRouter = Backbone.Router.extend({
         RAD.publish('route:change', this.activePage());
     },
 
-    storeActivePage: function(name) {
+    storeActivePage: function (name) {
         this.pageName = name;
         this.fragment = Backbone.history.fragment;
     },
 
-    activePage: function() {
+    activePage: function () {
         return {
             pageName: this.pageName,
             urlFragment: this.fragment

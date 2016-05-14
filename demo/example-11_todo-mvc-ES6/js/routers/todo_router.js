@@ -1,6 +1,5 @@
 'use strict';
-
-import { Router, history } from 'Backbone';
+import {Router, history} from 'Backbone';
 import RAD from 'RAD';
 
 class TodoRouter extends Router {

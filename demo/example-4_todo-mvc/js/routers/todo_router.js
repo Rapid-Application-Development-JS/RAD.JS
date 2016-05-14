@@ -1,5 +1,4 @@
 'use strict';
-
 var Backbone = require('Backbone');
 var RAD = require('RAD');
 

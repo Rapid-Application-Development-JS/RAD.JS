@@ -1,5 +1,4 @@
 'use strict';
-
 var $ = require('jquery');
 
 // Connect jQuery UI sortable module
@@ -19,7 +18,7 @@ function SortableStage(el, options) {
     if (this.$el.hasClass('ui-sortable')) {
         this.refresh();
     } else {
-        this.init( $.extend({}, defaults, options) );
+        this.init($.extend({}, defaults, options));
     }
 }
 
@@ -34,11 +33,11 @@ SortableStage.prototype.init = function (options) {
         revert: 150,
         forcePlaceholderSize: true,
 
-        start: function(event, ui) {
+        start: function (event, ui) {
             ui.item.addClass(options.activeClass);
         },
-        stop: function(event, ui) {
-            window.setTimeout(function(){
+        stop: function (event, ui) {
+            window.setTimeout(function () {
                 ui.item.removeClass(options.activeClass);
             }, 100);
         }

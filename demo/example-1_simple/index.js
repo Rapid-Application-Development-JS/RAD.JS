@@ -6,19 +6,19 @@ var WelcomePage = RAD.View.extend({
     events: {
         'click': 'onClick'
     },
-    initialize: function() {
+    initialize: function () {
         console.log('initialize');
     },
-    onAttach: function() {
+    onAttach: function () {
         console.log('onAttach');
     },
-    onRender: function() {
+    onRender: function () {
         console.log('onRender');
     },
     onDetach: function () {
         console.log('onDetach');
     },
-    onClick: function(e) {
+    onClick: function (e) {
         console.log(e);
     }
 });

@@ -5,7 +5,7 @@ function factory(option) {
     if (option['popup-content'] && option['popup-content'].content instanceof View) {
         return option['popup-content'].content
     }
-    
+
     // create standard type of view
     return new Popup(option);
 }

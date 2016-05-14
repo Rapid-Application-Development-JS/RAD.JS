@@ -20,7 +20,7 @@ var CustomView = RAD.View.extend({
         this.renderValue();
     },
 
-    renderValue: function() {
+    renderValue: function () {
         this.dataEl.textContent = ' ' + this.props.get('value') + ' ';
     }
 });

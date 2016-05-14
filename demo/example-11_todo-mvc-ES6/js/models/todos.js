@@ -4,10 +4,12 @@ var _ = require('underscore');
 var {Model, Collection} = require('Backbone');
 
 class TodoItem extends Model {
-    defaults = {
-        title: '',
-        completed: false
-    };
+    defaults() {
+        return {
+            title: '',
+            completed: false
+        };
+    }
 
     toggle() {
         this.save({

@@ -51,6 +51,6 @@ module.exports = {
         ]
     },
     plugins: [
-//        new webpack.optimize.UglifyJsPlugin({ output: {comments: false} })
+        new webpack.optimize.UglifyJsPlugin({output: {comments: false}})
     ]
 };

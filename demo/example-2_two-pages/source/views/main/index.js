@@ -4,7 +4,7 @@ var RAD = require('RAD');
 var _ = require('underscore');
 var animations = require('../../collections/animations');
 
-var MainView  = RAD.View.extend({
+var MainView = RAD.View.extend({
     template: require('./tpl.ejs'),
     className: 'root-view',
     events: {
@@ -14,15 +14,15 @@ var MainView  = RAD.View.extend({
     goBack: function () {
         this.props.set({direction: 'backward'});
     },
-    onRender: function() {
+    onRender: function () {
         // Used to show how animation works during continuous render
         if (!this.interval) {
-            this.interval = window.setInterval(function() {
+            this.interval = window.setInterval(function () {
                 this.render();
             }.bind(this), 100);
         }
     },
-    navigate: function(e) {
+    navigate: function (e) {
         var animationData = animations.get(+e.currentTarget.id).toJSON();
 
         this.props.set(animationData, {silent: true});

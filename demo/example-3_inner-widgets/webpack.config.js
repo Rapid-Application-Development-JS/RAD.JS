@@ -46,5 +46,8 @@ module.exports = {
                 loader: ExtractTextPlugin.extract("css-loader")
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin({output: {comments: false}})
+    ]
 };

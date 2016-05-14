@@ -1,10 +1,9 @@
 'use strict';
-
 var RAD = require('RAD');
 var Backbone = require('backbone');
 var renderLink = require('./tpl.ejs');
 
-RAD.utils.ITemplate.registerHelper('i-NavItem', function(attrs, content) {
+RAD.utils.ITemplate.registerHelper('i-NavItem', function (attrs, content) {
     var selected = Backbone.history.fragment === attrs.href;
     var activeClass = 'active';
 

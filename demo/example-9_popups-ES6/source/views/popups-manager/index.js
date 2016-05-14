@@ -15,7 +15,7 @@ class PopupManager extends View {
         return POPUP_CHANEL;
     }
 
-    display(type){
+    display(type) {
         if (this.props.keys().length === 0) {
             this.el.style.display = type;
         }

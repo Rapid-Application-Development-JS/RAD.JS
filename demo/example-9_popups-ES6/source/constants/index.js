@@ -5,4 +5,10 @@ const COMMAND = {
 
 const POPUP_CHANEL = 'popupManager';
 
-export {COMMAND, POPUP_CHANEL}
+const POPUP_IDS = {
+    first: 'ID_1',
+    second: 'ID_2',
+    third: 'ID_3'
+};
+
+export {COMMAND, POPUP_CHANEL, POPUP_IDS}

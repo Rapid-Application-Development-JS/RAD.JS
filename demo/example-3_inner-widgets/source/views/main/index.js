@@ -12,7 +12,7 @@ var HomeView = RAD.View.extend({
 
     activeTabName: 'first',
 
-    getTemplateData: function() {
+    getTemplateData: function () {
         return {
             tabName: this.activeTabName
         };

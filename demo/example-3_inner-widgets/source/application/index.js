@@ -2,10 +2,10 @@
 var RAD = require('RAD');
 
 var App = RAD.Module.extend({
-    onInitialize: function() {
+    onInitialize: function () {
         this.start();
     },
-    start: function() {
+    start: function () {
         this.publish('navigation.show', {
             container: '#screen',
             content: require('views/main'),

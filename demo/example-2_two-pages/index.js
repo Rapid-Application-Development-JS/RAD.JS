@@ -1,11 +1,11 @@
 'use strict';
 
-var RAD  = require('RAD');
+var RAD = require('RAD');
 
-RAD.getRandomColor = function() {
+RAD.getRandomColor = function () {
     var letters = '0123456789ABCDEF'.split('');
     var color = '#';
-    for (var i = 0; i < 6; i++ ) {
+    for (var i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;

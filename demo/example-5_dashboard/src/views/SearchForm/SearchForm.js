@@ -1,5 +1,4 @@
 'use strict';
-
 var $ = require('jquery');
 require('jquery-ui/autocomplete');
 

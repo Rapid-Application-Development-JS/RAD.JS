@@ -1,11 +1,7 @@
 'use strict';
-
-
 var RAD = require('RAD');
 var _ = require('underscore');
 var Backbone = require('Backbone');
-
-
 
 var TodoItem = Backbone.Model.extend({
 
@@ -20,13 +16,13 @@ var TodoItem = Backbone.Model.extend({
         });
     },
 
-    validate: function(attributes) {
+    validate: function (attributes) {
         if (!attributes.title) {
             return 'title cannot be blank';
         }
     },
 
-    isVisible: function(filterState) {
+    isVisible: function (filterState) {
 
         if (filterState === 'completed') {
             return this.get('completed');
@@ -46,7 +42,7 @@ var TodoItems = Backbone.Collection.extend({
     localStorage: new Backbone.LocalStorage('todos-backbone'),
     comparator: 'order',
 
-    filterBy: function(param) {
+    filterBy: function (param) {
         // In case when param value is active or completed
         if (typeof this[param] == 'function') {
             return this[param]();
@@ -67,9 +63,9 @@ var TodoItems = Backbone.Collection.extend({
         return this.length ? this.last().get('order') + 1 : 1;
     },
 
-    create: function(todo, options) {
-        todo    = _.extend( {}, todo,    {order: this.nextOrder()} );
-        options = _.extend( {}, options, {validate: true} );
+    create: function (todo, options) {
+        todo = _.extend({}, todo, {order: this.nextOrder()});
+        options = _.extend({}, options, {validate: true});
 
         return Backbone.Collection.prototype.create.call(this, todo, options);
     }

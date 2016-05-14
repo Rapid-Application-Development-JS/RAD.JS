@@ -1,8 +1,6 @@
 "use strict";
 import {View, publish} from 'RAD';
-
-// require to load all components
-require('./bootstrap-components');
+import components from './bootstrap-components';
 
 class WelcomePage extends View {
 
