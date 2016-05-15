@@ -44,10 +44,10 @@ var TodoList = RAD.View.extend({
         e.preventDefault();
         todoList.create({
             id: _.uniqueId('todo-'),
-            title: this.refs['todoField'].value.trim()
+            title: this.refs.inputField.value.trim()
         });
 
-        this.refs['todoField'].value = '';
+        this.refs.inputField.value = '';
     },
 
     toggleAll: function (e) {

@@ -35,17 +35,13 @@ class TodoList extends View {
         }
     }
 
-    onRender() {
-        this.inputField = this.inputField || this.el.querySelector('.new-todo');
-    }
-
     addTodo() {
         todoList.create(
-            {title: this.inputField.value.trim()},
+            {title: this.refs.inputField.value.trim()},
             {wait: true}
         );
 
-        this.inputField.value = '';
+        this.refs.inputField.value = '';
     }
 
     toggleAll(e) {
