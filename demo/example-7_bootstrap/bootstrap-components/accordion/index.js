@@ -1,2 +1,0 @@
-require('./group');
-require('./panel');

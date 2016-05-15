@@ -5,7 +5,7 @@ var skip = iDOM.skip;
 
 // Be careful, component was developed to work only with static content
 
-RAD.utils.ITemplate.registerHelper('i-code-format', function (data, renderContent) {
+module.exports = function (data, renderContent) {
     var block = elementOpen('pre');
     if (!block.immutable) {
         elementOpen('code', null, ['class', data.type]);
@@ -25,4 +25,4 @@ RAD.utils.ITemplate.registerHelper('i-code-format', function (data, renderConten
         skip();
         elementClose('pre');
     }
-});
+};

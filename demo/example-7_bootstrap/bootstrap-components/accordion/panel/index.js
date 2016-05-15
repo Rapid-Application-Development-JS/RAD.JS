@@ -1,1 +1,0 @@
-RAD.utils.ITemplate.registerHelper('i-accordion-panel', require('./template.ejs'));

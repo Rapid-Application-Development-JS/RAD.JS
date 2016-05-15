@@ -1,1 +1,0 @@
-RAD.utils.ITemplate.registerHelper('i-accordion-group', require('./template.ejs'));

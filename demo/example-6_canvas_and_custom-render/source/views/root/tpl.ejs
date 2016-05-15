@@ -1,9 +1,10 @@
 <%
 var ChartView = require('./chart');
+var SliderItem = require('../../components/slider/tpl.ejs');
 var CustomView = require('./custom');
 %>
 <div class="main">
     <::ChartView value="<%= data.props.charData %>" width="200" height="200" key="canvas-persist"/>
-    <i-SliderItem value="<%= data.props.charData %>" class="slider"/>
+    <::SliderItem value="<%= data.props.charData %>" class="slider"/>
     <::CustomView value="<%= data.props.charData %>" key="view-persist"/>
 </div>
