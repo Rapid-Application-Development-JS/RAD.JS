@@ -7,6 +7,10 @@ class WelcomePage extends View {
         return 'section';
     }
 
+    events = {
+      'click button' : 'click'  
+    };
+    
     /*
      * Unfortunately, you can not directly use a template in the properties of the class.
      * Instead, you must use the already compiled function.
@@ -23,6 +27,10 @@ class WelcomePage extends View {
 
     onDetach() {
         console.log('onDetach');
+    }
+    
+    click(e) {
+        console.log(e);
     }
 }
 
