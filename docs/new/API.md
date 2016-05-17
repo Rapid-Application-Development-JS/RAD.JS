@@ -339,34 +339,6 @@ let hasClass = utils.DOM.hasClass(my_element,'my_class');
 #### Tips
 
 ### <a name="utils_incremental-dom"></a>utils.IncrementalDOM	
-
-### <a name="utils_transition-end"></a>utils.TransitionEnd
-
-#### Arguments
-#### Returns
-#### Example
-#### Tips
-
-#### <a name="utils_transition-end_bind"></a>utils.TransitionEnd.bind
-
-#### Arguments
-#### Returns
-#### Example
-#### Tips
-
-#### <a name="utils_transition-end_unbind"></a>utils.TransitionEnd.unbind
-
-#### Arguments
-#### Returns
-#### Example
-#### Tips
-
-#### <a name="utils_transition-end_unbind-all"></a>utils.TransitionEnd.unbindAll
-
-#### Arguments
-#### Returns
-#### Example
-#### Tips
 	
 ## <a name="template"></a>template
  
@@ -376,22 +348,249 @@ let hasClass = utils.DOM.hasClass(my_element,'my_class');
 ### <a name="dispatcher_unsubscribe"></a>dispatcher.unsubscribe
  
 ## <a name="view"></a>View
-### <a name="view_initialize"></a>View.initialize
+
+**RAD.View** - это расширенная версия Backbone.View которая предоставляет несколько дополнительных методов, а также ряд колбэков описывающих жизненный цикл View.
+   
 ### <a name="view_template"></a>this.template
+Свойство задающее шаблон. Может принимает либо строку либо шаблон с Incremental DOM аннотациями.   
+
+#### Example
+```javascript 
+var LibraryView = RAD.View.extend({
+	template: RAD.template(...)
+}); 
+``` 
+### <a name="view_render"></a>this.render()
+В отличии от Backbone, RAD.View предоставляет готовый метод render который использует Incremental DOM в качестве шаблонизатора.
+
+#### Arguments
+`none`
+#### Returns
+`view` - возвращает ссылку на View
+#### Example
+   
+```javascript 
+var WelcomePage = RAD.View.extend({ 
+	template: document.getElementById('hello-page').innerHTML 
+});  
+var page = new WelcomePage({el: '#screen' });  
+page.render(); 
+```
+
+### <a name="view_bind-render"></a>this.bindRender(target, events)
+Это упрощенная запись для: `this.listenTo(target, events, this.render);` 
+
+#### Arguments
+`target` - объект на чьи события нужно подписаться: `Backbone.Collection`, `Backbone.Model` и т.д;
+
+`events` - имя события на которое нужно подписаться.
+
+#### Returns
+`View instance` - возвращает ссылку на View
+
+#### Example
+
+```javascript 
+var WelcomePage = RAD.View.extend({   
+	template: ...
+	initialize: function() {
+		this.bindRender(this.model, 'change:title');
+	}
+});  
+var page = new WelcomePage({
+	el: '#screen',
+	model: pageModel 
+});  
+page.render();
+pageModel.set('title', 'Hello world!'); // trigger page render
+```
+### <a name="view_bind-render"></a>this.refs
+Внутри шаблона каждому элементу можно указывать специальный атрибут `ref="refName"`. После каждого вызова `render` в объект `this.refs` будут записаны ссылки на указанные элементы.
+
+#### Example
+
+```ejs
+<form action="#" class="form-todo-item">
+    <input ref="title" class="edit" name="todo-title" value="<%= data.model.title %>">
+</form>
+```
+теперь по ссылке `this.refs.title` можно получить элемент `<input>`
+
+```javascript
+var TodoItem = RAD.View.extend({   
+	...
+	onRender: function() {
+		this.refs.title.value // input value
+	}
+}); 
+```
+
+
 ### <a name="view_props"></a>this.props
-### <a name="view_set-element"></a>this.setElement
-### <a name="view_get-id"></a>this.getID
-### <a name="view_get-template-data"></a>this.getTemplateData
-### <a name="view_bind-render"></a>this.bindRender
-### <a name="view_render"></a>this.render
-### <a name="view_destroy"></a>this.destroy
-### <a name="view_on-receive-msg"></a>this.onReceiveMsg
-### <a name="view_on-before-render"></a>this.onBeforeRender
-### <a name="view_on-render"></a>this.onRender
-### <a name="view_on-attach"></a>this.onAttach
-### <a name="view_on-detach"></a>this.onDetach
-### <a name="view_on-destroy"></a>this.onDestroy
-### <a name="view_extend"></a>View.extend
+При создании View в конструктор можно передавать различные данные. Часть из них являются зарезервированными `model`, `collection`, `el`, `id`, `className`, `tagName`, `attributes`, `events`, `key`, `template` и будут присвоены самой View. Остальные же будут переданы в специальную модель `this.props`. 
+
+Каждый раз когда значения `this.props` меняется будет вызван `render`.
+
+#### Example
+
+Это удобно когда мы используем View как компоненты внутри шаблона.
+
+```ejs
+<% var TodoItem = require('../todo-view/'); %>
+...
+<ul class="todo-list">
+
+<% data.todos.each(function(todo, index) { %>
+
+	<::TodoItem key="<%= todo.get('id') %>" model="<%= todo %>" index="<%= index %>"/>
+	
+<% }, this); %>
+
+</ul>
+```
+
+Теперь каждому TodoItem буде доступно значение `this.props.get('index')`.
+
+**Примечание:** В примере выше мы использовали `require('../todo-view/')` внутри шаблона. Для этого необходимо использовать webpack [itemplate loader](https://github.com/Rapid-Application-Development-JS/itemplate-loader).
+
+### <a name="view_get-template-data"></a>this.getTemplateData();
+Этот метод вызывается при каждом `render` и определяет какие данные будут переданы в шаблон. 
+
+#### Arguments
+`none` 
+
+#### Returns
+`object` - возвращает объект с данными;
+
+
+#### Example
+По умолчанию в шаблон передаются данные из `collection`, `model` и `props`.
+
+```javascript
+ getTemplateData: function() {
+    return {
+        collection: this.collection && this.collection.toJSON(),
+        model: this.model && this.model.toJSON(),
+        props: this.props.toJSON()
+    };
+}
+```
+получение данных внутри шаблона:
+
+```
+<label class="todo-label no-select">
+    <%= data.model.title %>
+</label>
+
+```
+
+Этот метод можно переопределить для передачи любых данных. 
+
+```javascript
+getTemplateData: function () {
+    return {
+        remaining: todoList.active().length,
+        length: todoList.length
+    }
+}
+```
+
+Теперь значения length и remaining будут доступны внутри шаблона:
+
+```ejs
+<span class="todo-count">
+    <%= data.remaining %> / <%= data.length %>
+</span>
+```
+
+
+### <a name="view_get-id"></a>this.getID();
+Возвращает внутренний id. 
+
+#### Arguments
+`none` 
+
+#### Returns
+`string` - возвращает строку идентификатор формата `view-134`;
+
+#### Example
+
+```javascript 
+var WelcomePage = RAD.View.extend({
+	tagName: 'section',     
+	template: document.getElementById('hello-page').innerHTML 
+});  
+var page = new WelcomePage({el: '#screen' });  
+page.getID(); // view-5
+```
+
+### <a name="view_destroy"></a>this.destroy();
+Удаляет view и `el` из DOM, вызывает `this.stopListening` и отписывается от все событий которые были подписаны через `this.subscribe` 
+
+#### Arguments
+`none` 
+
+#### Returns
+`undefined`
+
+#### Example
+
+
+### <a name="view_on-before-render"></a>this.onBeforeRender();
+Будет вызван каждый раз перед `render`.  
+
+#### Arguments
+`none` 
+
+#### Returns
+`boolean` - Если метод вернет `false` тогда контент не буде перерисован.
+
+#### Example
+
+
+### <a name="view_on-render"></a>this.onRender();
+Будет вызван сразу после вызова `render`
+
+#### Arguments
+`none` 
+
+#### Returns
+`undefined`
+
+#### Example
+
+### <a name="view_on-attach"></a>this.onAttach();
+В этот момент View приаттачена к DOM.
+
+#### Arguments
+`none` 
+
+#### Returns
+`undefined`
+
+#### Example
+
+### <a name="view_on-detach"></a>this.onDetach();
+В этот момент View удалена из DOM
+
+#### Arguments
+`none` 
+
+#### Returns
+`undefined`
+
+#### Example
+
+### <a name="view_on-destroy"></a>this.onDestroy();
+Этот колбек будет вызван если View была удалена используя метод `this.destroy`.   
+
+#### Arguments
+`none` 
+
+#### Returns
+`undefined`
+
+#### Example
 
 ## <a name="module"></a>Module
 ### <a name="module_on-receive-msg"></a>this.onReceiveMsg
@@ -399,7 +598,6 @@ let hasClass = utils.DOM.hasClass(my_element,'my_class');
 ### <a name="module_extend"></a>Module.extend
  
 ## <a name="plugins"></a>Plugins
-### <a name="plugins_layout-manager"></a>layout manager
 ### <a name="plugins_navigator"></a>navigator
 ### <a name="plugins_transition-group"></a>transition group
 	
