@@ -1,4 +1,8 @@
-# Template Engine
+
+
+		
+		
+		# Template Engine
 
 TODO: добавить краткое описание
 
@@ -209,6 +213,3 @@ RAD.template.registerHelper('NavItem', function(attrs) {
 > RAD.template.registerHelper('my-custom-div', templateFn);
 > ``` 
 > Более подробно можно почитать в документации по [helpers](helpers/README.md)
-
-
-  
