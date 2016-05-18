@@ -533,34 +533,52 @@ page.getID(); // view-5
 #### Returns
 `undefined`
 
-#### Example
-
 
 ### <a name="view_on-before-render"></a>this.onBeforeRender();
-Будет вызван каждый раз перед `render`.  
+Вызывется перед каждым запуском `render`.
 
 #### Arguments
 `none` 
 
 #### Returns
-`boolean` - Если метод вернет `false` тогда контент не буде перерисован.
+`boolean` - Если метод вернет `false` - контент не буде изменен.
 
 #### Example
 
+```js
+var CustomView = RAD.View.extend({
+    className: 'block',
+
+    onBeforeRender: function () {
+        if (this.dataEl) {
+            this.renderValue();
+            return false;
+        }
+    },
+
+    onRender: function () {
+        this.el.innerHTML = template({date: new Date()});
+        this.dataEl = this.el.querySelector('.data');
+        this.renderValue();
+    },
+
+    renderValue: function () {
+        this.dataEl.textContent = ' ' + this.props.get('value') + ' ';
+    }
+});
+```
 
 ### <a name="view_on-render"></a>this.onRender();
-Будет вызван сразу после вызова `render`
+Будет вызван сразу после `render`. В этот момент View уже закончила отрисовку шаблона.  
 
 #### Arguments
 `none` 
 
 #### Returns
 `undefined`
-
-#### Example
 
 ### <a name="view_on-attach"></a>this.onAttach();
-В этот момент View приаттачена к DOM.
+Вызывается сразу после того как View была отрисована и добавлена в DOM.
 
 #### Arguments
 `none` 
@@ -568,10 +586,9 @@ page.getID(); // view-5
 #### Returns
 `undefined`
 
-#### Example
 
 ### <a name="view_on-detach"></a>this.onDetach();
-В этот момент View удалена из DOM
+Вызывается сразу после того как View была удалена из DOM.
 
 #### Arguments
 `none` 
@@ -579,7 +596,6 @@ page.getID(); // view-5
 #### Returns
 `undefined`
 
-#### Example
 
 ### <a name="view_on-destroy"></a>this.onDestroy();
 Этот колбек будет вызван если View была удалена используя метод `this.destroy`.   
