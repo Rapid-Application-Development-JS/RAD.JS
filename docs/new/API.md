@@ -352,22 +352,24 @@ let hasClass = utils.DOM.hasClass(my_element,'my_class');
 **RAD.View** - это расширенная версия Backbone.View которая предоставляет несколько дополнительных методов, а также ряд колбэков описывающих жизненный цикл View.
    
 ### <a name="view_template"></a>this.template
+***
 Свойство задающее шаблон. Может принимает либо строку либо шаблон с Incremental DOM аннотациями.   
 
-#### Example
+##### Example
 ```javascript 
 var LibraryView = RAD.View.extend({
 	template: RAD.template(...)
 }); 
 ``` 
 ### <a name="view_render"></a>this.render()
+***
 В отличии от Backbone, RAD.View предоставляет готовый метод render который использует Incremental DOM в качестве шаблонизатора.
 
-#### Arguments
+##### Arguments
 `none`
-#### Returns
-`view` - возвращает ссылку на View
-#### Example
+##### Returns
+`{View Object}` - возвращает ссылку на View
+##### Example
    
 ```javascript 
 var WelcomePage = RAD.View.extend({ 
@@ -378,17 +380,18 @@ page.render();
 ```
 
 ### <a name="view_bind-render"></a>this.bindRender(target, events)
+***
 Это упрощенная запись для: `this.listenTo(target, events, this.render);` 
 
-#### Arguments
-`target` - объект на чьи события нужно подписаться: `Backbone.Collection`, `Backbone.Model` и т.д;
+##### Arguments
+`{Object} target` - объект на чьи события нужно подписаться: `Backbone.Collection`, `Backbone.Model` и т.д;
 
-`events` - имя события на которое нужно подписаться.
+`{String} events` - имя события на которое нужно подписаться.
 
-#### Returns
-`View instance` - возвращает ссылку на View
+##### Returns
+`{View Object}` - возвращает ссылку на View
 
-#### Example
+##### Example
 
 ```javascript 
 var WelcomePage = RAD.View.extend({   
@@ -405,9 +408,10 @@ page.render();
 pageModel.set('title', 'Hello world!'); // trigger page render
 ```
 ### <a name="view_bind-render"></a>this.refs
+***
 Внутри шаблона каждому элементу можно указывать специальный атрибут `ref="refName"`. После каждого вызова `render` в объект `this.refs` будут записаны ссылки на указанные элементы.
 
-#### Example
+##### Example
 
 ```ejs
 <form action="#" class="form-todo-item">
@@ -427,11 +431,12 @@ var TodoItem = RAD.View.extend({
 
 
 ### <a name="view_props"></a>this.props
+***
 При создании View в конструктор можно передавать различные данные. Часть из них являются зарезервированными `model`, `collection`, `el`, `id`, `className`, `tagName`, `attributes`, `events`, `key`, `template` и будут присвоены самой View. Остальные же будут переданы в специальную модель `this.props`. 
 
 Каждый раз когда значения `this.props` меняется будет вызван `render`.
 
-#### Example
+##### Example
 
 Это удобно когда мы используем View как компоненты внутри шаблона.
 
@@ -454,16 +459,17 @@ var TodoItem = RAD.View.extend({
 **Примечание:** В примере выше мы использовали `require('../todo-view/')` внутри шаблона. Для этого необходимо использовать webpack [itemplate loader](https://github.com/Rapid-Application-Development-JS/itemplate-loader).
 
 ### <a name="view_get-template-data"></a>this.getTemplateData();
+***
 Этот метод вызывается при каждом `render` и определяет какие данные будут переданы в шаблон. 
 
-#### Arguments
+##### Arguments
 `none` 
 
-#### Returns
-`object` - возвращает объект с данными;
+##### Returns
+`{object}` - возвращает объект с данными;
 
 
-#### Example
+##### Example
 По умолчанию в шаблон передаются данные из `collection`, `model` и `props`.
 
 ```javascript
@@ -503,17 +509,17 @@ getTemplateData: function () {
 </span>
 ```
 
-
 ### <a name="view_get-id"></a>this.getID();
+***
 Возвращает внутренний id. 
 
-#### Arguments
+##### Arguments
 `none` 
 
-#### Returns
-`string` - возвращает строку идентификатор формата `view-134`;
+##### Returns
+`{string}` - возвращает строку идентификатор формата `view-134`;
 
-#### Example
+##### Example
 
 ```javascript 
 var WelcomePage = RAD.View.extend({
@@ -525,25 +531,88 @@ page.getID(); // view-5
 ```
 
 ### <a name="view_destroy"></a>this.destroy();
+***
 Удаляет view и `el` из DOM, вызывает `this.stopListening` и отписывается от все событий которые были подписаны через `this.subscribe` 
 
-#### Arguments
+##### Arguments
 `none` 
 
-#### Returns
-`undefined`
+##### Returns
+`{undefined}`
 
+
+### <a name="view_subscribe"></a>this.subscribe(channel, callback, [context]);
+***
+Позволяет подписатся на получения сообщений из `channel`. 
+
+##### Arguments
+`{String} channel` - имя канала на чьи события нужно подписаться
+
+`{Function} callback` - функция будет вызвана каждый раз когда будет получено новое сообщение из `channel`
+
+`{Object} context` - задает контекст выполнения `callback`
+
+
+##### Returns
+`{Undefined}` - Если метод вернет `false` - контент не буде изменен.
+
+##### Example
+```js
+// router.js
+var TodoRouter = Backbone.Router.extend({
+    routes: {
+        '*filter': 'filterItems'
+    },
+    filterItems: function (param) {
+        RAD.publish('filter', param);
+    }
+});
+
+// todo-list.js
+var TodoList = RAD.View.extend({
+    template: require('./template.ejs'),
+    initialize: function () {
+        this.subscribe('filter', this.filter, this);
+    },
+    filter: function (value) {
+        this.props.set('filter', value);
+    }
+ });   
+
+```
+
+### <a name="view_unsubscribe"></a>this.unsubscribe([channel], [callback], [context]);
+***
+Позволяет отписатся от получения сообщений.
+
+##### Example
+```js
+
+// отписать this.filter от получения сообщений от канала filter
+this.unsubscribe('filter', this.filter); 
+
+// отписать все колбэки от получения сообщений от канала filter
+this.unsubscribe('filter'); 
+
+// отписать this.filter от получения сообщений из любого канала
+this.unsubscribe(null, this.filter);
+
+// отписать все колбэки с нужным контекстом 
+this.unsubscribe(null, null, this);  
+
+```
 
 ### <a name="view_on-before-render"></a>this.onBeforeRender();
+***
 Вызывется перед каждым запуском `render`.
 
-#### Arguments
+##### Arguments
 `none` 
 
-#### Returns
-`boolean` - Если метод вернет `false` - контент не буде изменен.
+##### Returns
+`{Boolean | Undefined}` - Если метод вернет `false` - контент не буде изменен.
 
-#### Example
+##### Example
 
 ```js
 var CustomView = RAD.View.extend({
@@ -569,44 +638,48 @@ var CustomView = RAD.View.extend({
 ```
 
 ### <a name="view_on-render"></a>this.onRender();
+***
 Будет вызван сразу после `render`. В этот момент View уже закончила отрисовку шаблона.  
 
-#### Arguments
+##### Arguments
 `none` 
 
-#### Returns
-`undefined`
+##### Returns
+`{Undefined}`
 
 ### <a name="view_on-attach"></a>this.onAttach();
+***
 Вызывается сразу после того как View была отрисована и добавлена в DOM.
 
-#### Arguments
+##### Arguments
 `none` 
 
-#### Returns
-`undefined`
+##### Returns
+`{Undefined}`
 
 
 ### <a name="view_on-detach"></a>this.onDetach();
+***
 Вызывается сразу после того как View была удалена из DOM.
 
-#### Arguments
+##### Arguments
 `none` 
 
-#### Returns
-`undefined`
+##### Returns
+`{Undefined}`
 
 
 ### <a name="view_on-destroy"></a>this.onDestroy();
+***
 Этот колбек будет вызван если View была удалена используя метод `this.destroy`.   
 
-#### Arguments
+##### Arguments
 `none` 
 
-#### Returns
-`undefined`
+##### Returns
+`{Undefined}`
 
-#### Example
+##### Example
 
 ## <a name="module"></a>Module
 ### <a name="module_on-receive-msg"></a>this.onReceiveMsg
