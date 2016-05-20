@@ -1,31 +1,15 @@
 # Introduction
 
+RAD.JS (Javascript library for Rapid Application Development)
+
+RAD.JS is a composite application library for Backbone.js that aims to simplify the construction of large scale JavaScript applications.
+
+* RAD.JS избавляет вас от необходимости прямой работы с DOM, но не лешают вас ее.
+* Позволяет использовать ваши уже существующие `view` в качестве строительных блоков ваших шаблонов.
+* И, наконец, RAD.JS позволяет вам добиться желаемой производительности Вашего приложения даже на слабых мобильных устройствах, за счет использования [incremental-dom](https://github.com/google/incremental-dom)
+
+Like Backbone itself, you're not required to use all of RAD.JS just because you want to use some of it. You can pick and choose which features you want to use. This allows you to work with other Backbone frameworks and plugins easily.
+
+
 * [Motivation](Motivation.md)
 * [Features](Features.md)
-* [Community/Ecosystem](Ecosystem.md)
-
-# Why Backbone.js
-
-Почему именно **Backbone.js**, потому что по факту **Backbone.js** не являеться фреймверком, он являеться MVVM библиотекой и по сравнению с **Angular.js** и **React.js** он являеться наиболее гибким, то есть вносит минимальные ограничения. Поэтому **Backbone.js** имеет максимальное количество совместимых библиотек.
-
-# Введение
-
-В основе Rad.js лежит многим знакомый [Backbone.js](http://backbonejs.org/). Более того если ранее вы писали приложения на Backbone то код написан с использованием Rad.js вам покажется знакомым.  При разработке мы пытались максимально сохранить существующее Backbone API и при этом не нагромождать его новыми понятиями и методами.  
-<br>
-Но тогда возникает вопрос, а чем же  Rad.js может мне помочь? Что в нем есть чего нет в самом Backbone или в других фреймворках на его основе.   
-<br>
-Если коротко -  Rad.js предлагает иной подход в работе с DOM. Вернее основная идея – это желание избавиться от необходимость работать с DOM и тем самым сконцентрироваться на работе с данными. Для этого мы используем новый [шаблонизатор](https://github.com/Rapid-Application-Development-JS/itemplate) на базе [incremental-dom](https://medium.com/google-developers/introducing-incremental-dom-e98f79ce2c5f#.5mlc5ju6h), который позволяет рендерит и обновлять DOM только в местах где изменились данные.    
-<br>
-Это значительно упрощает работу с View. Достаточно описать как должен выглядит ваш шаблон в зависимости от в входных данных и дальше RAD.js позаботиться о том как нужно обновить DOM.  
-<br>
-Со стороны процесс обновления View становится похожим на обновления компонентов в React.js: меняются данные → вызывается рендер шаблона → обновляется DOM только в тех местах где данные изменились.   
-<br>
-Но в отличии от React.js или VirtualDOM в Rad.js нет промежуточного виртуального дерева и нет дополнительных затрат на процесс сравнения виртуального и реального DOM.  
-<br>
-При этом вы как и раньше можете использовать существующие инструменты Backbone.js: [Backbone.Model](http://backbonejs.org/#Model), [Backbone.Collection](http://backbonejs.org/#Collection), [Backbone.Router](http://backbonejs.org/#Router).  
-<br>
-Основной упор сделан именно на работу с View и для этого RAD.js предоставляет два основных инструмента:    
-
-* [**RAD.template**](../template/README.md) - шаблонизатор для компиляции привычных underscore шаблонов в синтаксис [Incremental DOM](https://github.com/google/incremental-dom)
-
-* **RAD.View** - базовый класс который позволяет ренедерить View используя Incremental DOM, а также предоставляет набор колбэков чтобы следить за жизненным циклом компонента.
