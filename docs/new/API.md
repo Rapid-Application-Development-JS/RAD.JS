@@ -340,12 +340,107 @@ let hasClass = utils.DOM.hasClass(my_element,'my_class');
 
 ### <a name="utils_incremental-dom"></a>utils.IncrementalDOM	
 	
-## <a name="template"></a>template
+## <a name="template"></a>RAD.template(str);
+Компилирует html/ejs строку в набор Incremental DOM анотаций.
+
+##### Arguments
+`{String} str` - html/ejs строка.
+
+##### Returns
+`{Function}` - возвращает функцию-шаблон которая содержит Incremental DOM анотации. 
+
+##### Example
+
+
  
-## <a name="dispatcher"></a>dispatcher
-### <a name="dispatcher_publish"></a>dispatcher.publish
-### <a name="dispatcher_subscribe"></a>dispatcher.subscribe
-### <a name="dispatcher_unsubscribe"></a>dispatcher.unsubscribe
+## <a name="dispatcher"></a>Event Dispatcher
+Для коммуникации между модулями, RAD.js предоставляет Event Dispatcher который по факту является клоном Backbone.Events.
+
+
+### <a name="dispatcher_subscribe"></a>RAD.subscribe(channel, callback, [context]);
+***
+Позволяет подписатся на получения сообщений из `channel`. 
+
+##### Arguments
+`{String} channel` - имя канала на чьи события нужно подписаться
+
+`{Function} callback` - функция будет вызвана каждый раз когда будет получено новое сообщение из `channel`
+
+`{Object} context` - задает контекст выполнения `callback`
+
+
+##### Returns
+`{Undefined}`
+
+##### Example
+```js
+// router.js
+var TodoRouter = Backbone.Router.extend({
+    routes: {
+        '*filter': 'filterItems'
+    },
+    filterItems: function (param) {
+        RAD.publish('filter', param);
+    }
+});
+
+// todo-list.js
+var TodoList = RAD.View.extend({
+    template: require('./template.ejs'),
+    initialize: function () {
+        RAD.subscribe('filter', this.filter, this);
+    },
+    filter: function (value) {
+        this.props.set('filter', value);
+    }
+ });   
+
+```
+
+### <a name="dispatcher_unsubscribe"></a>RAD.unsubscribe([channel], [callback], [context]);
+***
+Позволяет отписатся от получения сообщений.
+
+##### Example
+```js
+
+// отписать this.filter от получения сообщений от канала filter
+RAD.unsubscribe('filter', this.filter); 
+
+// отписать все колбэки от получения сообщений от канала filter
+RAD.unsubscribe('filter'); 
+
+// отписать this.filter от получения сообщений из любого канала
+RAD.unsubscribe(null, this.filter);
+
+// отписать все колбэки с нужным контекстом 
+RAD.unsubscribe(null, null, this);  
+
+```
+
+### <a name="dispatcher_publish"></a>RAD.publish(chanel, [args]);
+***
+Позволяет отправлять сообщения по указаному каналу. 
+
+##### Arguments
+`{string} chanel` - название каннала или список каналов (разделенных пробелом)
+
+`{} args` - можно передавать любое количество аргументов. Агрументы будут переданны в колбэк функцию которая подписана на канал. 
+
+##### Returns
+`{View Object}` - возвращает ссылку на View
+##### Example
+
+```js
+var TodoRouter = Backbone.Router.extend({
+    routes: {
+        '*filter': 'filterItems'
+    },
+    filterItems: function (param) {
+        RAD.publish('filter', param);
+    }
+});
+```
  
 ## <a name="view"></a>View
 
@@ -407,7 +502,7 @@ var page = new WelcomePage({
 page.render();
 pageModel.set('title', 'Hello world!'); // trigger page render
 ```
-### <a name="view_bind-render"></a>this.refs
+### <a name="view_refs"></a>this.refs
 ***
 Внутри шаблона каждому элементу можно указывать специальный атрибут `ref="refName"`. После каждого вызова `render` в объект `this.refs` будут записаны ссылки на указанные элементы.
 
@@ -550,29 +645,19 @@ page.getID(); // view-5
 
 `{Function} callback` - функция будет вызвана каждый раз когда будет получено новое сообщение из `channel`
 
-`{Object} context` - задает контекст выполнения `callback`
+`{Object} context` - задает контекст выполнения `callback`. По умолчанию `context` === `this`
 
 
 ##### Returns
 `{Undefined}` - Если метод вернет `false` - контент не буде изменен.
 
 ##### Example
-```js
-// router.js
-var TodoRouter = Backbone.Router.extend({
-    routes: {
-        '*filter': 'filterItems'
-    },
-    filterItems: function (param) {
-        RAD.publish('filter', param);
-    }
-});
 
-// todo-list.js
+```js
 var TodoList = RAD.View.extend({
     template: require('./template.ejs'),
     initialize: function () {
-        this.subscribe('filter', this.filter, this);
+        this.subscribe('filter', this.filter);
     },
     filter: function (value) {
         this.props.set('filter', value);
@@ -583,7 +668,7 @@ var TodoList = RAD.View.extend({
 
 ### <a name="view_unsubscribe"></a>this.unsubscribe([channel], [callback], [context]);
 ***
-Позволяет отписатся от получения сообщений.
+Позволяет отписатся от получения сообщений. По умолчанию: `context` === `this`.
 
 ##### Example
 ```js
@@ -597,8 +682,8 @@ this.unsubscribe('filter');
 // отписать this.filter от получения сообщений из любого канала
 this.unsubscribe(null, this.filter);
 
-// отписать все колбэки с нужным контекстом 
-this.unsubscribe(null, null, this);  
+// отписать все колбэки на которые была подписана View 
+this.unsubscribe();  
 
 ```
 
@@ -660,7 +745,7 @@ var CustomView = RAD.View.extend({
 
 ### <a name="view_on-detach"></a>this.onDetach();
 ***
-Вызывается сразу после того как View была удалена из DOM.
+Вызывается сразу после того как View была удалена из DOM в следсвии перерисовки родительского копонента.
 
 ##### Arguments
 `none` 
@@ -671,7 +756,7 @@ var CustomView = RAD.View.extend({
 
 ### <a name="view_on-destroy"></a>this.onDestroy();
 ***
-Этот колбек будет вызван если View была удалена используя метод `this.destroy`.   
+Этот колбек будет вызван если View была удалена используя метод `this.destroy`. `onDetach` так же будет вызван перед `onDestroy`.
 
 ##### Arguments
 `none` 
