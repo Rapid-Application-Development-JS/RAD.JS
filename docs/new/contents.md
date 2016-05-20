@@ -3,7 +3,6 @@
 * [Introduction](introduction/Introduction.md)
 	* [Motivation](introduction/Motivation.md)
 	* [Features](introduction/Features.md)
-	* [Community/Ecosystem](introduction/Ecosystem.md)
 * [Tutorial](tutorial/Tutorial.md)
 	* [Introduction](tutorial/Introduction.md)
 	* [The HERO Editor](tutorial/Editor.md)
