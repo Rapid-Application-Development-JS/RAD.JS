@@ -7,8 +7,6 @@
 	* [setOptions](#core_set-options)
 	* [get](#core_get)
 	* [getAll](#core_get_all)
-	* [register](#core_register)
-	* [unregister](#core_unregister)
 * [utils](#utils)
 	* [AnimationEnd](#utils_animation-end)
 	* [binder](#utils_binder)
@@ -17,27 +15,17 @@
 		* [addClass](#utils_dom_add-class)
 		* [removeClass](#utils_dom_remove-class)
 	* [ITemplate](#utils_itemplate)
-		* [compile](#utils_itemplate_compile)
-		* [helpers](#utils_itemplate_helpers)
-		* [options](#utils_itemplate_options)
 		* [registerHelper](#utils_itemplate_register-helper)
 		* [unregisterHelper](#utils_itemplate_unregister-helper)
 	* [IncrementalDOM](#utils_incremental-dom)
-	* [template](#template)
-	* [TransitionEnd](#utils_transition-end)
-		* [bind](#utils_transition-end_bind)
-		* [unbind](#utils_transition-end_unbind)
-		* [unbindAll](#utils_transition-end_unbind-all)
 * [template](#template) 
 * [dispatcher](#dispatcher)
 	* [publish](#dispatcher_publish)
 	* [subscribe](#dispatcher_subscribe)
 	* [unsubscribe](#dispatcher_unsubscribe)
 * [View](#view)
-	* [constructor / initialize](#view_initialize) 
 	* [template](#view_template)
 	* [props](#view_props)
-	* [setElement](#view_set-element)
 	* [getID](#view_get-id)
 	* [getTemplateData](#view_get-template-data)
 	* [bindRender](#view_bind-render)
@@ -48,14 +36,7 @@
 	* [onRender](#view_on-render)
 	* [onAttach](#view_on-attach)
 	* [onDetach](#view_on-detach)
-	* [onDestroy](#view_on-destroy)
-	* [extend](#view_extend)
-	* [dispatcher](#dispatcher)
-* [Module](#module)
-	* [onReceiveMsg](#module_on-receive-msg)
-	* [destroy](#module_destroy)
-	* [extend](#module_extend)
-	* [dispatcher](#dispatcher) 
+	* [onDestroy](#view_on-destroy) 
 * [Plugins](#plugins)
 	* [layout manager](#plugins_layout-manager)
 	* [navigator](#plugins_navigator)
@@ -164,65 +145,13 @@ let currentView = views['view_ID'];
 
 * этот, как и [предидущий метод](#core_get), использует ID view определяемый с помощью [ID](#view_get-id). Поэтому, даже если нет необходимости, иногда имеет смысл во время отладки определить **view ID** для того что бы в консоле посмотреть состояние указанной view.
 
-### <a name="core_register"></a>core.register(id, object)
 
-Регестрирует экземпляр view под указаным ID.
+## <a name="utils"></a>RAD.utils
 
-#### Arguments
-
-* `id` - view ID генерируемое автоматически или определяемое с помощью [ID](#view_get-id)
-* `object` - экземпляр view регестрируеться под данным **id**
-
-#### Returns
-
-`undefined`
-
-#### Example
-
-```js
-import {core} from 'RAD'
-import view from './sorce/views/my_view'
-
-core.register('my-view', view);
-```
-
-#### Tips
-
-* данный метод автоматически вызываеться при инстанцировании любой `view`, и пердназначен для системных нужд. Нет необходимости вызывать его в ручную.
-* При вызове `register` для уже зарегестрированной `view` будет сгенерированно исключение.
-* Метод оставлен в открытом доступе, для регистрации `view` не унаследованных от **RAD.View**
-
-### <a name="core_unregister"></a>core.unregister(id)
-
-Удаляет регистрацию для уже зарегистрированной `view` по **id**
-
-#### Arguments
-
-* `id` - идентификатор `view`
-
-#### Returns
-
-`undefined`
-
-#### Example
-
-```js
-import {core} from 'RAD'
-
-core.unregister('my-view');
-```
-
-#### Tips
-
-* так же как и [`register`](#core_register) вызываеться автоматически для каждой [`view`](#view) которая удаляеться.
-* нет необходимости вызывать в ручную.
-
-## <a name="utils"></a>utils
-
-Namespace содержащее узкоспециализированные, приклодные методы 
+Namespace содержащее узкоспециализированные, прикладные методы 
 
 ### <a name="utils_animation-end"></a>utils.AnimationEnd(element)
-
+***
 Враппер для регистрирации обработчиков события окончания анимации, состоящего из нескольких transitions, вызванного на оборачиваемом **element**.
 
 #### Arguments
@@ -249,8 +178,8 @@ animationEnd.bind(()=>{
 
 * Более подробный пример использования можно увидеть в исходниках [transition group](#plugins_transition-group) плагина.
 
-### <a name="utils_binder"></a>utils.binder
-
+### <a name="utils_binder"></a>utils.binder(component, props, content)
+***
 Функция которая связывает кастомные теги в шаблонах с javascript кодом [во время иньекции](basics/Injection.md). 
 
 #### Arguments
@@ -264,88 +193,204 @@ animationEnd.bind(()=>{
 * находиться в открытом доступе для иньекции в [webpack loader](cookbook/Loader.md)
 * возможно использовать для написания кастомных лоадеров
 
-### <a name="utils_dom"></a>utils.DOM
 
-Объект содержащий полифилы для работы с классами на мобильных устройствах. Не использующий `classList`.
 
-#### <a name="utils_dom_has-class"></a>utils.DOM.hasClass(element, className)
+### <a name="utils_itemplate_register-helper"></a>utils.ITemplate.registerHelper(name, fn)
+***
+Для компиляции html/ejs шаблонов в набор Incremental DOM функций, RAD.js использует iTemplate. С более детальным описанием всех его возможностей можно ознакомится [тут](https://github.com/Rapid-Application-Development-JS/itemplate). 
+
+Одной из главных его особенностей является возможность созадавать компоенеты (helpers) которые представляют собой обычные функции и которые можно декларативно описывать внутри шаблонов.
 
 #### Arguments
+`{string} name` - имя компонента под которым он будет доступен внтури шаблона.
 
-* `element` - DOM элемент, в котором смотриться наличие css класса
-* `className` - имя класса, которое ищиться в элементе
-	
+`{function} fn` - функция которая в качестве аргументов принимает обьект `attrs` содержащий список всех атрибутов переданных компоненту (внутри шаблона) и вторым аргументом функцию `content` - это функция содержащая в себе контент нашего компонент. 
+
 #### Returns
 
-возвращает булево значение: **true** - если элемент содержит данный класс, **false** - если элемент не содержит.
+`{undefined}`
 
 #### Example
-
 ```js
-import {utils} from 'RAD'
+var RAD = require('RAD');
+var Backbone = require('Backbone');
+var navItemTemplate = RAD.template( require('./NavItemTemplate.ejs') );
 
-...
-let hasClass = utils.DOM.hasClass(my_element,'my_class');
+RAD.utils.ITemplate.registerHelper('NavItem', function (attrs, content) {
+    navItemTemplate({
+        href: attrs.href,
+        selected: Backbone.history.fragment === attrs.href
+    }, content);
+});
+
 ```
 
-#### <a name="utils_dom_add-class"></a>utils.DOM.addClass
+NavItemTemplate.ejs:
 
-#### Arguments
-#### Returns
-#### Example
-#### Tips
+```ejs
+<% if (data.selected) { %>
+<a href="#/<%= data.href %>" class="selected"> <% content(); %> </a>
+<% } else { %>
+<a href="#/<%= data.href %>"> <% content(); %> </a>
+<% } %>
+```
 
-#### <a name="utils_dom_remove-class"></a>utils.DOM.removeClass
+Теперь наш копонент можно использовать в любом шаблоне:
 
-#### Arguments
-#### Returns
-#### Example
-#### Tips
+```ejs
+<ul class="filters">
+    <li>
+        <NavItem href="">All</NavItem>
+    </li>
+    <li>
+    	 <NavItem href="active">Active</NavItem>
+    </li>
+    <li>
+    	 <NavItem href="completed">Completed</NavItem>
+    </li>
+</ul>
 
-### <a name="utils_itemplate"></a>utils.ITemplate
-#### <a name="utils_itemplate_compile"></a>utils.ITemplate.compile
+```
 
-#### Arguments
-#### Returns
-#### Example
-#### Tips
+В итоге мы получим следующий html:
 
-#### <a name="utils_itemplate_helpers"></a>utils.ITemplate.helpers
+```html
+<ul class="filters">
+	<li><a href="#/">All</a></li>
+	<li><a href="#/active">Active</a></li>
+	<li><a href="#/completed" class="selected">Completed</a></li>
+</ul>
 
-#### Arguments
-#### Returns
-#### Example
-#### Tips
+```
 
-#### <a name="utils_itemplate_options"></a>utils.ITemplate.options
 
-#### Arguments
-#### Returns
-#### Example
-#### Tips
+#### <a name="utils_itemplate_unregister-helper"></a>utils.ITemplate.unregisterHelper('name')
+***
+Удалить ранее зарегистрированый компонент
 
-#### <a name="utils_itemplate_register-helper"></a>utils.ITemplate.registerHelper
+##### Arguments
+`{string} name` - имя компонента который нужно удалить.
+##### Returns
+`{undefined}`
 
-#### Arguments
-#### Returns
-#### Example
-#### Tips
 
-#### <a name="utils_itemplate_unregister-helper"></a>utils.ITemplate.unregisterHelper
-
-#### Arguments
-#### Returns
-#### Example
-#### Tips
-
-### <a name="utils_incremental-dom"></a>utils.IncrementalDOM	
+### <a name="utils_incremental-dom"></a>utils.IncrementalDOM
+***
+Предоставляет доступ к [Incremental DOM API](https://github.com/google/incremental-dom)	
 	
-## <a name="template"></a>template
+## <a name="template"></a>RAD.template(str);
+Компилирует html/ejs строку в набор Incremental DOM анотаций.
+
+##### Arguments
+`{String} str` - html/ejs строка.
+
+##### Returns
+`{Function}` - возвращает функцию-шаблон которая содержит Incremental DOM анотации. 
+
+##### Example
+```js
+var RAD = require('RAD');
+var Backbone = require('Backbone');
+var navItemTemplate = RAD.template( require('./NavItemTemplate.ejs') );
+
+RAD.utils.ITemplate.registerHelper('NavItem', function (attrs, content) {
+    navItemTemplate({
+        href: attrs.href,
+        selected: Backbone.history.fragment === attrs.href
+    }, content);
+});
+
+```
+
  
-## <a name="dispatcher"></a>dispatcher
-### <a name="dispatcher_publish"></a>dispatcher.publish
-### <a name="dispatcher_subscribe"></a>dispatcher.subscribe
-### <a name="dispatcher_unsubscribe"></a>dispatcher.unsubscribe
+## <a name="dispatcher"></a>Event Dispatcher
+Для коммуникации между модулями, RAD.js предоставляет Event Dispatcher который по факту является клоном Backbone.Events.
+
+
+### <a name="dispatcher_subscribe"></a>RAD.subscribe(channel, callback, [context]);
+***
+Позволяет подписатся на получения сообщений из `channel`. 
+
+##### Arguments
+`{String} channel` - имя канала на чьи события нужно подписаться
+
+`{Function} callback` - функция будет вызвана каждый раз когда будет получено новое сообщение из `channel`
+
+`{Object} context` - задает контекст выполнения `callback`
+
+
+##### Returns
+`{Undefined}`
+
+##### Example
+```js
+// router.js
+var TodoRouter = Backbone.Router.extend({
+    routes: {
+        '*filter': 'filterItems'
+    },
+    filterItems: function (param) {
+        RAD.publish('filter', param);
+    }
+});
+
+// todo-list.js
+var TodoList = RAD.View.extend({
+    template: require('./template.ejs'),
+    initialize: function () {
+        RAD.subscribe('filter', this.filter, this);
+    },
+    filter: function (value) {
+        this.props.set('filter', value);
+    }
+ });   
+
+```
+
+### <a name="dispatcher_unsubscribe"></a>RAD.unsubscribe([channel], [callback], [context]);
+***
+Позволяет отписатся от получения сообщений.
+
+##### Example
+```js
+
+// отписать this.filter от получения сообщений от канала filter
+RAD.unsubscribe('filter', this.filter); 
+
+// отписать все колбэки от получения сообщений от канала filter
+RAD.unsubscribe('filter'); 
+
+// отписать this.filter от получения сообщений из любого канала
+RAD.unsubscribe(null, this.filter);
+
+// отписать все колбэки с нужным контекстом 
+RAD.unsubscribe(null, null, this);  
+
+```
+
+### <a name="dispatcher_publish"></a>RAD.publish(chanel, [args]);
+***
+Позволяет отправлять сообщения по указаному каналу. 
+
+##### Arguments
+`{string} chanel` - название каннала или список каналов (разделенных пробелом)
+
+`{} args` - можно передавать любое количество аргументов. Агрументы будут переданны в колбэк функцию которая подписана на канал. 
+
+##### Returns
+`{View Object}` - возвращает ссылку на View
+##### Example
+
+```js
+var TodoRouter = Backbone.Router.extend({
+    routes: {
+        '*filter': 'filterItems'
+    },
+    filterItems: function (param) {
+        RAD.publish('filter', param);
+    }
+});
+```
  
 ## <a name="view"></a>View
 
@@ -407,7 +452,7 @@ var page = new WelcomePage({
 page.render();
 pageModel.set('title', 'Hello world!'); // trigger page render
 ```
-### <a name="view_bind-render"></a>this.refs
+### <a name="view_refs"></a>this.refs
 ***
 Внутри шаблона каждому элементу можно указывать специальный атрибут `ref="refName"`. После каждого вызова `render` в объект `this.refs` будут записаны ссылки на указанные элементы.
 
@@ -550,29 +595,19 @@ page.getID(); // view-5
 
 `{Function} callback` - функция будет вызвана каждый раз когда будет получено новое сообщение из `channel`
 
-`{Object} context` - задает контекст выполнения `callback`
+`{Object} context` - задает контекст выполнения `callback`. По умолчанию `context` === `this`
 
 
 ##### Returns
 `{Undefined}` - Если метод вернет `false` - контент не буде изменен.
 
 ##### Example
-```js
-// router.js
-var TodoRouter = Backbone.Router.extend({
-    routes: {
-        '*filter': 'filterItems'
-    },
-    filterItems: function (param) {
-        RAD.publish('filter', param);
-    }
-});
 
-// todo-list.js
+```js
 var TodoList = RAD.View.extend({
     template: require('./template.ejs'),
     initialize: function () {
-        this.subscribe('filter', this.filter, this);
+        this.subscribe('filter', this.filter);
     },
     filter: function (value) {
         this.props.set('filter', value);
@@ -583,7 +618,7 @@ var TodoList = RAD.View.extend({
 
 ### <a name="view_unsubscribe"></a>this.unsubscribe([channel], [callback], [context]);
 ***
-Позволяет отписатся от получения сообщений.
+Позволяет отписатся от получения сообщений. По умолчанию: `context` === `this`.
 
 ##### Example
 ```js
@@ -597,8 +632,8 @@ this.unsubscribe('filter');
 // отписать this.filter от получения сообщений из любого канала
 this.unsubscribe(null, this.filter);
 
-// отписать все колбэки с нужным контекстом 
-this.unsubscribe(null, null, this);  
+// отписать все колбэки на которые была подписана View 
+this.unsubscribe();  
 
 ```
 
@@ -660,7 +695,7 @@ var CustomView = RAD.View.extend({
 
 ### <a name="view_on-detach"></a>this.onDetach();
 ***
-Вызывается сразу после того как View была удалена из DOM.
+Вызывается сразу после того как View была удалена из DOM в следсвии перерисовки родительского копонента.
 
 ##### Arguments
 `none` 
@@ -671,7 +706,7 @@ var CustomView = RAD.View.extend({
 
 ### <a name="view_on-destroy"></a>this.onDestroy();
 ***
-Этот колбек будет вызван если View была удалена используя метод `this.destroy`.   
+Этот колбек будет вызван если View была удалена используя метод `this.destroy`. `onDetach` так же будет вызван перед `onDestroy`.
 
 ##### Arguments
 `none` 
@@ -679,14 +714,49 @@ var CustomView = RAD.View.extend({
 ##### Returns
 `{Undefined}`
 
-##### Example
 
-## <a name="module"></a>Module
-### <a name="module_on-receive-msg"></a>this.onReceiveMsg
-### <a name="module_destroy"></a>this.destroy
-### <a name="module_extend"></a>Module.extend
- 
-## <a name="plugins"></a>Plugins
-### <a name="plugins_navigator"></a>navigator
-### <a name="plugins_transition-group"></a>transition group
+## <a name="plugins_navigator"></a>navigator
+Для простоты навигации RAD.js предоставляет плагин который позволяет удобное API для вставки Views или компонентов в DOM. 
+
+### RAD.publish('naviagtion.show', data);
+`naviagtion.show` - это зарезервированое имя канала. navigator принимает следующие `data`:
+
+##### Arguments
+```js
+RAD.publish('navigation.show', {
+    container: '#container', // css селектор или html элемент куда необходимо вставить View или компоенент;
+    content: SomeView, // функция конструктор
+    options: someData // данные которые будут переданы в функцию конструктор
+});
+
+```
+
+##### Returns
+`{Undefined}`
+
+##### Example
+```js
+var MainPage = require('./views/MainPage');
+
+RAD.publish('navigation.show', {
+    container: '#container',
+    content: MainPage,
+    options: {
+    	title: 'Home Page'
+    }
+});
+
+```
+
+```js
+var MainPage = RAD.View.extend({
+    template: require('./MainLayout.ejs'),
+    initialize: function () {
+        this.props.get('title'); // Hello Page
+    }
+});
+
+```
+
+## <a name="plugins_transition-group"></a>transition group
 	

@@ -175,10 +175,19 @@ BaseView.prototype = _.create(Backbone.View.prototype, {
 
         this.off();
         this.undelegateEvents();
+    },
+    subscribe: function(channel, callback, context) {
+        return Dispatcher.subscribe(channel, callback, context || this);
+    },
+    unsubscribe: function(channel, callback, context) {
+        return Dispatcher.unsubscribe(channel, callback, context || this);
+    },
+    publish: function() {
+        return Dispatcher.publish.apply(Dispatcher, arguments);
     }
 });
 
-_.extend(BaseView.prototype, Dispatcher, {
+_.extend(BaseView.prototype, {
     onReceiveMsg:   function () {},
     onBeforeRender: function () {},
     onRender:       function () {},
