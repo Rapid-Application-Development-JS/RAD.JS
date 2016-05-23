@@ -1,0 +1,20 @@
+<%
+var ChartView = require('./chart');
+var SliderItem = require('../../components/slider/tpl.ejs');
+var CustomView = require('./custom');
+
+function repeater(attrs, contentRender) {
+    for(var i = 0; i < attrs.amount; i++) {
+        contentRender({data: i})
+    }
+}
+%>
+<div class="main">
+    <::ChartView value="<%= data.props.charData %>" width="200" height="200" key="canvas-persist"/>
+    <::SliderItem value="<%= data.props.charData %>" class="slider"/>
+    <::CustomView value="<%= data.props.charData %>" key="view-persist"/>
+
+    <::repeater amount="2">
+        <div><span>item:</span>&#32;<%=parent.data%></div>
+    </::repeater>
+</div>

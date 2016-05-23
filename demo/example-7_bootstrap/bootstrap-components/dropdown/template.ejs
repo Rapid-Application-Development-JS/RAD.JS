@@ -1,0 +1,17 @@
+<div class="dropdown">
+    <button class="<%= 'btn dropdown-toggle btn-' + data.type %>" type="button" id="dropdownMenu1"
+            data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="true">
+        Dropdown
+        <span class="caret"></span>
+    </button>
+    <ul ref="ul" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <% data.items.forEach(function(item, index) {
+        if (item !== null) { %>
+        <li><a href="#" data-index="<%= index %>"><%= item %></a></li>
+        <% } else { %>
+        <li role="separator" class="divider"></li>
+        <% }
+        }); %>
+    </ul>
+</div>

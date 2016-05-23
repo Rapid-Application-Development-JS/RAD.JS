@@ -1,0 +1,62 @@
+.root-view {
+    background-color: #000;
+}
+
+.time-log {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 100;
+    padding: 10px;
+
+    text-shadow: 1px 1px #000;
+    -webkit-transition: background-color 500ms;
+    transition: background-color 500ms;
+}
+
+.topcoat-list__item {
+    -webkit-transition: color 300ms;
+    transition: color 300ms;
+}
+
+/* css perspective required for codrops PageTransitions  */
+#animation-group {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    -webkit-perspective: 1200px;
+    -moz-perspective: 1200px;
+    perspective: 1200px;
+}
+
+#animation-group [data-role="view"] {
+    z-index: 2;
+}
+
+/* Adds revers animation for Animate.css */
+.animated {
+    pointer-events: none;
+}
+
+#animation-group.forward .leave,
+#animation-group.backward .enter {
+    z-index: 1;
+}
+
+#animation-group.forward .enter,
+#animation-group.backward .leave {
+    z-index: 10;
+}
+
+.pt-page-onbottom {
+    z-index: 1 !important;
+}
+
+.pt-page-ontop {
+    z-index: 20 !important;
+}
+
+#animation-group .pt-reverse {
+    -webkit-animation-direction: reverse;
+    animation-direction: reverse;
+}

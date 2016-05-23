@@ -1,0 +1,24 @@
+<form action="#" class="form-todo-item">
+
+    <div class="view">
+
+        <% if (data.model.completed) { %>
+
+        <input class="toggle" type="checkbox" name="toggle" checked>
+
+        <% } else { %>
+
+        <input class="toggle" type="checkbox" name="toggle">
+
+        <% } %>
+
+        <label class="todo-label no-select">
+            <%= data.model.title %>
+        </label>
+
+        <button class="destroy" type="button"></button>
+
+    </div>
+
+    <input ref="edit" class="edit" name="todo-title" value="<%= data.model.title %>">
+</form>

@@ -1,0 +1,28 @@
+<% var Stage = require('./ClientsStage/Stage'); %>
+<div class="panel panel--new-leads">
+    <div class="title-hold">
+        <h1>Clients</h1>
+        <p class="text--new-leads">Ipsum dolor sit amet, consectetuer adipiscing elit</p>
+    </div>
+</div>
+<div class="panel panel--add-client">
+
+    <h2 class="h2--add-client">Add Client</h2>
+
+    <form id="add-client" action="#" class="form form--add-client">
+        <input class="input input--add-client" type="text" name="clientName" placeholder="Type Client Name">
+        <button class="btn btn--add-client" type="submit">
+            <span class="icon icon--plus s-center-abs"></span>
+        </button>
+    </form>
+</div>
+
+<div class="panel panel--stages">
+    <div class="stages">
+        <::Stage stage-id="1"/>
+        <::Stage stage-id="2"/>
+        <::Stage stage-id="3"/>
+        <::Stage stage-id="4"/>
+        <::Stage stage-id="5"/>
+    </div>
+</div>

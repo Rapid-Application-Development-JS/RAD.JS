@@ -1,0 +1,11 @@
+.hidden-input {
+    position: absolute;
+    left: -2000px;
+    top: -2000px;
+    visibility: hidden;
+}
+
+.no-select {
+    -webkit-user-select: none;
+    user-select: none;
+}

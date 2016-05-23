@@ -1,0 +1,33 @@
+<%
+var List = require('../list');
+var Details = require('../details');
+
+var direction = data.props.direction;
+var animationEnter = (direction == 'forward') ? data.props.animationEnter : data.props.animationEnterBack;
+var animationLeave = (direction == 'forward') ? data.props.animationLeave : data.props.animationLeaveBack;
+var enterTimeout = (direction == 'forward') ? data.props.enterTimeout : data.props.leaveTimeout;
+var leaveTimeout = (direction == 'forward') ? data.props.leaveTimeout : data.props.enterTimeout;
+var date = new Date();
+var seconds = date.getSeconds();
+
+seconds = seconds < 10 ? '0' + seconds : seconds;
+%>
+<div class="time-log" style="background-color: <%= RAD.getRandomColor() %>;">
+    <%= date.getHours() %>:<%= date.getMinutes() %>:<%= seconds %>
+</div>
+<i-transition id="animation-group"
+              key="animation-group"
+              class="<%= direction %>"
+              initialAnimation="none"
+              animationEnter="<%= animationEnter %>"
+              animationLeave="<%= animationLeave %>"
+              enterTimeout="<%= enterTimeout || 400 %>"
+              leaveTimeout="<%= leaveTimeout || 400 %>">
+
+    <% if (data.props.direction === 'forward') { %>
+    <::Details key="details"/>
+    <% } else { %>
+    <::List key="transitions-list" className="test"/>
+    <% } %>
+
+</i-transition>

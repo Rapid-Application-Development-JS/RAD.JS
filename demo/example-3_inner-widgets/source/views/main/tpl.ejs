@@ -1,0 +1,53 @@
+<%
+/* Dummy component  */
+var TopBar = require('../header/tpl.ejs');
+
+/* Smart components */
+var FirstTab = require('../inner/tab-first');
+var SecondTab = require('../inner/tab-second');
+
+var firstTabState = '';
+var secondTabState = '';
+var title;
+
+if (data.tabName === 'first') {
+    firstTabState = 'active';
+    title = 'First tab'
+} else {
+    secondTabState = 'active';
+    title = 'Second tab'
+}
+%>
+
+<div class="top-bar">
+    <::TopBar title="<%= title %>"/>
+</div>
+
+<div class="bottom-bar topcoat-tab-bar">
+    <div class="topcoat-tab-bar__item">
+        <button class="topcoat-tab-bar__button switch-to <%= firstTabState %>"
+                data-tab-name="first">
+            First
+        </button>
+    </div>
+    <div class="topcoat-tab-bar__item">
+        <button class="topcoat-tab-bar__button switch-to <%= secondTabState %>"
+                data-tab-name="second">
+            Second
+        </button>
+    </div>
+</div>
+
+<div class="main">
+
+    <% if (data.tabName === 'first') { %>
+
+    <::FirstTab/>
+
+    <% } else { %>
+
+    <::SecondTab/>
+
+    <% } %>
+
+</div>

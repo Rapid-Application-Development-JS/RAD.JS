@@ -1,0 +1,15 @@
+<div class="modal-frame">
+    <div class="intro">
+        <% var content = this.props.get("popup-content").content;
+        if (typeof content === 'function') {
+            content(data);
+        } else { %>
+        <%= this.props.get("popup-content").content %>
+        <% } %>
+    </div>
+    <div>
+        <button class="topcoat-button--cta js-close">
+            Close
+        </button>
+    </div>
+</div>

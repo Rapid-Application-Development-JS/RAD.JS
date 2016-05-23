@@ -1,0 +1,8 @@
+<% var client = data.props.client; %>
+<h3 class="h2--tile"><%= client.name %></h3>
+<p class="text--tile"><%= client.company %></p>
+<p class="text--amount"><%= client.salary %></p>
+<span class="date date--tile"><%= new Date(client.date).toDateString() %></span>
+<a class="link--social link--facebook" href="#">
+    <span class="icon icon--facebook s-center-abs"></span>
+</a>

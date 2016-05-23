@@ -1,0 +1,95 @@
+<%
+var CodeFormat = require('./bootstrap-components').CodeFormat;
+var DropDown = require('./bootstrap-components').DropDown;
+var AcordionGroup = require('./bootstrap-components').AcordionGroup;
+var AcordionPanel = require('./bootstrap-components').AcordionPanel;
+%>
+<div class="main-page">
+
+    <!--render counter-->
+    <div class="panel">Render counter:&#32;<span><%= this.counter %></span></div>
+
+    <!--DropDown panel-->
+    <div class="panel panel-info">
+        <div class="panel-heading">DropDown</div>
+        <div class="panel-body">
+            <::DropDown items="<%= this.dropDownItems %>" onclick="<%= this.onDropDownClick %>"
+                        type="danger"></::DropDown>
+        </div>
+        <div class="panel-footer">
+            <::CodeFormat type="html">
+&lt;::DropDown items=&quot;&lt;%= this.dropDownItems %&gt;&quot; onclick=&quot;&lt;%= this.onDropDownClick %&gt;&quot; type=&quot;danger&quot;&gt;&lt;/::DropDown&gt;
+            </::CodeFormat>
+        </div>
+    </div>
+
+    <!--accordion-->
+    <div class="panel panel-info">
+        <div class="panel-heading">Accordion</div>
+        <div class="panel-body">
+            <::AcordionGroup id="my-accordion">
+                <::AcordionPanel caption="Collapsible Group Item #1" id="panel-one" parent-id="my-accordion">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+                    wolf moonofficia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                    eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+                    assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt
+                    sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
+                    farm-to-table,denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore
+                    sustainable VHS.
+                </::AcordionPanel>
+                <::AcordionPanel caption="Collapsible Group Item #2" open="true" id="panel-two" parent-id="my-accordion">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+                    wolf moonofficia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                    eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+                    assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt
+                    sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
+                    farm-to-table,denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore
+                    sustainable VHS.
+                </::AcordionPanel>
+                <::AcordionPanel caption="Collapsible Group Item #3" id="panel-three" parent-id="my-accordion">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+                    wolf moonofficia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                    eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+                    assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt
+                    sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
+                    farm-to-table,denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore
+                    sustainable VHS.
+                </::AcordionPanel>
+            </::AcordionGroup>
+        </div>
+        <div class="panel-footer">
+            <::CodeFormat type="html">
+&lt;::AcordionGroup id=&quot;my-accordion&quot;&gt;<br/>
+&#09;&lt;::AcordionPanel caption=&quot;Collapsible Group Item #1&quot; id=&quot;panelOne&quot; parent-id=&quot;my-accordion&quot;&gt;<br/>
+&#09;&#09;Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3<br/>
+&#09;&#09;wolf moonofficia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum<br/>
+&#09;&#09;eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla<br/>
+&#09;&#09;assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt<br/>
+&#09;&#09;sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer<br/>
+&#09;&#09;farm-to-table,denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore<br/>
+&#09;&#09;sustainable VHS.<br/>
+&#09;&lt;/::AcordionPanel&gt;<br/>
+&#09;&lt;::AcordionPanel caption=&quot;Collapsible Group Item #2&quot; open=&quot;true&quot; id=&quot;panelTwo&quot; parent-id=&quot;my-accordion&quot;&gt;<br/>
+&#09;&#09;Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3<br/>
+&#09;&#09;wolf moonofficia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum<br/>
+&#09;&#09;eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla<br/>
+&#09;&#09;assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt<br/>
+&#09;&#09;sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer<br/>
+&#09;&#09;farm-to-table,denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore<br/>
+&#09;&#09;sustainable VHS.<br/>
+&#09;&lt;/::AcordionPanel&gt;<br/>
+&#09;&lt;::AcordionPanel caption=&quot;Collapsible Group Item #3&quot; id=&quot;panelThree&quot; parent-id=&quot;my-accordion&quot;&gt;<br/>
+&#09;&#09;Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3<br/>
+&#09;&#09;wolf moonofficia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum<br/>
+&#09;&#09;eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla<br/>
+&#09;&#09;assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt<br/>
+&#09;&#09;sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer<br/>
+&#09;&#09;farm-to-table,denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore<br/>
+&#09;&#09;sustainable VHS.<br/>
+&#09;&lt;/::AcordionPanel&gt;<br/>
+&lt;/::AcordionGroup&gt;<br/>
+            </::CodeFormat>
+        </div>
+    </div>
+
+</div>

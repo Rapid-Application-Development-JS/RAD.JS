@@ -1,0 +1,31 @@
+<% var animationGroups = _.groupBy(data.collection, 'libName'); %>
+
+<div class="top-bar topcoat-navigation-bar">
+    <div class="topcoat-navigation-bar__item center full">
+        <h1 class="topcoat-navigation-bar__title">Select animation type</h1>
+    </div>
+</div>
+
+<div class="main">
+    <div class="section form-options topcoat-list">
+        <% _.each(animationGroups, function(animations, groupName) { %>
+
+        <h2 class="topcoat-list__header">
+            <%= groupName %>:
+        </h2>
+
+        <ul class="topcoat-list__container">
+            <% _.each(animations, function(animation) { %>
+
+            <li id="<%= animation.id %>" class="topcoat-list__item has-active"
+                style="color: <%= RAD.getRandomColor() %>;">
+                <%= animation.name %>
+                <i class="fa fa-angle-right"></i>
+            </li>
+
+            <% }); %>
+        </ul>
+
+        <% }); %>
+    </div>
+</div>

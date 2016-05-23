@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+
+    <title>HTML injection</title>
+
+    <link rel="stylesheet" href="../theme/css/main.css" type="text/css"/>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+
+    <script type="text/javascript" src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="../../node_modules/underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="../../node_modules/backbone/backbone-min.js"></script>
+    <script type="text/javascript" src="../../build/rad.js"></script>
+
+</head>
+<body>
+<div id="screen"></div>
+<div id="modals"></div>
+
+<script type="text/ejs-template" id="hello-page">
+    <div class="intro">
+        <h1>Hello World!</h1>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lectus nisl, luctus at nulla a, volutpat
+            viverra leo. Ut ut lobortis erat. Fusce ultrices interdum viverra. Etiam tristique tellus ac placerat
+            varius.
+            Quisque at fringilla odio, sit amet laoreet ligula. Nam a mi in enim scelerisque tempus non vitae velit.
+        </p>
+        <% this.htmlInjection(); %>
+    </div>
+</script>
+<script type="text/javascript" src="build/app.min.js"></script>
+</body>
+</html>

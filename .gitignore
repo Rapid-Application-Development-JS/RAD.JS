@@ -1,34 +1,10 @@
-!.gitignore
 .idea/
+build/
 nbproject/
-
 .DS_Store
-
-tmp/**
-tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# SublimeText project files
-/*.sublime-project
-
-# Windows image file caches
-Thumbs.db
-
-# Folder config file
-Desktop.ini
-
-/node_modules/
-
-
+.DS_STORE
 node_modules/
-
+demo_old/
+input/
+*.log
+bower_components/

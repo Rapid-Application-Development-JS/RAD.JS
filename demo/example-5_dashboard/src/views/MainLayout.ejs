@@ -1,0 +1,40 @@
+<%
+var TopBar = require('./TopBar/TopBar');
+var Clients = require('./Clients/Clients');
+%>
+<div class="content">
+    <header class="header">
+        <::TopBar/>
+    </header>
+
+    <main class="main">
+        <% if (data.props.pageName === 'home') { %>
+        <::Clients/>
+        <% } else { %>
+        <h1>Ooops: 404 Page not found!!!</h1>
+        <% } %>
+    </main>
+</div>
+
+<div class="sidebar">
+    <nav>
+        <i-NavItem class="link--logo" href="">
+            <span class="icon icon--logo s-center-abs"></span>
+        </i-NavItem>
+
+        <i-NavItem class="link--sidebar" href="">
+            <span class="icon icon--speed s-center-abs"></span>
+            <span class="icon icon--speed-active s-center-abs"></span>
+        </i-NavItem>
+
+        <i-NavItem class="link--sidebar" href="details">
+            <span class="icon icon--workflow s-center-abs"></span>
+            <span class="icon icon--workflow-active s-center-abs"></span>
+        </i-NavItem>
+
+        <i-NavItem class="link--sidebar" href="calendar">
+            <span class="icon icon--calendar s-center-abs"></span>
+            <span class="icon icon--calendar-active s-center-abs"></span>
+        </i-NavItem>
+    </nav>
+</div>

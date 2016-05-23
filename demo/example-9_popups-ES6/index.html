@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+
+    <title>Popups</title>
+
+    <link rel="stylesheet" href="../theme/css/main.css" type="text/css"/>
+
+    <script type="text/javascript" src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="../../node_modules/underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="../../node_modules/backbone/backbone-min.js"></script>
+    <script type="text/javascript" src="../../build/rad.js"></script>
+
+    <style>
+        .intro {
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-frame {
+            width: 300px;
+            background: cornflowerblue;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+<div id="screen"></div>
+<div id="modals"></div>
+
+<script type="text/javascript" src="build/app.min.js"></script>
+</body>
+</html>

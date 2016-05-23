@@ -1,0 +1,8 @@
+<%
+var Factory = require('./factory');
+        for (var viewID in this.props.toJSON()) {
+%>
+
+<::Factory key="<%= viewID %>" popup-content="<%= this.props.get(viewID) %>" popup-id="<%= viewID %>"/>
+
+<% } %>

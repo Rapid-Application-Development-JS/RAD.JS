@@ -1,0 +1,70 @@
+<% var TodoItem = require('../todo-view/'); %>
+<header class="header">
+    <h1>todos</h1>
+
+    <form action="#" class="form-todo">
+        <input ref="input-field" class="new-todo" name="todo-title" placeholder="What needs to be done?" autofocus>
+        <input class="hidden-input" type="submit" value="submit">
+    </form>
+</header>
+
+<% if (data.length) { %>
+
+<section class="main">
+
+    <% if (data.remaining) { %>
+
+    <input class="toggle-all" type="checkbox" name="toggle-all">
+
+    <% } else { %>
+
+    <input class="toggle-all" type="checkbox" name="toggle-all" checked>
+
+    <% } %>
+
+    <i-transition tagName="ul"
+                  class="todo-list"
+                  animationName="height"
+                  enterTimeout="400"
+                  leaveTimeout="400">
+
+        <% data.todos.each(function(todo) { %>
+
+        <::TodoItem key="<%= todo.get('id') %>"
+                    model="<%= todo %>"
+                    tagName="li"/>
+
+        <% }, this); %>
+
+    </i-transition>
+
+</section>
+
+<footer class="footer">
+
+        <span class="todo-count">
+            <strong>
+                <%= data.remaining %>
+            </strong>
+            <span>
+                <%= (data.remaining === 1 ? ' item' : ' items') %> left
+            </span>
+        </span>
+
+    <ul class="filters">
+        <li>
+            <i-NavItem href="" title="All"/>
+        </li>
+        <li>
+            <i-NavItem href="active" title="Active"/>
+        </li>
+        <li>
+            <i-NavItem href="completed" title="Completed"/>
+        </li>
+    </ul>
+
+    <% if (data.length != data.remaining) { %>
+    <button class="clear-completed">Clear completed</button>
+    <% } %>
+</footer>
+<% } %>

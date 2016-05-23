@@ -1,0 +1,17 @@
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+        <h4 class="panel-title">
+            <a class="<%= (data.open ? '' : 'collapsed') %>" role="button" data-toggle="collapse"
+               data-parent="<%= '#' + data['parent-id'] %>" href="<%= '#' + data.id %>"
+               aria-expanded="true" aria-controls="<%= data.id %>">
+                <%= data.caption %>
+            </a>
+        </h4>
+    </div>
+    <div id="<%= data.id %>" class="<%= 'panel-collapse collapse' + (data.open ? ' in' : '') %>" role="tabpanel"
+         aria-labelledby="headingOne">
+        <div class="panel-body">
+            <% content(); %>
+        </div>
+    </div>
+</div>
