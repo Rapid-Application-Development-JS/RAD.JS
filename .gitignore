@@ -7,3 +7,4 @@ demo_old/
 input/
 *.log
 bower_components/
+demo/**/build/

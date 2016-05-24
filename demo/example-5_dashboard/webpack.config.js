@@ -21,7 +21,8 @@ module.exports = {
     },
     resolve: {
         alias: {
-            'RAD': Path.join(__dirname, '../..', 'build', 'rad')
+            'RAD': Path.join(__dirname, '../..', 'build', 'rad'),
+            'RAD.js': Path.join(__dirname, '../..', 'build', 'rad')
         }
     },
     module: {
