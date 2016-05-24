@@ -16,3 +16,5 @@ Like Backbone itself, you're not required to use all of RAD.JS just because you 
 
 * [Motivation](Motivation.md)
 * [Features](Features.md)
+
+> **RAD.js** являеться **product ready library**, мы его уже используем в наших проектах.
