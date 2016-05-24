@@ -26,6 +26,7 @@
 * [View](#view)
 	* [template](#view_template)
 	* [props](#view_props)
+	* [refs](#view_refs)
 	* [getID](#view_get-id)
 	* [getTemplateData](#view_get-template-data)
 	* [bindRender](#view_bind-render)
