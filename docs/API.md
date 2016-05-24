@@ -760,4 +760,85 @@ var MainPage = RAD.View.extend({
 ```
 
 ## <a name="plugins_transition-group"></a>transition group
-	
+
+Для удобства работы с CSS анимациями RAD.js предоставляет встроенный компонент `<i-transtion></i-transition>`. 
+На данный момент он поддерживает только CSS3 Keyframes Animation. И предоставляет API схожее с React Transition Group.
+
+##### Options:
+`{string} tagName='div'` - позволяет указать тег transition group элемент. 
+
+`{string} initialAnimation` - если указать как `none` - тогда при первой отрисовки анимация к элемента применятся не будет.
+
+`{string} animationEnter` - CSS класс который будет применятся к добавленным элементам. 
+ 
+`{string} animationLeave` - CSS класс который будет применятся к удаляемым элементам. 
+
+`{string} animationName` - позволяет указать один общий CSS класc для `animationLeave` и `animationEnter`.
+
+`{number | string} leaveTimeout=3500 enterTimeout=3500` - Позволяют задать время тайм-аута для анимации. Transition group всегда старается отследить события onAnimationEnd но для подстраховки можно указать явно timeout для предотвращения подвисания. 
+Если указать timeout=0 - анимация произойдет мгновенно.  
+
+
+`{string} enterClass='enter'` - позволяет переопределить доп класc применяемый к добавленым элементам. 
+
+`{string} leaveClass='leave'` - позволяет переопределить доп класc применяемый к добавленым элементам. 
+
+`{string} activeClass='animated'` - позволяет переоределить класc-активатор для анимации. 
+
+##### Example	
+
+``` ejs
+<i-transition tagName="ul"
+              class="todo-list"
+              animationName="toggleHeight"
+              initialAnimation="none"
+              enterTimeout="400"
+              leaveTimeout="400">
+
+        <% data.todos.each(function(todo) { %>
+
+        <::TodoItem key="<%= todo.get('id') %>"
+                    model="<%= todo %>"
+                    tagName="li"/>
+
+        <% }, this); %>
+
+</i-transition>
+```
+**Важно**: дочернии элементы transition group должны именть уникальный `key`
+
+
+```css
+@keyframes animateHeight {
+    0% {
+        height: 0;
+        overflow: hidden;
+    }
+
+    100% {
+        height: 58px;
+        overflow: hidden;
+    }
+}
+
+.toggleHeight {
+    animation-name: animateHeight;
+}
+
+.toggleHeight.leave {
+    animation-direction: reverse;
+}
+
+```
+
+Для описания CSS анимации transition group предоставляет сразу 3 CSS класcа которые будут применятся в следующий последовательности:
+
+- Enter Animation. В момент добавления нового DOM узла к нему буду добавлены CSS классы указанные в параметрах: `animationEnter` и `enterClass` - в этот момент можно описать анимацию и задать начальное состояния. После чего будет добавлен класс-тригер `activeClass` - в этот момент можно запустить нашу анимацию. 
+
+- Leave Animation: перед удалением к DOM узлу добавляются классы указаны в `animationLeave` и `enterClass` после чего будет добавлен клас-тригер `activeClass`
+
+Не обязательно использовать все 3-и класса для описания анимации. Можно всю анимации описать и через `animationEnter` и `animationLeave` или же только через `animationName`. Дополнительные класы могут быть использованы для стилизации, изменения animation-direction.
+
+Также достаточно легко использовать готовые наборы/библиотеки для CSS анимаций такие как Animate.css (можно найти пример использование в demo/example-2_two-pages) 
+
+ 
