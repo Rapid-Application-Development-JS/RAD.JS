@@ -17,6 +17,7 @@ module.exports = {
     // Define global variable names that could be required inside module
     externals: {
         "RAD": "RAD",
+        "RAD.js": "RAD",
         "$": "jQuery",
         "jQuery": "jQuery",
         "Backbone": "Backbone",

@@ -15,12 +15,12 @@ npm run build
 
 Build examples:
 ```
-npm run watch
+npm run demo
 ```
 
 Run in dev mode. In this case webpack will start in --watch mode:
 ```
-npm run watch
+npm run dev
 ```
 
 ---
