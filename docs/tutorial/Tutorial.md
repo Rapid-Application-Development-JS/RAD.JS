@@ -1,8 +1,8 @@
 # Tutorial
 
-Try the QuickStart. The QuickStart is the "Hello, World" of RAD.js. It shows us how to setup the libraries and tools.
+Для начала вы можете поробовать [QuickStart](../quickstart/Quickstart.md). The QuickStart is the "Hello, World" of **RAD.js**. It shows us how to setup the libraries and tools for project. А также показывает основные отличия **RAD.js** от **Backbone.js**, в чем именно он дополняет **Backbone.js**. 
 
-Но самое главное мы обратим отдельное внимание на новые фитчи которые можно использовать с RAD.js и на использование сторонних библиотек с RAD.js.
+Но самое главное мы обратим внимание не только на то как писать приложение но и на то как использовать сторонний библиотеки/кодвместе с **RAD.js**.
 
 * [Introduction](Introduction.md)
 * [The HERO Editor](Editor.md)
