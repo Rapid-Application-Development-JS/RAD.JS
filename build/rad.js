@@ -173,10 +173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    contentHandler.stop(renderData);
 	    rootElementClose(options);
 	
-	    // important for heavy view animation
-	    setTimeout(function(){
-	        contentHandler.doTransition(renderData);
-	    }, 0)
+	    contentHandler.doTransition(renderData);
 	});
 
 /***/ },

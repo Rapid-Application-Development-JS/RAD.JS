@@ -73,8 +73,5 @@ iTemplate.registerHelper('i-transition', function(options, renderContent) {
     contentHandler.stop(renderData);
     rootElementClose(options);
 
-    // important for heavy view animation
-    setTimeout(function(){
-        contentHandler.doTransition(renderData);
-    }, 0)
+    contentHandler.doTransition(renderData);
 });
