@@ -122,7 +122,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    'enterClass',
 	    'leaveClass',
-	    'activeClass'
+	    'activeClass',
+	    'delay',
+	    'groupName'
 	];
 	
 	function rootElementOpen(options) {
