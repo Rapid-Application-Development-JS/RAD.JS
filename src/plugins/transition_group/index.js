@@ -6,6 +6,7 @@ var template = require('../../template');
 var utils = require('./utils');
 var contentHandler = require('./contentHandler');
 var iTemplate = require('idom-template');
+var RunnerQuery = require('./runner');
 
 var reservedAttrs = [
     'name', // deprecated
@@ -73,5 +74,7 @@ iTemplate.registerHelper('i-transition', function(options, renderContent) {
     contentHandler.stop(renderData);
     rootElementClose(options);
 
-    contentHandler.doTransition(renderData);
+    var runner = RunnerQuery.create(options);
+    contentHandler.doTransition(renderData, runner);
+    runner.run();
 });

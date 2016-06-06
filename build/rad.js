@@ -69,10 +69,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var RAD = {};
 	
 	RAD.core = __webpack_require__(13);
-	RAD.utils = __webpack_require__(25);
+	RAD.utils = __webpack_require__(26);
 	RAD.template = __webpack_require__(10);
 	RAD.View = __webpack_require__(14);
-	RAD.Module = __webpack_require__(23);
+	RAD.Module = __webpack_require__(24);
 	
 	// Extend with Dispatcher API: publish, subscribe, unsubscribe
 	_.extend(RAD, __webpack_require__(6));
@@ -90,8 +90,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(3);
-	__webpack_require__(22);
-	__webpack_require__(24);
+	__webpack_require__(23);
+	__webpack_require__(25);
 
 
 /***/ },
@@ -106,6 +106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var utils = __webpack_require__(15);
 	var contentHandler = __webpack_require__(16);
 	var iTemplate = __webpack_require__(11);
+	var RunnerQuery = __webpack_require__(22);
 	
 	var reservedAttrs = [
 	    'name', // deprecated
@@ -173,7 +174,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    contentHandler.stop(renderData);
 	    rootElementClose(options);
 	
-	    contentHandler.doTransition(renderData);
+	    var runner = RunnerQuery.create(options);
+	    contentHandler.doTransition(renderData, runner);
+	    runner.run();
 	});
 
 /***/ },
@@ -2957,7 +2960,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    alignContent(renderData.children, renderData.position);
 	}
 	
-	function doTransition(renderData) {
+	function doTransition(renderData, runner) {
 	    var rootEl = renderData.rootEl;
 	    var activeKeys = utils.getNodeData(rootEl).keyMap;
 	    var transitionOptions = initTransitionOptions(renderData.attrs);
@@ -2978,14 +2981,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    render.status = RenderStatus.DONE;
 	                    delete activeKeys[key];
 	                    publish(Events.NODE_REMOVED, node);
-	                });
+	                }, runner);
 	            }
 	        } else if (renderData.keysToShow[key] || render.status === RenderStatus.LEAVE) {
 	            if (render.status !== RenderStatus.ENTER) {
 	                render.status = RenderStatus.ENTER;
 	                transition.enter(node, transitionOptions, function() {
 	                    render.status = RenderStatus.DONE;
-	                });
+	                }, runner);
 	            }
 	        }
 	    });
@@ -3072,7 +3075,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    utilsDOM.addClass(node, options.activeClass);
 	}
 	
-	function transitionLeave(node, options, callback) {
+	function transitionLeave(node, options, callback, runner) {
 	    if (hasActiveTransition(node)) {
 	        node.stopActiveTransition();
 	    }
@@ -3080,13 +3083,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    utilsDOM.addClass(node, [options.animationLeave, options.leaveClass].join(sep));
 	    utilsDOM.removeClass(node, options.enterClass);
 	
-	    transition(node, options, options.leaveTimeout, function(node) {
-	        node.parentNode && node.parentNode.removeChild(node);
-	        callback && callback();
+	    runner.push(function () {
+	        transition(node, options, options.leaveTimeout, function(node) {
+	            node.parentNode && node.parentNode.removeChild(node);
+	            callback && callback();
+	        });
 	    });
 	}
 	
-	function transitionEnter(node, options, callback) {
+	function transitionEnter(node, options, callback, runner) {
 	    if (hasActiveTransition(node)) {
 	        node.stopActiveTransition();
 	    }
@@ -3094,7 +3099,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    utilsDOM.addClass(node, [options.animationEnter, options.enterClass].join(sep));
 	    utilsDOM.removeClass(node, options.leaveClass);
 	
-	    transition(node, options, options.enterTimeout, callback);
+	    runner.push(function () {
+	        transition(node, options, options.enterTimeout, callback);
+	    });    
 	}
 	
 	module.exports.enter = transitionEnter;
@@ -3247,13 +3254,115 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 22 */
+/***/ function(module, exports) {
+
+	function Runner() {
+	    this.callbacks = [];
+	
+	    // this.delay = undefined;
+	    //
+	    // if (options && options.hasOwnProperty('delay')) {
+	    //     this.delay = parseInt(options.delay, 10) || 0;
+	    // }
+	}
+	
+	Runner.prototype.push = function (callback) {
+	    this.callbacks.push(callback);
+	};
+	
+	Runner.prototype.execute = function () {
+	    // clearTimeout(this.timeout);
+	    //
+	    // var callbacks = this.callbacks;
+	    //
+	    // function execute() {
+	    //     for (var i = callbacks.length - 1; i >= 0; i--)
+	    //         callbacks.pop()();
+	    // }
+	    //
+	    // if (this.delay !== undefined) {
+	    //     this.timeout = setTimeout(execute, this.delay);
+	    // } else {
+	    //     execute();
+	    // }
+	
+	    for (var i = this.callbacks.length - 1; i >= 0; i--)
+	        this.callbacks.pop()();
+	};
+	
+	function createExecutor(query, name, delay) {
+	    return function () {
+	        var runners = query.runners[name];
+	
+	        runners.run = function () {
+	        };
+	
+	        function execute() {
+	            for (var i = runners.length - 1; i >= 0; i--) {
+	                console.log(i, name);
+	                runners.pop().execute();
+	            }
+	
+	            delete query.runners[name];
+	        }
+	
+	        if (delay !== undefined) {
+	            setTimeout(execute, delay);
+	        } else {
+	            execute();
+	        }
+	    }
+	}
+	
+	var query = {
+	
+	    runners: {},
+	
+	    create: function (options) {
+	        var self = this;
+	        var runner = new Runner(options);
+	        var delay;
+	
+	        // extract delay value
+	        if (options && options.hasOwnProperty('delay')) {
+	            delay = parseInt(options.delay, 10) || 0;
+	        }
+	
+	        // generate name for runner
+	        var name = "name_" + Math.random().toString(16).slice(2);
+	        if (options && options.hasOwnProperty('groupName')) {
+	            name = options.groupName;
+	        }
+	
+	        // push runner to query
+	        if (!this.runners.hasOwnProperty(name)) {
+	            this.runners[name] = [];
+	
+	            this.runners[name].run = createExecutor(this, name, delay);
+	        }
+	        this.runners[name].push(runner);
+	
+	        // modify the runner
+	        runner.name = name;
+	        runner.run = function () {
+	            self.runners[this.name].run();
+	        };
+	
+	        return runner;
+	    }
+	};
+	
+	module.exports = query;
+
+/***/ },
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
 	var _ = __webpack_require__(1);
 	
-	var Module = __webpack_require__(23);
+	var Module = __webpack_require__(24);
 	var Events = __webpack_require__(9).Events;
 	var Attrs = __webpack_require__(9).Attributes;
 	
@@ -3359,7 +3468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = new LayoutManager();
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3396,13 +3505,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Module;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var _ = __webpack_require__(1);
 	var core = __webpack_require__(13);
-	var Module = __webpack_require__(23);
+	var Module = __webpack_require__(24);
 	var iDOM = __webpack_require__(4);
 	var renderView = __webpack_require__(12);
 	
@@ -3473,7 +3582,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

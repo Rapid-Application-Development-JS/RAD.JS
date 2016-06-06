@@ -69,7 +69,7 @@ function transition(node, options, timeout, callback) {
     utilsDOM.addClass(node, options.activeClass);
 }
 
-function transitionLeave(node, options, callback) {
+function transitionLeave(node, options, callback, runner) {
     if (hasActiveTransition(node)) {
         node.stopActiveTransition();
     }
@@ -77,13 +77,15 @@ function transitionLeave(node, options, callback) {
     utilsDOM.addClass(node, [options.animationLeave, options.leaveClass].join(sep));
     utilsDOM.removeClass(node, options.enterClass);
 
-    transition(node, options, options.leaveTimeout, function(node) {
-        node.parentNode && node.parentNode.removeChild(node);
-        callback && callback();
+    runner.push(function () {
+        transition(node, options, options.leaveTimeout, function(node) {
+            node.parentNode && node.parentNode.removeChild(node);
+            callback && callback();
+        });
     });
 }
 
-function transitionEnter(node, options, callback) {
+function transitionEnter(node, options, callback, runner) {
     if (hasActiveTransition(node)) {
         node.stopActiveTransition();
     }
@@ -91,7 +93,9 @@ function transitionEnter(node, options, callback) {
     utilsDOM.addClass(node, [options.animationEnter, options.enterClass].join(sep));
     utilsDOM.removeClass(node, options.leaveClass);
 
-    transition(node, options, options.enterTimeout, callback);
+    runner.push(function () {
+        transition(node, options, options.enterTimeout, callback);
+    });    
 }
 
 module.exports.enter = transitionEnter;

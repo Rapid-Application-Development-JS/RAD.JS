@@ -114,7 +114,7 @@ function renderStop(renderData) {
     alignContent(renderData.children, renderData.position);
 }
 
-function doTransition(renderData) {
+function doTransition(renderData, runner) {
     var rootEl = renderData.rootEl;
     var activeKeys = utils.getNodeData(rootEl).keyMap;
     var transitionOptions = initTransitionOptions(renderData.attrs);
@@ -135,14 +135,14 @@ function doTransition(renderData) {
                     render.status = RenderStatus.DONE;
                     delete activeKeys[key];
                     publish(Events.NODE_REMOVED, node);
-                });
+                }, runner);
             }
         } else if (renderData.keysToShow[key] || render.status === RenderStatus.LEAVE) {
             if (render.status !== RenderStatus.ENTER) {
                 render.status = RenderStatus.ENTER;
                 transition.enter(node, transitionOptions, function() {
                     render.status = RenderStatus.DONE;
-                });
+                }, runner);
             }
         }
     });
