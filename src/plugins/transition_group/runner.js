@@ -34,7 +34,7 @@ var query = {
         if (!this.runners.hasOwnProperty(name)) {
             this.runners[name] = [];
         }
-        
+
         var runner = new Runner(name);
         this.runners[name].push(runner);
         this.runners[name].delay = delay;
@@ -44,20 +44,21 @@ var query = {
 
     run: function (name) {
         var runners = this.runners[name];
-        var delay = this.runners[name].delay;
+        if (runners) {
+            var delay = this.runners[name].delay;
 
-        function execute() {
-            for (var i = runners.length - 1; i >= 0; i--) {
-                runners.pop().execute();
+            function execute() {
+                for (var i = runners.length - 1; i >= 0; i--) {
+                    runners.pop().execute();
+                }
             }
 
-            delete query.runners[name];
-        }
-
-        if (delay !== undefined) {
-            setTimeout(execute, delay);
-        } else {
-            execute();
+            if (delay !== undefined) {
+                setTimeout(execute, delay);
+            } else {
+                execute();
+            }
+            this.runners[name] = [];
         }
     }
 };

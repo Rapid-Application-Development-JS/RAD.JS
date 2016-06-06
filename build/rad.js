@@ -2982,7 +2982,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        render.status = RenderStatus.DONE;
 	                        delete activeKeys[key];
 	                        publish(Events.NODE_REMOVED, node);
-	                    }, runner);
+	                    });
 	                });
 	           }
 	        } else if (renderData.keysToShow[key] || render.status === RenderStatus.LEAVE) {
@@ -2991,7 +2991,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                runner.push(function(){
 	                    transition.enter(node, transitionOptions, function () {
 	                        render.status = RenderStatus.DONE;
-	                    }, runner);
+	                    });
 	                });
 	            }
 	        }
@@ -3288,8 +3288,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!this.runners.hasOwnProperty(name)) {
 	            this.runners[name] = [];
 	        }
-	        
-	        var runner = new Runner(name)
+	
+	        var runner = new Runner(name);
 	        this.runners[name].push(runner);
 	        this.runners[name].delay = delay;
 	
@@ -3298,20 +3298,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    run: function (name) {
 	        var runners = this.runners[name];
-	        var delay = this.runners[name].delay;
+	        if (runners) {
+	            var delay = this.runners[name].delay;
 	
-	        function execute() {
-	            for (var i = runners.length - 1; i >= 0; i--) {
-	                runners.pop().execute();
+	            function execute() {
+	                for (var i = runners.length - 1; i >= 0; i--) {
+	                    runners.pop().execute();
+	                }
 	            }
 	
-	            delete query.runners[name];
-	        }
-	
-	        if (delay !== undefined) {
-	            setTimeout(execute, delay);
-	        } else {
-	            execute();
+	            if (delay !== undefined) {
+	                setTimeout(execute, delay);
+	            } else {
+	                execute();
+	            }
+	            this.runners[name] = [];
 	        }
 	    }
 	};

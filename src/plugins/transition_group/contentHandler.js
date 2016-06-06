@@ -136,7 +136,7 @@ function doTransition(renderData, runner) {
                         render.status = RenderStatus.DONE;
                         delete activeKeys[key];
                         publish(Events.NODE_REMOVED, node);
-                    }, runner);
+                    });
                 });
            }
         } else if (renderData.keysToShow[key] || render.status === RenderStatus.LEAVE) {
@@ -145,7 +145,7 @@ function doTransition(renderData, runner) {
                 runner.push(function(){
                     transition.enter(node, transitionOptions, function () {
                         render.status = RenderStatus.DONE;
-                    }, runner);
+                    });
                 });
             }
         }

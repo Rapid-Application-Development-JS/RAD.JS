@@ -22,9 +22,7 @@ seconds = seconds < 10 ? '0' + seconds : seconds;
               animationEnter="<%= animationEnter %>"
               animationLeave="<%= animationLeave %>"
               enterTimeout="<%= enterTimeout || 400 %>"
-              leaveTimeout="<%= leaveTimeout || 400 %>"
-              groupName="test"
-              delay="5000">
+              leaveTimeout="<%= leaveTimeout || 400 %>">
 
     <% if (data.props.direction === 'forward') { %>
     <::Details key="details"/>
