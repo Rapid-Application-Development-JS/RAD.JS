@@ -1,11 +1,5 @@
 function Runner() {
     this.callbacks = [];
-
-    // this.delay = undefined;
-    //
-    // if (options && options.hasOwnProperty('delay')) {
-    //     this.delay = parseInt(options.delay, 10) || 0;
-    // }
 }
 
 Runner.prototype.push = function (callback) {
@@ -13,21 +7,6 @@ Runner.prototype.push = function (callback) {
 };
 
 Runner.prototype.execute = function () {
-    // clearTimeout(this.timeout);
-    //
-    // var callbacks = this.callbacks;
-    //
-    // function execute() {
-    //     for (var i = callbacks.length - 1; i >= 0; i--)
-    //         callbacks.pop()();
-    // }
-    //
-    // if (this.delay !== undefined) {
-    //     this.timeout = setTimeout(execute, this.delay);
-    // } else {
-    //     execute();
-    // }
-
     for (var i = this.callbacks.length - 1; i >= 0; i--)
         this.callbacks.pop()();
 };

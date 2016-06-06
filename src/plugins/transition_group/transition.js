@@ -17,7 +17,7 @@ function clearTransitionTimeout(node) {
 }
 
 function setTransitionTimeout(node, cb, timeout) {
-    node.__transitionId = setTimeout(function() {
+    node.__transitionId = setTimeout(function () {
         cb(node);
     }, timeout);
 }
@@ -37,7 +37,7 @@ function transition(node, options, timeout, callback) {
         options.activeClass
     ].join(sep);
 
-    node.stopActiveTransition = function() {
+    node.stopActiveTransition = function () {
         clearTransitionTimeout(node);
         transitionEnd.unbindAll();
         animationEnd.unbindAll();
@@ -49,7 +49,7 @@ function transition(node, options, timeout, callback) {
         callback && callback(node);
     }
 
-    function onTransitionEnd (e) {
+    function onTransitionEnd(e) {
         if (e.target === node) {
             done();
         }
@@ -70,15 +70,15 @@ function transition(node, options, timeout, callback) {
 }
 
 function transitionLeave(node, options, callback, runner) {
-    if (hasActiveTransition(node)) {
-        node.stopActiveTransition();
-    }
-
-    utilsDOM.addClass(node, [options.animationLeave, options.leaveClass].join(sep));
-    utilsDOM.removeClass(node, options.enterClass);
-
     runner.push(function () {
-        transition(node, options, options.leaveTimeout, function(node) {
+        if (hasActiveTransition(node)) {
+            node.stopActiveTransition();
+        }
+
+        utilsDOM.addClass(node, [options.animationLeave, options.leaveClass].join(sep));
+        utilsDOM.removeClass(node, options.enterClass);
+
+        transition(node, options, options.leaveTimeout, function (node) {
             node.parentNode && node.parentNode.removeChild(node);
             callback && callback();
         });
@@ -86,16 +86,16 @@ function transitionLeave(node, options, callback, runner) {
 }
 
 function transitionEnter(node, options, callback, runner) {
-    if (hasActiveTransition(node)) {
-        node.stopActiveTransition();
-    }
-
-    utilsDOM.addClass(node, [options.animationEnter, options.enterClass].join(sep));
-    utilsDOM.removeClass(node, options.leaveClass);
-
     runner.push(function () {
+        if (hasActiveTransition(node)) {
+            node.stopActiveTransition();
+        }
+
+        utilsDOM.addClass(node, [options.animationEnter, options.enterClass].join(sep));
+        utilsDOM.removeClass(node, options.leaveClass);
+
         transition(node, options, options.enterTimeout, callback);
-    });    
+    });
 }
 
 module.exports.enter = transitionEnter;

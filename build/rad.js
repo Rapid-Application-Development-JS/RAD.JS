@@ -3023,7 +3023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	function setTransitionTimeout(node, cb, timeout) {
-	    node.__transitionId = setTimeout(function() {
+	    node.__transitionId = setTimeout(function () {
 	        cb(node);
 	    }, timeout);
 	}
@@ -3043,7 +3043,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        options.activeClass
 	    ].join(sep);
 	
-	    node.stopActiveTransition = function() {
+	    node.stopActiveTransition = function () {
 	        clearTransitionTimeout(node);
 	        transitionEnd.unbindAll();
 	        animationEnd.unbindAll();
@@ -3055,7 +3055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        callback && callback(node);
 	    }
 	
-	    function onTransitionEnd (e) {
+	    function onTransitionEnd(e) {
 	        if (e.target === node) {
 	            done();
 	        }
@@ -3076,15 +3076,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	function transitionLeave(node, options, callback, runner) {
-	    if (hasActiveTransition(node)) {
-	        node.stopActiveTransition();
-	    }
-	
-	    utilsDOM.addClass(node, [options.animationLeave, options.leaveClass].join(sep));
-	    utilsDOM.removeClass(node, options.enterClass);
-	
 	    runner.push(function () {
-	        transition(node, options, options.leaveTimeout, function(node) {
+	        if (hasActiveTransition(node)) {
+	            node.stopActiveTransition();
+	        }
+	
+	        utilsDOM.addClass(node, [options.animationLeave, options.leaveClass].join(sep));
+	        utilsDOM.removeClass(node, options.enterClass);
+	
+	        transition(node, options, options.leaveTimeout, function (node) {
 	            node.parentNode && node.parentNode.removeChild(node);
 	            callback && callback();
 	        });
@@ -3092,16 +3092,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	function transitionEnter(node, options, callback, runner) {
-	    if (hasActiveTransition(node)) {
-	        node.stopActiveTransition();
-	    }
-	
-	    utilsDOM.addClass(node, [options.animationEnter, options.enterClass].join(sep));
-	    utilsDOM.removeClass(node, options.leaveClass);
-	
 	    runner.push(function () {
+	        if (hasActiveTransition(node)) {
+	            node.stopActiveTransition();
+	        }
+	
+	        utilsDOM.addClass(node, [options.animationEnter, options.enterClass].join(sep));
+	        utilsDOM.removeClass(node, options.leaveClass);
+	
 	        transition(node, options, options.enterTimeout, callback);
-	    });    
+	    });
 	}
 	
 	module.exports.enter = transitionEnter;
@@ -3258,12 +3258,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function Runner() {
 	    this.callbacks = [];
-	
-	    // this.delay = undefined;
-	    //
-	    // if (options && options.hasOwnProperty('delay')) {
-	    //     this.delay = parseInt(options.delay, 10) || 0;
-	    // }
 	}
 	
 	Runner.prototype.push = function (callback) {
@@ -3271,21 +3265,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	Runner.prototype.execute = function () {
-	    // clearTimeout(this.timeout);
-	    //
-	    // var callbacks = this.callbacks;
-	    //
-	    // function execute() {
-	    //     for (var i = callbacks.length - 1; i >= 0; i--)
-	    //         callbacks.pop()();
-	    // }
-	    //
-	    // if (this.delay !== undefined) {
-	    //     this.timeout = setTimeout(execute, this.delay);
-	    // } else {
-	    //     execute();
-	    // }
-	
 	    for (var i = this.callbacks.length - 1; i >= 0; i--)
 	        this.callbacks.pop()();
 	};
