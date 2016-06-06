@@ -131,18 +131,22 @@ function doTransition(renderData, runner) {
         if (!renderData.keysRendered[key]) {
             if (render.status !== RenderStatus.LEAVE) {
                 render.status = RenderStatus.LEAVE;
-                transition.leave(node, transitionOptions, function() {
-                    render.status = RenderStatus.DONE;
-                    delete activeKeys[key];
-                    publish(Events.NODE_REMOVED, node);
-                }, runner);
-            }
+                runner.push(function(){
+                    transition.leave(node, transitionOptions, function() {
+                        render.status = RenderStatus.DONE;
+                        delete activeKeys[key];
+                        publish(Events.NODE_REMOVED, node);
+                    }, runner);
+                });
+           }
         } else if (renderData.keysToShow[key] || render.status === RenderStatus.LEAVE) {
             if (render.status !== RenderStatus.ENTER) {
                 render.status = RenderStatus.ENTER;
-                transition.enter(node, transitionOptions, function() {
-                    render.status = RenderStatus.DONE;
-                }, runner);
+                runner.push(function(){
+                    transition.enter(node, transitionOptions, function () {
+                        render.status = RenderStatus.DONE;
+                    }, runner);
+                });
             }
         }
     });
