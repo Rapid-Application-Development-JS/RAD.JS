@@ -1,4 +1,5 @@
-function Runner() {
+function Runner(name) {
+    this.name = name;
     this.callbacks = [];
 }
 
@@ -11,37 +12,11 @@ Runner.prototype.execute = function () {
         this.callbacks.pop()();
 };
 
-function createExecutor(query, name, delay) {
-    return function () {
-        var runners = query.runners[name];
-
-        runners.run = function () {
-        };
-
-        function execute() {
-            for (var i = runners.length - 1; i >= 0; i--) {
-                console.log(i, name);
-                runners.pop().execute();
-            }
-
-            delete query.runners[name];
-        }
-
-        if (delay !== undefined) {
-            setTimeout(execute, delay);
-        } else {
-            execute();
-        }
-    }
-}
-
 var query = {
 
     runners: {},
 
     create: function (options) {
-        var self = this;
-        var runner = new Runner(options);
         var delay;
 
         // extract delay value
@@ -58,18 +33,32 @@ var query = {
         // push runner to query
         if (!this.runners.hasOwnProperty(name)) {
             this.runners[name] = [];
-
-            this.runners[name].run = createExecutor(this, name, delay);
         }
+        
+        var runner = new Runner(name);
         this.runners[name].push(runner);
-
-        // modify the runner
-        runner.name = name;
-        runner.run = function () {
-            self.runners[this.name].run();
-        };
+        this.runners[name].delay = delay;
 
         return runner;
+    },
+
+    run: function (name) {
+        var runners = this.runners[name];
+        var delay = this.runners[name].delay;
+
+        function execute() {
+            for (var i = runners.length - 1; i >= 0; i--) {
+                runners.pop().execute();
+            }
+
+            delete query.runners[name];
+        }
+
+        if (delay !== undefined) {
+            setTimeout(execute, delay);
+        } else {
+            execute();
+        }
     }
 };
 

@@ -10,9 +10,7 @@ var ListView = RAD.View.extend({
     onRender: function () {
         // Used to show how animation works during continuous render
         if (!this.interval) {
-            this.interval = window.setInterval(function () {
-                this.render();
-            }.bind(this), 300);
+            this.interval = window.setInterval(this.render.bind(this), 500);
         }
     },
     onDetach: function () {

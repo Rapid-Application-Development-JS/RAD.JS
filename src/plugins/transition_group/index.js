@@ -76,5 +76,5 @@ iTemplate.registerHelper('i-transition', function(options, renderContent) {
 
     var runner = RunnerQuery.create(options);
     contentHandler.doTransition(renderData, runner);
-    runner.run();
+    RunnerQuery.run(runner.name);
 });

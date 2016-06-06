@@ -5,10 +5,6 @@ var TransitionEnd = require('../../utils/transition/transitionEnd');
 var utilsDOM = require('../../utils/DOM_Utils');
 var sep = ' ';
 
-function forceReflow(node) {
-    return node.offsetWidth;
-}
-
 function clearTransitionTimeout(node) {
     if (node.__transitionId) {
         clearTimeout(node.__transitionId);
