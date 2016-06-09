@@ -2979,22 +2979,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!renderData.keysRendered[key]) {
 	            if (render.status !== RenderStatus.LEAVE) {
 	                render.status = RenderStatus.LEAVE;
-	                runner.push(function(){
-	                    transition.leave(node, transitionOptions, function() {
-	                        render.status = RenderStatus.DONE;
-	                        delete activeKeys[key];
-	                        publish(Events.NODE_REMOVED, node);
-	                    });
-	                });
+	                transition.leave(node, transitionOptions, function() {
+	                    render.status = RenderStatus.DONE;
+	                    delete activeKeys[key];
+	                    publish(Events.NODE_REMOVED, node, runner);
+	                }, runner);
 	           }
 	        } else if (renderData.keysToShow[key] || render.status === RenderStatus.LEAVE) {
 	            if (render.status !== RenderStatus.ENTER) {
-	                render.status = RenderStatus.ENTER;
-	                runner.push(function(){
-	                    transition.enter(node, transitionOptions, function () {
-	                        render.status = RenderStatus.DONE;
-	                    });
-	                });
+	            render.status = RenderStatus.ENTER;
+	                transition.enter(node, transitionOptions, function () {
+	                    render.status = RenderStatus.DONE;
+	                }, runner);
 	            }
 	        }
 	    });
@@ -3077,29 +3073,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	    utilsDOM.addClass(node, options.activeClass);
 	}
 	
-	function transitionLeave(node, options, callback) {
+	function transitionLeave(node, options, callback, runner) {
 	    if (hasActiveTransition(node)) {
 	        node.stopActiveTransition();
 	    }
 	
-	    utilsDOM.addClass(node, [options.animationLeave, options.leaveClass].join(sep));
+	    utilsDOM.addClass(node, [options.leaveClass].join(sep));
 	    utilsDOM.removeClass(node, options.enterClass);
 	
-	    transition(node, options, options.leaveTimeout, function (node) {
-	        node.parentNode && node.parentNode.removeChild(node);
-	        callback && callback();
+	    runner.push(function () {
+	        utilsDOM.addClass(node, [options.animationLeave].join(sep));
+	        transition(node, options, options.leaveTimeout, function (node) {
+	            node.parentNode && node.parentNode.removeChild(node);
+	            callback && callback();
+	        });
 	    });
 	}
 	
-	function transitionEnter(node, options, callback) {
+	function transitionEnter(node, options, callback, runner) {
 	    if (hasActiveTransition(node)) {
 	        node.stopActiveTransition();
 	    }
 	
-	    utilsDOM.addClass(node, [options.animationEnter, options.enterClass].join(sep));
+	    utilsDOM.addClass(node, [options.enterClass].join(sep));
 	    utilsDOM.removeClass(node, options.leaveClass);
 	
-	    transition(node, options, options.enterTimeout, callback);
+	    runner.push(function () {
+	        utilsDOM.addClass(node, [options.animationEnter].join(sep));
+	        transition(node, options, options.enterTimeout, callback);
+	    });
 	}
 	
 	module.exports.enter = transitionEnter;
