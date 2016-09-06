@@ -73,8 +73,8 @@ JSON объект с настройками.
 
 Параметры:
 
-* `{boolean} debug='false'` - **true** или **false**, указывает как именно компилировать шаблоны
-* `{string} parameterName='data'` - имя объекта с данными, возвращаемый [getTemplateData()](#view_get-template-data), и который доступен в шаблоне во время рендеринга.
+* `{boolean} debug='false'` - **true** или **false**, указывает как именно компилировать шаблоны, с возможностью вывода ошибки в шаблоне или без.
+* `{string} parameterName='data'` - имя объекта с данными для рендеринга, возвращаемый [getTemplateData()](#view_get-template-data), и который доступен в шаблоне во время рендеринга.
 * `{object} viewAttributes` - объект со служебными атрибутами [View](#view), которые используються фреймвоком. В данный момент содержит только атрибут `data-role` определяющий префекс для [ID](#view_get-id), который виден как атрибут DOM элемента.
 
 #### Returns
@@ -119,7 +119,7 @@ let view = core.get('view-key-details');
 
 #### Tips
 
-* По факту метод возвращает экземпляры `view` только в двух случаях: 1) view автоматически было создано для отображания на экране, 2) вы в ручную создали экземпляр `view`.
+* По факту метод возвращает экземпляры `view` только в двух случаях: view автоматически было создано для отображания на экране, или вы в ручную создали экземпляр `view`.
 
 ### <a name="core_get_all"></a>core.getAll()
 
@@ -131,7 +131,7 @@ let view = core.get('view-key-details');
 
 #### Returns
 
-Возвращает объект содержащий в качестве аттрибутов -  view ID, а в качестве значений аттрибутов - экземпляры инстанцированных `view`.
+Возвращает объект содержащий в качестве имен аттрибутов -  view ID, а в качестве значений аттрибутов - экземпляры инстанцированных `view`.
 
 #### Example
 
@@ -185,14 +185,14 @@ animationEnd.bind(()=>{
 
 #### Arguments
 
-* `{Function} component` - функция или объект, который связываеться с кастомным тегом
+* `{function | object} component` - функция или объект, который связываеться с кастомным тегом
 * `{object} props` - объект данных сформированный из атрибутов кастомного тега
-* `{Function} content` - функция рендеринга контента [компонента / хелпера](#utils_itemplate_register-helper)
+* `{function} content` - функция рендеринга контента [компонента / хелпера](#utils_itemplate_register-helper)
 
 #### Tips
 
 * находиться в открытом доступе для иньекции в [webpack loader](cookbook/Loader.md)
-* возможно использовать для написания кастомных лоадеров
+* возможно использовать для написания кастомных загрущиков шаблонов 
 
 
 
@@ -200,12 +200,12 @@ animationEnd.bind(()=>{
 ***
 Для компиляции html/ejs шаблонов в набор Incremental DOM функций, RAD.js использует iTemplate. С более детальным описанием всех его возможностей можно ознакомится [тут](https://github.com/Rapid-Application-Development-JS/itemplate). 
 
-Одной из главных его особенностей является возможность созадавать компоенеты (helpers) которые представляют собой обычные функции и которые можно декларативно описывать внутри шаблонов.
+Одной из главных его особенностей является возможность созадавать компоенеты (helpers) которые представляют собой обычные функции и которые можно декларативно описывать внутри шаблонов, как кастомные теги.
 
 #### Arguments
-`{string} name` - имя компонента под которым он будет доступен внтури шаблона.
+`{string} name` - имя компонента(кастомного тега) под которым он будет доступен внтури шаблона.
 
-`{Function} fn` - функция которая в качестве аргументов принимает обьект `attrs` содержащий список всех атрибутов переданных компоненту (внутри шаблона) и вторым аргументом функцию `content` - это функция содержащая в себе контент нашего компонент. 
+`{function} fn` - функция которая в качестве аргументов принимает обьект `attrs` содержащий список всех атрибутов переданных компоненту (внутри шаблона) и вторым аргументом функцию `content` - это функция содержащая в себе контент нашего компонента, для рендеринга контента. 
 
 #### Returns
 
@@ -217,7 +217,7 @@ var RAD = require('RAD');
 var Backbone = require('Backbone');
 var navItemTemplate = RAD.template( require('./NavItemTemplate.ejs') );
 
-RAD.utils.ITemplate.registerHelper('NavItem', function (attrs, content) {
+RAD.utils.ITemplate.registerHelper('NavItem', (attrs, content) => {
     navItemTemplate({
         href: attrs.href,
         selected: Backbone.history.fragment === attrs.href
@@ -263,11 +263,12 @@ NavItemTemplate.ejs:
 </ul>
 
 ```
+> Данный пример в более развернутом виде можно увидеть в прмерах.
 
 
 #### <a name="utils_itemplate_unregister-helper"></a>utils.ITemplate.unregisterHelper('name')
 ***
-Удалить ранее зарегистрированый компонент
+Удалить ранее зарегистрированый компонент(не путать с `view`)
 
 ##### Arguments
 `{string} name` - имя компонента который нужно удалить.
@@ -277,16 +278,15 @@ NavItemTemplate.ejs:
 
 ### <a name="utils_incremental-dom"></a>utils.IncrementalDOM
 ***
-Предоставляет доступ к [Incremental DOM API](https://github.com/google/incremental-dom)	
-	
+Предоставляет доступ к [Incremental DOM API](https://github.com/google/incremental-dom), который используеться в качестве DOM движка в RAD.js	
 ## <a name="template"></a>RAD.template(str);
 Компилирует html/ejs строку в набор Incremental DOM анотаций.
 
 ##### Arguments
-`{String} str` - html/ejs строка.
+`{string} str` - html/ejs строка.
 
 ##### Returns
-`{Function}` - возвращает функцию-шаблон которая содержит Incremental DOM анотации. 
+`{function}` - возвращает функцию-шаблон которая содержит Incremental DOM анотации. 
 
 ##### Example
 ```js
@@ -294,7 +294,7 @@ var RAD = require('RAD');
 var Backbone = require('Backbone');
 var navItemTemplate = RAD.template( require('./NavItemTemplate.ejs') );
 
-RAD.utils.ITemplate.registerHelper('NavItem', function (attrs, content) {
+RAD.utils.ITemplate.registerHelper('NavItem', (attrs, content) => {
     navItemTemplate({
         href: attrs.href,
         selected: Backbone.history.fragment === attrs.href
@@ -303,9 +303,8 @@ RAD.utils.ITemplate.registerHelper('NavItem', function (attrs, content) {
 
 ```
 
- 
 ## <a name="dispatcher"></a>Event Dispatcher
-Для коммуникации между модулями, RAD.js предоставляет Event Dispatcher который по факту является клоном Backbone.Events.
+Для коммуникации между модулями, RAD.js предоставляет Event Dispatcher который по факту является оберткой над Backbone.Events.
 
 
 ### <a name="dispatcher_subscribe"></a>RAD.subscribe(channel, callback, [context]);
@@ -313,15 +312,15 @@ RAD.utils.ITemplate.registerHelper('NavItem', function (attrs, content) {
 Позволяет подписатся на получения сообщений из `channel`. 
 
 ##### Arguments
-`{String} channel` - имя канала на чьи события нужно подписаться
+`{string} channel` - имя канала на чьи события нужно подписаться
 
-`{Function} callback` - функция будет вызвана каждый раз когда будет получено новое сообщение из `channel`
+`{function} callback` - функция будет вызвана каждый раз когда будет получено новое сообщение из `channel`
 
-`{Object} context` - задает контекст выполнения `callback`
+`{object} context` - задает контекст выполнения `callback`
 
 
 ##### Returns
-`{Undefined}`
+`{undefined}`
 
 ##### Example
 ```js
@@ -339,7 +338,7 @@ var TodoRouter = Backbone.Router.extend({
 var TodoList = RAD.View.extend({
     template: require('./template.ejs'),
     initialize: function () {
-        RAD.subscribe('filter', this.filter, this);
+        this.subscribe('filter', this.filter, this);
     },
     filter: function (value) {
         this.props.set('filter', value);
@@ -379,7 +378,7 @@ RAD.unsubscribe(null, null, this);
 `{} args` - можно передавать любое количество аргументов. Агрументы будут переданны в колбэк функцию которая подписана на канал. 
 
 ##### Returns
-`{View Object}` - возвращает ссылку на View
+`{object}` - возвращает ссылку на View
 ##### Example
 
 ```js
@@ -388,7 +387,7 @@ var TodoRouter = Backbone.Router.extend({
         '*filter': 'filterItems'
     },
     filterItems: function (param) {
-        RAD.publish('filter', param);
+        this.publish('filter', param);
     }
 });
 ```
@@ -396,25 +395,27 @@ var TodoRouter = Backbone.Router.extend({
 ## <a name="view"></a>View
 
 **RAD.View** - это расширенная версия Backbone.View которая предоставляет несколько дополнительных методов, а также ряд колбэков описывающих жизненный цикл View.
+
+> Стоит заметить что `RAD.js` полностью совместим с `Backbone.js` так как проходит все внутрение тесты последнего.
    
 ### <a name="view_template"></a>this.template
 ***
-Свойство задающее шаблон. Может принимает либо строку либо шаблон с Incremental DOM аннотациями.   
+Свойство задающее шаблон. Может принимает либо строку либо функцию шаблон с Incremental DOM аннотациями.   
 
 ##### Example
-```javascript 
+```javascript
 var LibraryView = RAD.View.extend({
-	template: RAD.template(...)
+	template: template(...)
 }); 
 ``` 
 ### <a name="view_render"></a>this.render()
 ***
-В отличии от Backbone, RAD.View предоставляет готовый метод render который использует Incremental DOM в качестве шаблонизатора.
+> В отличии от Backbone, RAD.View предоставляет готовый метод render который использует Incremental DOM в качестве шаблонизатора.
 
 ##### Arguments
 `none`
 ##### Returns
-`{View Object}` - возвращает ссылку на View
+`{object}` - возвращает ссылку на View
 ##### Example
    
 ```javascript 
@@ -430,12 +431,12 @@ page.render();
 Это упрощенная запись для: `this.listenTo(target, events, this.render);` 
 
 ##### Arguments
-`{Object} target` - объект на чьи события нужно подписаться: `Backbone.Collection`, `Backbone.Model` и т.д;
+`{object} target` - объект на чьи события нужно подписаться: `Backbone.Collection`, `Backbone.Model` и т.д;
 
-`{String} events` - имя события на которое нужно подписаться.
+`{string} events` - имя события на которое нужно подписаться.
 
 ##### Returns
-`{View Object}` - возвращает ссылку на View
+`{object}` - возвращает ссылку на View
 
 ##### Example
 
@@ -484,7 +485,7 @@ var TodoItem = RAD.View.extend({
 
 ##### Example
 
-Это удобно когда мы используем View как компоненты внутри шаблона.
+Это удобно когда мы используем вложенные View как компоненты внутри шаблона.
 
 ```ejs
 <% var TodoItem = require('../todo-view/'); %>
@@ -506,7 +507,7 @@ var TodoItem = RAD.View.extend({
 
 ### <a name="view_get-template-data"></a>this.getTemplateData();
 ***
-Этот метод вызывается при каждом `render` и определяет какие данные будут переданы в шаблон. 
+Этот метод вызывается при каждом `render` и определяет какие данные будут переданы в шаблон и будут там доступны во время рендеринга как объект `data`. 
 
 ##### Arguments
 `none` 
@@ -554,6 +555,7 @@ getTemplateData: function () {
     <%= data.remaining %> / <%= data.length %>
 </span>
 ```
+> Следует помнить что шаблон рендериться в контексте `view` поэтому `this` непосредственно указывает на текущий экземпляр `view`.
 
 ### <a name="view_get-id"></a>this.getID();
 ***
@@ -576,6 +578,24 @@ var page = new WelcomePage({el: '#screen' });
 page.getID(); // view-5
 ```
 
+##### Tips
+
+В некоторых случаях необходимо четко прописать ID для `view`, это можно просто сделать переопределив этот метод:
+
+```javascript 
+var WelcomePage = RAD.View.extend({
+	tagName: 'section',     
+	template: document.getElementById('hello-page').innerHTML,
+	getID() {
+		return 'my_view';
+	}
+});  
+var page = new WelcomePage({el: '#screen' });  
+page.getID(); // my_view
+```
+
+> В случае переопределения ID Вам не следует в ручную инстанцировать `view`, иначе это может привести к ошибке в случае попытки инстанцирования второго экземпляра `view` с тем же ID в добавок к существующему.
+
 ### <a name="view_destroy"></a>this.destroy();
 ***
 Удаляет view и `el` из DOM, вызывает `this.stopListening` и отписывается от все событий которые были подписаны через `this.subscribe` 
@@ -592,15 +612,11 @@ page.getID(); // view-5
 Позволяет подписатся на получения сообщений из `channel`. 
 
 ##### Arguments
-`{String} channel` - имя канала на чьи события нужно подписаться
+`{string} channel` - имя канала на чьи события нужно подписаться
 
-`{Function} callback` - функция будет вызвана каждый раз когда будет получено новое сообщение из `channel`
+`{function} callback` - функция будет вызвана каждый раз когда будет получено новое сообщение из `channel`
 
-`{Object} context` - задает контекст выполнения `callback`. По умолчанию `context` === `this`
-
-
-##### Returns
-`{Undefined}` - Если метод вернет `false` - контент не буде изменен.
+`{object} context` - задает контекст выполнения `callback`. По умолчанию `context` === `this`
 
 ##### Example
 
@@ -646,7 +662,7 @@ this.unsubscribe();
 `none` 
 
 ##### Returns
-`{Boolean | Undefined}` - Если метод вернет `false` - контент не буде изменен.
+`{boolean | undefined}` - Если метод вернет `false` - контент не буде изменен.
 
 ##### Example
 
@@ -672,16 +688,17 @@ var CustomView = RAD.View.extend({
     }
 });
 ```
+> Один из примеров кастомного рендеринга для `view`, обеспечивающего непосредственную работу с DOM.
 
 ### <a name="view_on-render"></a>this.onRender();
 ***
-Будет вызван сразу после `render`. В этот момент View уже закончила отрисовку шаблона.  
+Будет вызван сразу после `render`. В этот момент View уже закончила отрисовку шаблона и формирование структуры DOM.  
 
 ##### Arguments
 `none` 
 
 ##### Returns
-`{Undefined}`
+`{undefined}`
 
 ### <a name="view_on-attach"></a>this.onAttach();
 ***
@@ -691,7 +708,7 @@ var CustomView = RAD.View.extend({
 `none` 
 
 ##### Returns
-`{Undefined}`
+`{undefined}`
 
 
 ### <a name="view_on-detach"></a>this.onDetach();
@@ -702,7 +719,7 @@ var CustomView = RAD.View.extend({
 `none` 
 
 ##### Returns
-`{Undefined}`
+`{undefined}`
 
 
 ### <a name="view_on-destroy"></a>this.onDestroy();
@@ -713,7 +730,7 @@ var CustomView = RAD.View.extend({
 `none` 
 
 ##### Returns
-`{Undefined}`
+`{undefined}`
 
 
 ## <a name="plugins_navigator"></a>navigator
@@ -726,14 +743,14 @@ var CustomView = RAD.View.extend({
 ```js
 RAD.publish('navigation.show', {
     container: '#container', // css селектор или html элемент куда необходимо вставить View или компоенент;
-    content: SomeView, // функция конструктор
+    content: SomeView, // функция конструктор `view`
     options: someData // данные которые будут переданы в функцию конструктор
 });
 
 ```
 
 ##### Returns
-`{Undefined}`
+`{undefined}`
 
 ##### Example
 ```js
@@ -793,7 +810,7 @@ var MainPage = RAD.View.extend({
 `{string} groupName='group'` - позволяет синхронизировать асинхронные анимации, сгрупировав их в одну группу с одним именем.
 > Обратите внимание, что атрибут `groupName` используеться только в случае асинхронных анимаций, при синхронных анимациях, он просто не будет иметь влияние.
 > 
-> Данный атрибут как правило необходим когда вы пытаетесь анимировать переход с одной `view` на другую, в которой есть вложенные анимации, даже если в них установлена стартовая анимация как `initialAnimation ='none'`, в этом случае Вам необходимо объеденить все анимации в группу с одним именем и установить `delay='0'`. 
+> Данный атрибут как правило необходим когда вы пытаетесь анимировать переход с одной `view` на другую, в которой есть вложенные анимации, даже если в них установлена стартовая анимация как `initialAnimation ='none'`, в этом случае Вам необходимо объеденить все анимации в группу с одним именем и установить `delay='0'`. В этом случае анимация начнеться как только будет добавлена новая `view` или `element` и выполняться все скрипты которые прописаны в [onRender](#view_on-render) и [onAttach](#view_on-attach). Именно по этой причине вам следует избегать нагруженных операций в данных двух методах.
 
 ##### Example	
 
