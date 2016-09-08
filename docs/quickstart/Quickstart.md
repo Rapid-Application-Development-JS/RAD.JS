@@ -93,14 +93,12 @@ module.exports = {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- 
-    <title>Demo</title>
-
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-    <div id="screen"></div>
-    <script type="text/javascript" src="build/app.min.js"></script>
+<div id="screen"></div>
+<script type="text/javascript" src="app.min.js"></script>
 </body>
 </html>
 ```
@@ -110,7 +108,6 @@ module.exports = {
 Для этого в файле `index.js` создадим класс `WelcomePage` расширив `RAD.View` следующим образом:
 
 ```javascript
-"use strict";
 import {View, publish, template} from 'RAD.js';
 
 class WelcomePage extends View {
@@ -132,16 +129,20 @@ publish('navigation.show', {
 * описываем класс. Обратите внимание что свойство `template` класса должно содержать откомпилированную шаблонную функцию.
 * и наконец, публикуем нашу View в DOM по указанному css селектору с помощью команды для плагина навигатор.
 
-> <a name="standart"></a> Мы могли бы воспользоваться и стандартной техникой **Backbone.js**:
+> <a name="standart"></a> Мы могли бы воспользоваться и более стандартной техникой **Backbone.js** отрендерить в указаном DOM элементе нашу `view`:
 > 
 >```javascript
->let page = new WelcomePage({
-	...
-    el: '#screen'
-});
-page.render();
+>class WelcomePage extends View {
+>    template = template('Hello, World!');
+>
+>    el() {
+>        return '#screen';
+>    }
+>}
+>
+>new WelcomePage().render();
 >```
->Указать css селектор элемента который будет использоваться в качестве основного для данного `view`. Но, в этом случае нам бы понадобилось бы в будщем задавать биндинг `events` для `views` через функцию следующим образом:
+>Указав css селектор элемента который будет использоваться в качестве основного для данного `view`. Но, в этом случае нам бы понадобилось бы в будщем задавать биндинг `events` для `views` через функцию следующим образом, так же как мы сделали это с `el() {...}`:
 >
 >```javascript
 >events() {
@@ -150,7 +151,9 @@ page.render();
 >	}
 >}
 >```
->Связано это с `babel-plugin-transform-class-properties` плагином, какой вариант вас устраивает больше - решать вам.
+>Связано это со связкой `Backbone` + `babel-plugin-transform-class-properties` плагином. Вы можете использовать оба варианта: и рендеринг в элемент и использование `RAD.navigator`(кторый решает проблемы со свойствами классов) какой вариант вас устраивает больше - решать вам.
+>
+>В следующем разделе мы покажем небольшой полный пример рендеринга `view` в элемент.
 
 ## Source
 

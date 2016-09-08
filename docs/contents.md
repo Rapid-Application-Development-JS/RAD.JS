@@ -6,6 +6,7 @@
 * [Quick Start](quickstart/Quickstart.md)
 	* [Работа с DOM](quickstart/DOM.md)
 	* [Dependency Injection and Nested View](quickstart/Injection.md)
+	* [Components](quickstart/Components.md)
 * [Tutorial](tutorial/Tutorial.md)
 	* [Introduction](tutorial/Introduction.md)
 	* [Main View & Bootstrap](tutorial/mainview.md)
