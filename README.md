@@ -1,7 +1,10 @@
 # RAD 2.0 development version
 
-## Install and work
+## Docs & Help
+* [Documentation Contents](docs/contents.md)
+* [API Reference](docs/API.md)
 
+## Install and work
 
 ```
 npm install
